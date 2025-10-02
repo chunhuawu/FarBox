@@ -1,3 +1,5 @@
+from farbox_bucket.core.logging import get_logger
+
 import os, time
 from farbox_bucket.settings import DEBUG, MAX_FILE_SIZE
 from farbox_bucket.utils import string_types, smart_str, get_md5
@@ -10,6 +12,8 @@ from farbox_bucket.bucket.clouds.storage.qcloud import delete_file_on_qcloud_for
 from farbox_bucket.bucket.storage.helpers.before_store_image import get_image_info_from_raw_content
 
 from .base import Storage
+
+logger = get_logger(__name__)
 
 class QCloudStorage(Storage):
 
@@ -65,8 +69,7 @@ class QCloudStorage(Storage):
             headers = dict()
             if filename:
                 headers["ContentDisposition"] = smart_str('attachment;filename="%s"' % relative_path)
-            if DEBUG:
-                print("upload %s to qcloud" % relative_path)
+            logger.debug("upload %s to qcloud" % relative_path)
             uploaded = upload_file_to_qcloud_for_bucket(bucket, filepath, raw_content, content_type=content_type, **headers)
             if uploaded:
                 file_size = len(raw_content)

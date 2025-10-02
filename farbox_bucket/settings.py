@@ -1,3 +1,5 @@
+from farbox_bucket.core.logging import get_logger
+
 import re, os, sys, uuid
 from raven import Client
 from farbox_bucket.utils import to_float, to_int
@@ -48,6 +50,8 @@ if os.path.isdir(bucket_scripts_root):
 
 BUCKET_PRICE = to_float(get_env("bucket_price"), default_if_fail=128) or 0
 BUCKET_PRICE2 = to_float(get_env("bucket_price2"), default_if_fail=0) or 0
+
+logger = get_logger(__name__)
 
 def get_domains_from_env(key):
     raw_domains = get_env(key) or ''

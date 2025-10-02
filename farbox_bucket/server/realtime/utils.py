@@ -1,3 +1,5 @@
+from farbox_bucket.core.logging import get_logger
+
 import ujson as json
 from flask import request
 from geventwebsocket.exceptions import WebSocketError
@@ -7,6 +9,8 @@ from farbox_bucket.utils import string_types
 from farbox_bucket.settings import sentry_client
 from farbox_bucket.utils.ssdb_utils import qpop_front, qpush_back
 import logging
+
+logger = get_logger(__name__)
 
 def push_message_to_ws(ws, message):
     # ws is websocket, 一个具体的连接

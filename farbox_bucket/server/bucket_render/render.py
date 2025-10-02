@@ -1,3 +1,5 @@
+from farbox_bucket.core.logging import get_logger
+
 import re
 from flask import abort, Response
 from flask.globals import _request_ctx_stack
@@ -30,6 +32,8 @@ from farbox_bucket.server.template_system.namespace.html import Html
 from .static_file import render_as_static_resource_in_pages_for_farbox_bucket, render_as_static_file_for_farbox_bucket
 
 html_content_for_timeout_page = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">\n<title>408 Request Timeout</title>\n<h1>Request Timeout</h1>\n<p>Sorry! The run time of this page is too long, maybe there were some errors in your template</p>\n'
+
+logger = get_logger(__name__)
 
 def render_html_content_for_timeout_page(reqctx):
     with reqctx:

@@ -1,3 +1,5 @@
+from farbox_bucket.core.logging import get_logger
+
 from jinja2.runtime import Context, Undefined, Macro
 from jinja2.compiler import CodeGenerator
 from werkzeug.exceptions import HTTPException
@@ -9,6 +11,8 @@ from farbox_bucket.server.template_system.namespace.record import get_records_fo
 from farbox_bucket.server.template_system.namespace.built_in import set_property
 from .exceptions import TemplateDebugException
 from jinja2.runtime import Undefined
+
+logger = get_logger(__name__)
 
 def context_resolve(self, key):
     if key in self.vars:

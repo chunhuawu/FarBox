@@ -1,3 +1,5 @@
+from farbox_bucket.core.logging import get_logger
+
 import os, shutil
 from farbox_bucket.settings import DEBUG, MAX_FILE_SIZE
 from farbox_bucket.utils import string_types
@@ -6,6 +8,8 @@ from farbox_bucket.utils.path import write_file
 from farbox_bucket.bucket.record.utils import get_file_id_from_record
 from farbox_bucket.bucket.storage.helpers.before_store_image import get_image_info_from_raw_content
 from .base import Storage
+
+logger = get_logger(__name__)
 
 def get_server_side_storage_filepath_root():
     storage_root = os.environ.get('STORAGE_ROOT') or '/mt/web/data/file_storage'

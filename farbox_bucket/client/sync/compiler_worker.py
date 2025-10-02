@@ -1,3 +1,5 @@
+from farbox_bucket.core.logging import get_logger
+
 import os
 from farbox_bucket.settings import MAX_RECORD_SIZE, DEBUG
 from farbox_bucket.utils import is_a_markdown_file
@@ -16,6 +18,8 @@ from farbox_bucket.utils.encrypt.key_encrypt import get_md5_for_key
 FILE_TYPE_FILENAMES = ['robots.txt', 'robot.txt']
 
 VISITS_FILEPATHS = ['_data/visits.csv']
+
+logger = get_logger(__name__)
 
 def is_a_image_file(filepath):
     mimetype = guess_type(filepath) or ''

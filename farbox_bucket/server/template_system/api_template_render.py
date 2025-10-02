@@ -1,3 +1,5 @@
+from farbox_bucket.core.logging import get_logger
+
 from farbox_bucket.settings import DEBUG, sentry_client
 from farbox_bucket.utils import smart_unicode, get_md5
 from farbox_bucket.utils.cache import LimitedSizeDict
@@ -7,6 +9,8 @@ from flask import Response
 from jinja2.sandbox import SandboxedEnvironment
 
 api_template_env = None
+
+logger = get_logger(__name__)
 
 def get_api_template_env():
     from farbox_bucket.server.template_system.env import FarboxBucketEnvironment

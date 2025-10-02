@@ -1,3 +1,5 @@
+from farbox_bucket.core.logging import get_logger
+
 import time
 from flask import request, abort
 from farbox_bucket.settings import DEBUG, WEBSOCKET, MAX_FILE_SIZE
@@ -30,6 +32,8 @@ from farbox_bucket.themes import themes
 # timestamp: 与服务器上的时间差，不能超过 120s，另外也是作为内容校验的一个字段
 # data: 必然是字符串，可以是 JSON，有些场合会转为 Python 的数据进行处理
 # public_key: 只有 create_bucket 的时候，才会有；如果它存在，也会参与 signature 的校验
+
+logger = get_logger(__name__)
 
 class FarBoxBucketMessageAPIHandler(object):
     def __init__(self):
@@ -197,8 +201,7 @@ class FarBoxBucketMessageAPIHandler(object):
         if version and path:
             old_record = get_record_by_path(bucket=self.bucket, path=path)
             if old_record and old_record.get("version") == version:
-                if DEBUG:
-                    print("same file for %s" % path)
+                logger.debug("same file for %s" % path)
                 return json_with_status_code(200, 'ok')
         elif path and self.raw_json_data.get("is_dir") and not self.raw_json_data.get("is_deleted", False):
             # folder 不需要重新处理

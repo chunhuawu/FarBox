@@ -1,3 +1,5 @@
+from farbox_bucket.core.logging import get_logger
+
 import os, re
 import ujson as json
 from flask import request, redirect, Response, abort, send_file, make_response
@@ -8,6 +10,8 @@ from farbox_bucket.utils.mime import guess_type
 from farbox_bucket.utils.url import join_url, get_get_var
 from farbox_bucket.server.utils.request_context_vars import pre_handle_force_response_in_context
 from farbox_bucket.utils.convert.jade2jinja import jade_to_template
+
+logger = get_logger(__name__)
 
 def _handle_redirect_url(url, keep_site_id=True):
     if url.startswith('?'):

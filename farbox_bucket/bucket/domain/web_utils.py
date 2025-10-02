@@ -1,3 +1,5 @@
+from farbox_bucket.core.logging import get_logger
+
 import re
 from flask import request
 from farbox_bucket.settings import WEBSITE_DOMAINS, DEBUG, TMP_BUCKET_FOR_DEBUG
@@ -8,6 +10,8 @@ from farbox_bucket.server.utils.request_path import get_bucket_from_url
 from farbox_bucket.server.utils.cache_for_function import cache_result
 
 @cache_result
+logger = get_logger(__name__)
+
 def get_bucket_from_request(try_referrer=True, hit_admin_bucket=True):
     if DEBUG and TMP_BUCKET_FOR_DEBUG: # for debug
         return TMP_BUCKET_FOR_DEBUG

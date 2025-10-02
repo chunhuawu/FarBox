@@ -1,3 +1,5 @@
+from farbox_bucket.core.logging import get_logger
+
 from farbox_bucket.utils import string_types
 from farbox_bucket.settings import DEBUG
 from farbox_bucket.bucket.utils import get_bucket_last_record_id
@@ -9,6 +11,8 @@ from elasticsearch.helpers import bulk
 
 from .es_client import get_es_client, doc_fields_in_es, make_sure_es_indexes
 from .es_utils import get_es_index_doc, search_es
+
+logger = get_logger(__name__)
 
 def db_doc_to_es_action(bucket, doc, action_type='index'):
     # https://elasticsearch-py.readthedocs.io/en/v7.10.1/helpers.html#bulk-helpers
