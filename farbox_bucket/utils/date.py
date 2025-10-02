@@ -1,3 +1,6 @@
+"""
+Date and time utility functions.
+"""
 import datetime, re
 from dateutil.parser import parse
 import calendar

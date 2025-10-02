@@ -41,7 +41,7 @@ def deploy_farbox_bucket(memcache='2G', project_name='farbox_bucket',
     if memcache.endswith('g'):
         memcache = memcache.replace('g', '').strip()
         memcache = str(int(memcache)*1024)
-    memcache = '%smb' % re.search('\d+', memcache).group() # to MB
+    memcache = '%smb' % re.search(r'\d+', memcache).group() # to MB
 
     deploy_project_dir(
         files_data = files_data_for_deploy,

@@ -46,7 +46,7 @@ def get_data_to_post(node, private_key, message='', action='record'):
     data_to_post['signature'] = signature
 
     # 给 server 端一个 private_key 的 md5 值，做一些敏感字段的弱加密、解密用的
-    clean_private_key = re.sub('\s', '', private_key, flags=re.M)
+    clean_private_key = re.sub(r'\s', '', private_key, flags=re.M)
     private_key_md5 = get_md5(clean_private_key)
     data_to_post['private_key_md5'] = private_key_md5
 

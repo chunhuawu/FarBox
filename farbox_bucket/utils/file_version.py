@@ -63,7 +63,7 @@ def create_file_version(filepath, force=False, min_time_diff=60, history_max_ver
         os.makedirs(version_folder)
 
     versions_file_names = os.listdir(version_folder)
-    versions_file_names = [name for name in versions_file_names if re.search('\d{4}-\d{1,2}-\d{1,2}',name)]
+    versions_file_names = [name for name in versions_file_names if re.search(r'\d{4}-\d{1,2}-\d{1,2}',name)]
     versions_file_names.sort()
     versions_file_names.reverse() # 倒序之后，就是最新的排最前面
 

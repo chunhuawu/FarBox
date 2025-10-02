@@ -1,3 +1,6 @@
+"""
+URL manipulation and parsing utilities.
+"""
 import json, urllib
 from farbox_bucket.utils import smart_str, smart_unicode, string_types
 from urlparse import urlparse, parse_qs

@@ -7,7 +7,7 @@ def set_property(parent, property_name, value):
     # 这里要隔绝 parent，不能传递特别的东西，不然会有安全隐患
     if hasattr(value, 'core'): # 可能某些 model 处理过的，比如Text
         value = value.core
-    if parent is not None and isinstance(property_name, (str, unicode)) and re.match('[a-z_]\w*$', property_name, re.I):
+    if parent is not None and isinstance(property_name, (str, unicode)) and re.match(r'[a-z_]\w*$', property_name, re.I):
         if isinstance(parent, dict): # 字典的处理
             parent[property_name] = value
         if getattr(parent, 'set_property_allowed', None) and not hasattr(value, '__call__'):

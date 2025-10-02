@@ -23,15 +23,15 @@ def reset_elasticsearch_memory_config(system_configs, es_mem_config_filepath = "
         return
     try:
         elasticsearch_memory = elasticsearch_memory.strip()
-        if not re.match("\d+[mg]$", elasticsearch_memory, flags=re.I):
+        if not re.match(r"\d+[mg]$", elasticsearch_memory, flags=re.I):
             return
     except Exception: return
     with open(es_mem_config_filepath, "rb") as f:
         old_es_mem_config = f.read()
 
     new_es_mem_config =  old_es_mem_config
-    new_es_mem_config = re.sub("\n-Xms\d+[gm]", "\n-Xms%s"%elasticsearch_memory, new_es_mem_config)
-    new_es_mem_config = re.sub("\n-Xmx\d+[gm]", "\n-Xmx%s" % elasticsearch_memory, new_es_mem_config)
+    new_es_mem_config = re.sub(r"\n-Xms\d+[gm]", "\n-Xms%s"%elasticsearch_memory, new_es_mem_config)
+    new_es_mem_config = re.sub(r"\n-Xmx\d+[gm]", "\n-Xmx%s" % elasticsearch_memory, new_es_mem_config)
     if new_es_mem_config != old_es_mem_config:
         print("will update elasticsearch memory")
         try:

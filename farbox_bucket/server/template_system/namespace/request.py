@@ -69,12 +69,12 @@ class Request(object):
             user_agent = copy.copy(_request.user_agent)
             user_agent._parser = None
             return user_agent
-        elif re.match('^_?path_?\d+$', item): # request.path1
-            offset_c = re.search('\d+', item)
+        elif re.match(r'^_?path_?\d+$', item): # request.path1
+            offset_c = re.search(r'\d+', item)
             i = offset_c.group()
             return self.get_n_path(i, raw=item.startswith('_'))
-        elif re.match('^_?offset_path_?\d+$', item): # request.offset_path_1
-            offset_c = re.search('\d+', item)
+        elif re.match(r'^_?offset_path_?\d+$', item): # request.offset_path_1
+            offset_c = re.search(r'\d+', item)
             i = offset_c.group()
             return self.get_offset_path(i, raw=item.startswith('_'))
         else:

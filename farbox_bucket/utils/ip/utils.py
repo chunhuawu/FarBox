@@ -73,7 +73,7 @@ def is_ipv4_ip(ip):
         ip = ip.strip()
         if len(ip) > 100:
             return False
-        if re.match('\d+\.\d+\.\d+\.\d+$', ip):
+        if re.match(r'\d+\.\d+\.\d+\.\d+$', ip):
             ip_parts = ip.split('.')
             if ip_parts[0] == '0':
                 return False

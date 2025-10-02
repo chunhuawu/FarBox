@@ -236,7 +236,7 @@ def decrypt_blob(encrypted_blob, private_key, password=None, encode_type='zip'):
     return decrypted
 
 def get_md5_for_key(key):
-    clean_key = re.sub('\s', '', key, flags=re.M)
+    clean_key = re.sub(r'\s', '', key, flags=re.M)
     return get_md5(clean_key)
 
 if __name__ == '__main__':

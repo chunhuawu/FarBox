@@ -171,7 +171,7 @@ class Site(dict):
     def get_settings_from_json(self, config_path):
         if not isinstance(config_path, string_types):
             return {}
-        if not re.match("__\w+\.json", config_path):
+        if not re.match(r"__\w+\.json", config_path):
             return {}
         if not self.bucket:
             return {}
@@ -217,7 +217,7 @@ class Site(dict):
                 return "config_keys format error, not allowed"
             if not config_store_path or not config_keys:
                 return "config_store_path is invalid or config_keys is invalid, not allowed"
-            if not re.match("__\w+\.json", config_store_path):
+            if not re.match(r"__\w+\.json", config_store_path):
                 return "path should be __xxxx.json, not allowed"
 
         def settings_json_editor_callback(new_data_obj):

@@ -1,4 +1,5 @@
-from farbox_bucket.utils import smart_str, smart_unicode
+from farboxfrom typing import Any, Optional, Union, Dict, List, Tuple
+_bucket.utils import smart_str, smart_unicode
 from farbox_bucket.utils.functional import cached_property
 from dateutil.parser import parse as date_parse
 from flask import request
@@ -24,17 +25,17 @@ def json_object_hook(dct):
         return value
     return dct
 
-def json_dumps(obj, indent=None):
+def json_dumps(obj: Any, indent: Optional[int] = None) -> str:
     # 主要是 mongodb 上的一些 obj
     if isinstance(obj, dict) and '_id' in obj:
         obj['_id'] = smart_str(obj['_id'])
     return json.dumps(obj, cls=UTCDateJSONEncoder, indent=indent)
 
-def json_loads(raw_content):
+def json_loads(raw_content: str) -> Any:
     # 主要是 mongodb 上的一些 obj
     return json.loads(raw_content, object_hook=json_object_hook)
 
-def csv_to_list(raw_content, max_rows=None, max_columns=None, return_max_length=False, auto_fill=False):
+def csv_to_list(raw_content: Union[str, bytes], max_rows: Optional[int] = None, max_columns: Optional[int] = None, return_max_length: bool = False, auto_fill: bool = False) -> Union[List[List[str]], Tuple[List[List[str]], int]]:
     # auto_fill 表示会自动补充缺失的空 cell
     file_io = BytesIO(smart_str(raw_content))
     csv_reader = csv.reader(file_io)

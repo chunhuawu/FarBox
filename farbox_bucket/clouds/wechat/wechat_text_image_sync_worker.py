@@ -10,9 +10,9 @@ from .bind_wechat import set_name_by_wechat_user_id, get_name_by_wechat_user_id
 
 #    #tag #hello [[ #wiki_tag ]] [[#more]] test
 def compile_tag_to_wiki_link_syntax(content, is_voice=False):
-    content = re.sub("(?<!\[)(#[^# \t]+)", "[[\g<1>]]", content)
-    content = re.sub("(\[\s*){2,}\[", "[[", content)
-    content = re.sub("(\]\s*){2,}\]", "]]", content)
+    content = re.sub(r"(?<!\[)(#[^# \t]+)", "[[\g<1>]]", content)
+    content = re.sub(r"(\[\s*){2,}\[", "[[", content)
+    content = re.sub(r"(\]\s*){2,}\]", "]]", content)
     if is_voice and u"标签" in content:
         p1, p2 = content.rsplit(u"标签", 1)
         if u"，" not in p2:

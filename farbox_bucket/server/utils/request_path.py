@@ -72,7 +72,7 @@ def get_request_path_for_bucket(path=None):
     bucket = get_bucket_in_request_context()
     if bucket and bucket in request_path:
         try:
-            request_path = re.search('/%s/\w+(/.*|$)'%bucket, request_path).group(1)
+            request_path = re.search(r'/%s/\w+(/.*|$)'%bucket, request_path).group(1)
         except Exception: pass
     return request_path
 
@@ -95,7 +95,7 @@ def auto_bucket_url_path(url_path):
 
 def get_bucket_from_url(url):
     if url and isinstance(url, string_types):
-        c = re.search('/bucket/(\w+)/', url)
+        c = re.search(r'/bucket/(\w+)/', url)
         if c:
             return c.group(1)
     return None

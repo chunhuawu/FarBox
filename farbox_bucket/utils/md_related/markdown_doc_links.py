@@ -14,12 +14,12 @@ def get_link_title_id_in_wiki_syntax(line):
         is_tag = True
     else:
         is_tag = False
-    link_id_c = re.search("#([^#|]+)(\||$)", line)
+    link_id_c = re.search(r"#([^#|]+)(\||$)", line)
     if link_id_c:
         link_id = link_id_c.group(1).strip()
     else:
         link_id = ""
-    link_title_c = re.search("\|([^#|]+)(#|$)", line)
+    link_title_c = re.search(r"\|([^#|]+)(#|$)", line)
     if link_title_c:
         link_title = link_title_c.group(1).strip()
     else:
@@ -43,7 +43,7 @@ def get_linked_docs_from_markdown_content(path, raw_content, md_link_abs_check_f
 
     # [xxx](/???.md)
     maybe_md_links = []
-    for m in re.finditer("(?:(?<=^)|(?<!!))(\\[.*?\\])\\((.*?)\\)", raw_content):
+    for m in re.finditer(r"(?:(?<=^)|(?<!!))(\\[.*?\\])\\((.*?)\\)", raw_content):
         link = m.group(2)
         if "://" in link:
             continue
@@ -56,7 +56,7 @@ def get_linked_docs_from_markdown_content(path, raw_content, md_link_abs_check_f
             if not link in maybe_md_links:
                 maybe_md_links.append(link)
 
-    for m in re.finditer("(?<!\[)(\[\[)([^\[\]]+)(\]\])", raw_content):
+    for m in re.finditer(r"(?<!\[)(\[\[)([^\[\]]+)(\]\])", raw_content):
         # [[ xxx ]]
         # [[ xxx | title ]]
         # [[ xxx | title # id ]]

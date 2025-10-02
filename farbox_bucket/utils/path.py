@@ -1,3 +1,4 @@
+from typing import Optional, List
 import os
 import time
 import re
@@ -20,7 +21,7 @@ def is_real(path):
     return True
 
 def is_a_hidden_path(path):
-    if re.search('(^|/)(\.|~$)', path):
+    if re.search(r'(^|/)(\.|~$)', path):
         return True
     elif re.search(r'~\.[^.]+$', path):
         return True
@@ -187,14 +188,14 @@ def is_sub_path(filepath, parent_path, direct=False):
             return False
     return is_under_parent
 
-def write_file(filepath, content):
+def write_file(filepath: str, content: str) -> bool:
     make_sure_path(filepath)
     if isinstance(content, unicode):
         content = content.encode('utf8')
     with open(filepath, 'wb') as f:
         f.write(content)
 
-def read_file(filepath):
+def read_file(filepath: str) -> Optional[str]:
     if not os.path.isfile(filepath):
         return ''
     else:

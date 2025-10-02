@@ -1,3 +1,6 @@
+"""
+HTML processing and sanitization utilities.
+"""
 import re
 from farbox_bucket.utils import smart_unicode, make_content_clean, UnicodeWithAttrs
 from farbox_markdown.compile_md import fix_relative_image_path
@@ -16,10 +19,10 @@ def linebreaks(value, post_path=None, render_markdown_image=False):
     # post_path 是处理图片本身的相对路径，这样就可以处理Markdown语法的图片了
     value = re.sub('<.*?[^>]$','', value) #避免尾行图片（源码）被截断
     value = re.sub(r'\r\n|\r|\n', '\n', value)
-    paras = re.split('\n{2,}', value)
+    paras = re.split(r'\n{2,}', value)
     new_paras = []
     for p in paras:
-        p = "\n\n".join([u"<p>%s</p>"%line for line in re.split('\n',p)])
+        p = "\n\n".join([u"<p>%s</p>"%line for line in re.split(r'\n',p)])
         p = u'<div class="p_part">%s</div>' %p
         new_paras.append(p)
     html = u'\n\n'.join(new_paras)
@@ -37,7 +40,7 @@ def html_to_text(content, keep_a_html=False, remove_a=True, keep_images=False, q
     content = re.sub(r'<br\s*/?>', '\n', content, flags=re.I|re.S)
     content = re.sub(r'</p>\s*<p>', '\n\n', content, flags=re.I|re.S)
     if keep_images:
-        content = re.sub('(<img)([^<]+)(/?\s*>)', '&LT;img\g<2>/&GT;', content) # 保护图片代码
+        content = re.sub(r'(<img)([^<]+)(/?\s*>)', '&LT;img\g<2>/&GT;', content) # 保护图片代码
 
     if keep_a_html:
         remove_a = False
@@ -119,7 +122,7 @@ def limit(content, length=None, mark='......', keep_images=True, words=None, pos
     output = linebreaks(output, post_path=post_path)
     content = UnicodeWithAttrs(output)
     content.has_more = has_more
-    content.without_pics = re.sub('<img[^<]+/\s*>', '', output) #去掉img节点
+    content.without_pics = re.sub(r'<img[^<]+/\s*>', '', output) #去掉img节点
     content.without_pic = content.no_pic = content.without_pics
 
     return content

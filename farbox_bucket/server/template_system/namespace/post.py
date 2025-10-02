@@ -47,8 +47,8 @@ class Posts(object):
 
     def __getattr__(self, item):
         # 找不到attribute的时候，会调用getattr
-        if re.match('^recent_?\d+$', item): # 获得最近的几篇文章
-            limit = re.search('\d+', item).group()
+        if re.match(r'^recent_?\d+$', item): # 获得最近的几篇文章
+            limit = re.search(r'\d+', item).group()
             limit = to_int(limit)
             return self.get_recent(limit)
 

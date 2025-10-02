@@ -44,7 +44,7 @@ def get_file_timestamp(relative_path=None, metadata=None, abs_filepath=None, utc
             date_s = smart_str(get_meta_value(metadata=metadata, key='date', default='')) # 先从meta中获取, 格式化之后，可以自动调整时差
         if date_s:
             date_s = date_s.strip()
-        if date_s and re.match('\d{4}\.\d+\.\d+$', date_s):
+        if date_s and re.match(r'\d{4}\.\d+\.\d+$', date_s):
             # # 2018.3.19  这种日期形式的 转为 xxxx-xx-xx
             date_s = date_s.replace('.', '-')
         if not date_s:
@@ -57,7 +57,7 @@ def get_file_timestamp(relative_path=None, metadata=None, abs_filepath=None, utc
                     return date
                 except Exception: pass
             # 从文件名中获取 2012-1?2-1?2, date模式
-            date_search = re.search('/?([123]\d{3}-\d{1,2}-\d{1,2})[^/]*', relative_path)
+            date_search = re.search(r'/?([123]\d{3}-\d{1,2}-\d{1,2})[^/]*', relative_path)
             if date_search: # 可以从文件的路径中取， 兼容jekyll
                 date_s = date_search.groups()[0]
         date = utc_date_parse(date_s, utc_offset=utc_offset)

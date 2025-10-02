@@ -1,3 +1,6 @@
+"""
+Memcached client wrapper and utilities.
+"""
 import random
 from farbox_bucket.utils import smart_str
 import socket, time, zlib

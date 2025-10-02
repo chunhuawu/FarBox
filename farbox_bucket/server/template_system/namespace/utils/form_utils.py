@@ -70,7 +70,7 @@ def extract_extra_info(line):
                 k, v = extra_info_part.split('=', 1)
                 k = k.strip()
                 v = v.strip('\'"').strip()
-                if re.match('\d+$', v):
+                if re.match(r'\d+$', v):
                     v = int(v)
                 elif re.match(r'\d+\.\d+$', v):
                     v = float(v)
@@ -237,7 +237,7 @@ def to_form_fields_obj(data_obj, keys, formats=None, extra_handler_func=None):
             w_h_value = key_matched_data.get(w_h_field)
             if w_h_value:
                 w_h_value = smart_unicode(w_h_value)[:30].strip()
-                if re.match('[\d.]+$', w_h_value):
+                if re.match(r'[\d.]+$', w_h_value):
                     w_h_value += 'px'
                 key_matched_data[w_h_field] = w_h_value
 

@@ -1,103 +1,195 @@
 #import ujson as json
 import re
 from functools import partial
+from typing import Any, Optional, Union, Dict, List
 from farbox_bucket.settings import db_client
 from farbox_bucket.utils import string_types, to_unicode, bytes2human, to_md5
 from farbox_bucket.utils.data import json_dumps, json_loads
 
-def py_data_to_ssdb_data(py_data):
-    # just string
+def py_data_to_ssdb_data(py_data: Any) -> str:
+    """
+    Convert Python data to SSDB-compatible string format.
+
+    Args:
+        py_data: Any Python object (string, dict, list, etc.)
+
+    Returns:
+        String representation suitable for SSDB storage
+    """
     if isinstance(py_data, string_types):
         return py_data
     else:
         try:
             ssdb_data = json_dumps(py_data)
-        except Exception: ssdb_data = ''
+        except Exception:
+            ssdb_data = ''
         return ssdb_data
 
-ssdb_data_to_py_data_cache = {}
-def ssdb_data_to_py_data(ssdb_data, hit_cache=False):
+ssdb_data_to_py_data_cache: Dict[str, Any] = {}
+
+def ssdb_data_to_py_data(ssdb_data: Any, hit_cache: bool = False) -> Any:
+    """
+    Convert SSDB data (string) to Python objects.
+
+    Args:
+        ssdb_data: Data from SSDB (usually string)
+        hit_cache: Whether to use caching to avoid repeated conversions
+
+    Returns:
+        Deserialized Python object (dict, list, or string)
+    """
     # 为了避免从 ssdb 中获得数据，反复转为 python 中使用， 增加了 cache_id 的逻辑，以避免重复计算性能消耗的问题
     if not isinstance(ssdb_data, string_types):
         return ssdb_data
+
+    data_cache_key: Optional[str] = None
     if hit_cache:
         data_cache_key = to_md5(ssdb_data)
         cached_value = ssdb_data_to_py_data_cache.get(data_cache_key)
         if cached_value:
             return cached_value
-    else:
-        data_cache_key = None
-    if re.match('\s*[\[\{\(]', ssdb_data): # dict list tuple
+
+    if re.match(r'\s*[\[\{\(]', ssdb_data): # dict list tuple
         try:
             py_data = json_loads(ssdb_data)
             if data_cache_key:
                 ssdb_data_to_py_data_cache[data_cache_key] = py_data
-        except Exception: py_data = to_unicode(ssdb_data)
+        except Exception:
+            py_data = to_unicode(ssdb_data)
     else:
         py_data = to_unicode(ssdb_data)
     return py_data
 
-def hset(namespace, key, value, ignore_if_exists=False):
+def hset(namespace: str, key: str, value: Any, ignore_if_exists: bool = False) -> Optional[bool]:
+    """
+    Set a hash field value in SSDB.
+
+    Args:
+        namespace: Hash table namespace
+        key: Field key
+        value: Value to store (will be serialized)
+        ignore_if_exists: Skip if key already exists
+
+    Returns:
+        True if set successfully, None if skipped or no client
+    """
     if not db_client:
-        return
+        return None
     if not namespace:
-        return
+        return None
     if ignore_if_exists:
         if hexists(namespace, key):
-            return
+            return None
     value = py_data_to_ssdb_data(value)
     db_client.hset(namespace, key, value)
     return True
 
-def hincr(namespace, key,  num=1):
+def hincr(namespace: str, key: str, num: int = 1) -> int:
+    """
+    Increment a hash field by a number.
+
+    Args:
+        namespace: Hash table namespace
+        key: Field key
+        num: Increment amount (default 1)
+
+    Returns:
+        New value after increment
+    """
     if not num:
-        return # ignore
+        return 0
     try:
         new_value = db_client.hincr(namespace, key, num)
         new_value = int(new_value)
-    except Exception: new_value = int(num) # failed
+    except Exception:
+        new_value = int(num)
         db_client.hset(namespace, key, num)
     return new_value
 
-def hdel(namespace, key):
+def hdel(namespace: str, key: str) -> bool:
+    """
+    Delete a hash field.
+
+    Args:
+        namespace: Hash table namespace
+        key: Field key to delete
+
+    Returns:
+        True if deleted successfully
+    """
     if not key:
-        return
+        return False
     done = db_client.hdel(namespace, key)
     return bool(done)
 
-def hdel_many(namespace, keys):
+def hdel_many(namespace: str, keys: List[str]) -> bool:
+    """
+    Delete multiple hash fields.
+
+    Args:
+        namespace: Hash table namespace
+        keys: List of field keys to delete
+
+    Returns:
+        True if deleted successfully
+    """
     if not keys:
         return True
     done = db_client.multi_hdel(namespace, *keys)
     return bool(done)
 
-def hclear(namespace):
+def hclear(namespace: str) -> bool:
+    """
+    Clear all fields in a hash table.
+
+    Args:
+        namespace: Hash table namespace to clear
+
+    Returns:
+        True if cleared successfully
+    """
     done = db_client.hclear(namespace)
     return bool(done)
 
-def hget(namespace, key, force_dict=False):
+def hget(namespace: str, key: str, force_dict: bool = False) -> Any:
+    """
+    Get a hash field value from SSDB.
+
+    Args:
+        namespace: Hash table namespace
+        key: Field key
+        force_dict: Return empty dict if value is not a dict
+
+    Returns:
+        Deserialized value or None if not found
+    """
     if not db_client:
-        return
+        return None
     if not namespace:
-        return
+        return None
     if not key:
-        return
+        return None
     value = db_client.hget(namespace, key)
     value = ssdb_data_to_py_data(value)
     if force_dict and not isinstance(value, dict):
         value = {}
     return value
 
-def just_hget(namespace, key):
+def just_hget(namespace: str, key: str) -> Optional[str]:
     """
-    :param namespace:
-    :param key:
-    :return: None 或 原始的字符串
+    Get raw string value from hash without deserialization.
+
+    Args:
+        namespace: Hash table namespace
+        key: Field key
+
+    Returns:
+        Raw string value or None
     """
     if not db_client:
-        return
+        return None
     if not namespace:
-        return
+        return None
     if not key:
         return
     value = db_client.hget(namespace, key)

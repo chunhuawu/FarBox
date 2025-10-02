@@ -12,7 +12,7 @@ def get_records_for_request_resolver(key):
     if key in request.cached_records_for_resolver: # cached value
         return request.cached_records_for_resolver[key]
 
-    if not re.match('r?records(_\d+)?$', key):
+    if not re.match(r'r?records(_\d+)?$', key):
         return None
 
     bucket = get_bucket_in_request_context()

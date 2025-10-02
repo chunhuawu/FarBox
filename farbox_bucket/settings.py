@@ -51,7 +51,7 @@ BUCKET_PRICE2 = to_float(get_env("bucket_price2"), default_if_fail=0) or 0
 
 def get_domains_from_env(key):
     raw_domains = get_env(key) or ''
-    domain_list = re.split('[,\n]', raw_domains)
+    domain_list = re.split(r'[,\n]', raw_domains)
     domains_got = []
     for domain in domain_list:
         domain = domain.strip().lower()

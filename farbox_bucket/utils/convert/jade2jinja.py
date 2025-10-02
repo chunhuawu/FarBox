@@ -213,7 +213,7 @@ def beautiful_jade(source):
     source = re.sub(r'\\[\t \r]*\n\s*', '', source)
 
     # 跨行的赋值处理
-    multi_lines_vars = re.findall('{%[\t \r\n].*?[\t \r\n]%}', source, re.S|re.M)
+    multi_lines_vars = re.findall(r'{%[\t \r\n].*?[\t \r\n]%}', source, re.S|re.M)
     for multi_lines_var in multi_lines_vars:
         if '\n' in multi_lines_var:
             source = source.replace(multi_lines_var, re.sub(r'[\r\n]', '', multi_lines_var), 1)
@@ -283,7 +283,7 @@ def beautiful_jade(source):
         split_colon = False # 将 : 替换被必要的换行
         if re.search(r'(^| )(if|for|else|elif) .*?: ', line) or re.search(r': (if|for|else|elif) ', line):
             split_colon = True
-        elif re.match('[a-z0-9\s]+:\s*\+[^)]*?\)\s*$', line_strip): #like ->  li: +h.a(xxxxx) -> one `()` only
+        elif re.match(r'[a-z0-9\s]+:\s*\+[^)]*?\)\s*$', line_strip): #like ->  li: +h.a(xxxxx) -> one `()` only
             split_colon = True
             force_split_colon = True
         elif re.match(r'([\.#]?[a-z])', line_without_attrs, re.I) and ":" in line_without_attrs \
@@ -350,7 +350,7 @@ def beautiful_jade(source):
             # 变量的调用也可以用+的形式来
             if line_strip[1:] in ['caller']:
                 new_line = line
-            elif not re.match('\+\w+\(.*?\)$', line_strip) and not re.match('\+(%s)'%block_or_re_pattern, line_strip):
+            elif not re.match(r'\+\w+\(.*?\)$', line_strip) and not re.match(r'\+(%s)'%block_or_re_pattern, line_strip):
                 # 非函数调用需要属性的（call），非 pure 等 block 代码语法，自动处理为变量先
                 new_line = re.sub(r'(\s*)(\+)(\w+.*)', '\g<1>{{ \g<3> }}', line)
             else:
@@ -373,7 +373,7 @@ def beautiful_jade(source):
                     new_line = front_part + '{{ %s }}' % end_part
                     done = True
 
-            if not done and not re.match(r'\s*\w+(\.\w+)? = ', line) and not re.search('%s\.\w+\s*\}\}' % global_types, line):
+            if not done and not re.match(r'\s*\w+(\.\w+)? = ', line) and not re.search(r'%s\.\w+\s*\}\}' % global_types, line):
                 # 替换全局变量名
                 # 但不能是   xx = xx 这种赋值类型的
                 # 也不能是 a(target="_blank", href="http://{{request.domain}}") 类似已经处理了的

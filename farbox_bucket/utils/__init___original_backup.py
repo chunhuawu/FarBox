@@ -80,9 +80,9 @@ def string_to_list(value):
         return []
     if isinstance(value, (str, unicode)) and value:
         value = value.strip()
-        if re.match("\\[.*?\\]$", value):
+        if re.match(r"\\[.*?\\]$", value):
             value = value[1:-1]
-        elif re.match("\\(.*?\\)$", value):
+        elif re.match(r"\\(.*?\\)$", value):
             value = value[1:-1]
         value = value.strip()
         if ',' in value:

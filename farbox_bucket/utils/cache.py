@@ -1,3 +1,6 @@
+"""
+Caching decorators and utilities.
+"""
 import time, hashlib
 from collections import OrderedDict
 
