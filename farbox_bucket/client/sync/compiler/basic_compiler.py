@@ -1,4 +1,3 @@
-#coding: utf8
 import os, time
 from farbox_bucket import version as farbox_version
 from farbox_bucket.utils import md5_for_file, get_md5, smart_str
@@ -8,7 +7,6 @@ from farbox_bucket.utils.gzip_content import gzip_content
 from farbox_bucket.client.sync.compiler.utils import get_meta_value as _get_meta_value
 from farbox_bucket.client.sync.compiler.utils import split_title_and_position
 from farbox_bucket.utils.ipfs_utils import get_ipfs_hash_from_filepath
-
 
 class BasicSyncCompiler(object):
     def __init__(self, relative_path, abs_filepath=None,
@@ -55,7 +53,6 @@ class BasicSyncCompiler(object):
     def get_meta_value(self, key, default=None):
         return _get_meta_value(key=key, metadata=self.metadata, default=default)
 
-
     @cached_property
     def file_version(self):
         # if is_deleted = True, will not get the file version, only get it by self.version
@@ -79,7 +76,6 @@ class BasicSyncCompiler(object):
             return os.path.getsize(self.abs_filepath)
         else:
             return 0
-
 
     @cached_property
     def is_dir(self):
@@ -115,7 +111,6 @@ class BasicSyncCompiler(object):
     def name(self):  # just name, without .ext
         return os.path.splitext(self.filename)[0]
 
-
     @cached_property
     def title(self):
         title, position = split_title_and_position(self.name)
@@ -125,8 +120,6 @@ class BasicSyncCompiler(object):
     def position(self):  # 根据文件名获得的position，支持浮点数
         title, position = split_title_and_position(self.name)
         return position
-
-
 
     @cached_property
     def ipfs_key(self):
@@ -165,7 +158,6 @@ class BasicSyncCompiler(object):
         else:
             return ''
 
-
     @cached_property
     def basic_compiled_data(self):
         if self.is_dir:
@@ -195,16 +187,12 @@ class BasicSyncCompiler(object):
             data['mtime'] = mtime
         return data
 
-
-
     def get_compiled_data(self):
         # 子类需要处理的
         return {}
 
-
     def update_files_info(self, data):
         return
-
 
     @cached_property
     def compiled_data(self):
@@ -219,11 +207,9 @@ class BasicSyncCompiler(object):
         self.update_files_info(data)  # 用于 update_files_info
         return data
 
-
     @cached_property
     def ipfs_compiled_data(self):
         # 通用的做法，处置为 ipfs 上的逻辑
         data = self.basic_compiled_data
         return data
-
 

@@ -1,8 +1,6 @@
-# coding: utf8
 from farbox_bucket.utils.convert.coffee2js import compile_coffee
 from farbox_bucket.utils.convert.css import compile_css
 from farbox_bucket.utils.convert.jade2jinja import convert_jade_to_html
-
 
 def compile_frontend_resource(ext, raw_content):
     ext = ext.lower().strip('.')
@@ -21,8 +19,7 @@ def compile_frontend_resource(ext, raw_content):
     if func:
         try:
             compiled_content = func(raw_content)
-        except:
-            compiled_content = ''
+        except Exception: compiled_content = ''
     else:
         compiled_content = ''
     return compiled_type, compiled_content

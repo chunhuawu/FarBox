@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 import os
 import uuid
 import re
@@ -37,16 +35,12 @@ from farbox_bucket.server.helpers.smart_scss import get_smart_scss_url
 
 from farbox_bucket.server.realtime.utils import get_bucket_ws_url
 
-
 static_files_url = (get_env("static_files_url") or "").strip().strip("/")
 qcloud_cdn_token = (get_env("qcloud_cdn_token") or "").strip()
-
-
 
 def get_a_random_dom_id():
     dom_id = 'd%s' % uuid.uuid1().hex
     return dom_id
-
 
 lazy_load_map = {
     'font': '/fb_static/lib/fontawesome/css/font-awesome.min.css',
@@ -64,7 +58,6 @@ lazy_load_map = {
     "post_preview": "/fb_static/basic/post_preview.css",
 
 }
-
 
 def str_has(obj, to_check, just_in=False):
     if isinstance(to_check, (tuple, list)): # 给的是一个list，只要其中一个元素满足就可以了
@@ -89,7 +82,6 @@ def str_has(obj, to_check, just_in=False):
             return False
     else: # 中文的，没有空格
         return to_check in obj
-
 
 class Html(object):
 
@@ -183,8 +175,6 @@ class Html(object):
 
         return content
 
-
-
     def linebreaks(self, content):
         content = smart_unicode(content)[:50000]
         return _linebreaks(content)
@@ -194,7 +184,6 @@ class Html(object):
         # 返回一个随机的dom_id
         return 'd_%s' % uuid.uuid4().hex
 
-
     def get_dom_id(self, v=None):
         # 将一个value转为dom_id的格式
         return 'dd_%s' % get_md5(v)
@@ -203,8 +192,6 @@ class Html(object):
     def join_url(url, *args, **kwargs):
         new_url = join_url(url, **kwargs)
         return new_url
-
-
 
     @staticmethod
     def js_view(title, url=None, group_id=None, view_type='', **kwargs):
@@ -249,8 +236,6 @@ class Html(object):
                                     title=title, thumbnail=thumbnail, url=url, css_class=css_class, uuid=dom_id, group_id=group_id,
                                     return_html=True, **kwargs)
         return html_content
-
-
 
     @classmethod
     def a(cls, title, url=None, dom_id=None, must_equal=False, **kwargs):
@@ -357,7 +342,6 @@ class Html(object):
         else:
             return ''  # failed
 
-
     @staticmethod
     def paginator(paginator=None, style='simple', **kwargs):
         if 'simple' in kwargs and not kwargs.get('simple'):
@@ -384,13 +368,10 @@ class Html(object):
         return render_api_template('paginator',
                                    paginator=paginator, paginator_style=style, return_html=True, **kwargs)
 
-
-
     def back_to_top(self, label=u'△'):
         # 页面右下角的返回顶部
         html_content = render_api_template('back_to_top', label=label, return_html=True)
         return html_content
-
 
     def auto_toc(self, post=None, **kwargs):
         # for markdown
@@ -401,7 +382,6 @@ class Html(object):
             return ''
         html_content = render_api_template('auto_toc', post=post, **kwargs)
         return html_content
-
 
     def nav(self, *nav_data, **kwargs):
         toggle_menu = kwargs.get('toggle_menu', False)
@@ -428,8 +408,6 @@ class Html(object):
                                          )
         return html_content
 
-
-
     def auto_sidebar(self, side='left', sidebar_name='sidebar', width=300, default_status="hide"):
         # for markdown
         if side not in ['left', 'right']:
@@ -438,7 +416,6 @@ class Html(object):
         html = render_api_template('auto_sidebar', sidebar_name=sidebar_name,
                                     side=side, sidebar_width=width, default_status=default_status, return_html=True)
         return html
-
 
     @staticmethod
     def i18n(key, *args):
@@ -512,7 +489,6 @@ class Html(object):
         request.seo_header_set_already = True
         return html_content
 
-
     def debug(self):
         bucket = get_bucket_in_request_context()
         if not bucket:
@@ -542,10 +518,6 @@ class Html(object):
                                             data=data, callback=callback, dom_id=dom_id)
         return html_content
 
-
-
-
-
     def show(self, template_path, *args,  **kwargs):
         from farbox_bucket.server.template_system.env import render_by_farbox_bucket_env
         # 显示一个子模板, 作为 html 的部分
@@ -556,8 +528,6 @@ class Html(object):
         if html_content:
             html_content = '<div class="h_show">\n%s\n</div>\n' % html_content
         return html_content
-
-
 
     ########### form starts #########
     def ajax_submit(self, **kwargs):
@@ -590,13 +560,9 @@ class Html(object):
 
     ########### form ends #########
 
-
-
-
 @cache_result
 def html():
     return Html()
-
 
 @cache_result
 def h():

@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 import re, os
 from farbox_bucket.settings import SYSTEM_DOMAINS
 from farbox_bucket.utils import string_types
@@ -8,7 +6,6 @@ from dns.resolver import Resolver, NoAnswer
 from dns import rdatatype
 
 domain_re = re.compile(r'^([a-z0-9\-_][a-z0-9-_]+[a-z0-9]\.|[a-z0-9]+\.)+([a-z]{2,3}\.)?[a-z]{2,9}$', flags=re.I)
-
 
 _kept_sub_names = [
     'beta', 'www', 'wwww','blog', 'theme', 'themes', 'template', 'templates',
@@ -19,7 +16,6 @@ _kept_sub_names = [
     'ns', 'ns1', 'ns2', 'ns3', 'ns4', 'ns5', 'ns6', 'ipfs', 'farbox',
 ]
 kept_sub_names = set(_kept_sub_names)
-
 
 def is_valid_domain(domain):
     domain = domain.strip().lower()
@@ -36,7 +32,6 @@ def get_is_system_domain(domain):
         if domain.endswith("."+system_domain):
             return True
     return False
-
 
 def get_domain_basic_info(domain, is_admin=False):
     domain = domain.strip().lower()
@@ -66,7 +61,6 @@ def get_domain_basic_info(domain, is_admin=False):
     info['is_system_domain'] = is_system_domain
     return info
 
-
 dns_resolver = Resolver()
 dns_resolver.nameservers = ['8.8.8.8', '8.8.4.4']
 @cached(1*60) # 结果, 缓存 1 分钟
@@ -83,5 +77,4 @@ def get_domain_text_record(domain):
             return text_value
         except NoAnswer:
             return ''
-        except:
-            return ''
+        except Exception: return ''

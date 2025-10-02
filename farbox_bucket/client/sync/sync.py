@@ -1,4 +1,3 @@
-#coding: utf8
 import os
 import datetime
 from farbox_bucket import settings
@@ -15,11 +14,9 @@ from farbox_bucket.utils.mime import guess_type
 
 from farbox_bucket.client.sync.compiler_worker import FarBoxSyncCompilerWorker
 
-
 FILE_TYPE_FILENAMES = ['robots.txt', 'robot.txt']
 
 VISITS_FILEPATHS = ['_data/visits.csv']
-
 
 def is_a_image_file(filepath):
     mimetype = guess_type(filepath) or ''
@@ -27,8 +24,6 @@ def is_a_image_file(filepath):
         return True
     else:
         return False
-
-
 
 class FarBoxBucketSyncWorker(object):
     # # files_info_filepath 如果没有指定，则在根目录中，为 .files_info.json，
@@ -60,7 +55,6 @@ class FarBoxBucketSyncWorker(object):
         # pass relative-path to this func, return True/False to sync or not
         self.should_sync_file_func = should_sync_file_func
 
-
     def do_record_sync_log(self, log):
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         log = to_bytes('%s %s\n\n' % (now, log))
@@ -69,8 +63,7 @@ class FarBoxBucketSyncWorker(object):
             make_sure_path(sync_log_filepath)
             with open(sync_log_filepath, 'a') as f:
                 f.write(log)
-        except:
-            pass
+        except Exception: pass
 
     def record_sync_log(self, filepath, is_deleted, sync_status):
         log = '%s, is_deleted=%s' % (filepath, is_deleted)
@@ -82,8 +75,6 @@ class FarBoxBucketSyncWorker(object):
             log = '%s, status: None, maybe not allowed' % log
         self.do_record_sync_log(log)
 
-
-
     def add_file_to_ipfs(self, filepath):
         ipfs_key = add_filepath_to_ipfs(filepath)
         return ipfs_key
@@ -93,7 +84,6 @@ class FarBoxBucketSyncWorker(object):
         if not ipfs_key:
             return
         remove_hash_from_ipfs(ipfs_key)
-
 
     def sync_for_updated_files(self):
         files_info_on_server = send_message(
@@ -121,7 +111,6 @@ class FarBoxBucketSyncWorker(object):
 
         return synced
 
-
     def sync_one_file(self, filepath, lower_files_info_on_server=None, lower_folders_info_on_server=None,
                       re_check=False, should_store_files_info=False):
         if re_check:
@@ -146,8 +135,7 @@ class FarBoxBucketSyncWorker(object):
             ipfs_key = self.add_file_to_ipfs(encrypted_filepath)
             try:
                 os.remove(encrypted_filepath)
-            except:
-                pass
+            except Exception: pass
         elif is_file:
             ipfs_key = self.add_file_to_ipfs(filepath)
         else:
@@ -211,8 +199,6 @@ class FarBoxBucketSyncWorker(object):
 
         return synced
 
-
-
     def sync_for_deleted_files(self):
         # 处理删除了的文件
         synced = False
@@ -266,7 +252,6 @@ class FarBoxBucketSyncWorker(object):
 
         return synced
 
-
     def check_remote(self):
         # 确保 bucket 存在，以及能联网
         reply = send_message(
@@ -279,7 +264,6 @@ class FarBoxBucketSyncWorker(object):
             return True
         else:
             return False
-
 
     def sync(self):
         is_remote_ok = self.check_remote()
@@ -299,9 +283,6 @@ class FarBoxBucketSyncWorker(object):
     def store_files_info(self):
         files_info_content = json_dumps(self.files_info, indent=4)
         write_file(self.files_info_filepath, files_info_content)
-
-
-
 
 def should_sync_file_for_sync_folder_simply(relative_path, extra_func=None):
     # must return True or False, else will checked by`should_sync` func in detact.py
@@ -331,8 +312,6 @@ def should_sync_file_for_sync_folder_simply(relative_path, extra_func=None):
     if extra_func:
         return extra_func(relative_path)
 
-
-
 def sync_folder_simply(node, root, private_key, should_encrypt_file=False,
                        app_name_for_sync=None, auto_clean_bucket=True,
                        exclude_rpath_func=None,):
@@ -347,8 +326,6 @@ def sync_folder_simply(node, root, private_key, should_encrypt_file=False,
                                     )
     changed = worker.sync()
     return changed
-
-
 
 def sync_file_simply(filepath, node, root, private_key, should_encrypt_file=False, app_name_for_sync=None, auto_clean_bucket=True,):
     if not os.path.isfile(filepath):

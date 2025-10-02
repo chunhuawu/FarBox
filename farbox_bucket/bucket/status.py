@@ -1,4 +1,3 @@
-# coding: utf8
 from farbox_bucket.utils import bytes2human
 from farbox_bucket.utils.ssdb_utils import hsize, zsize, zget, zget_max, zget_min, hget, get_db_system_status, hset, \
     hclear, get_hlist_and_count
@@ -7,7 +6,6 @@ from farbox_bucket.utils.objectid import ObjectID, is_object_id
 from farbox_bucket.utils.cache import cached
 
 import datetime
-
 
 def db_timestamp_to_date_string(db_timestamp):
     if not db_timestamp:
@@ -20,7 +18,6 @@ def db_timestamp_to_date_string(db_timestamp):
     date_string = utc_date.strftime('%Y-%m-%d %H:%M:%S UTC')
     return date_string
 
-
 def record_id_to_date_string(record_id):
     if not record_id:
         return ''
@@ -31,9 +28,6 @@ def record_id_to_date_string(record_id):
     date_string = date.strftime('%Y-%m-%d %H:%M:%S UTC')
     return date_string
 
-
-
-
 def get_bucket_size(bucket):
     # count records of bucket
     size = hsize(bucket) or 0
@@ -42,12 +36,10 @@ def get_bucket_size(bucket):
 def get_bucket_usage(bucket, for_human=False):
     try:
         usage = int(hget('_bucket_usage', bucket))
-    except:
-        usage = 0
+    except Exception: usage = 0
     if for_human:
         usage = bytes2human(usage)
     return usage
-
 
 def get_bucket_status(bucket):
     status_info = {}
@@ -64,8 +56,7 @@ def get_bucket_status(bucket):
     status_info['delta_record_date'] = record_id_to_date_string(delta_record_id)
     try:
         usage = int(hget('_bucket_usage', bucket) or 0)
-    except:
-        usage = 0
+    except Exception: usage = 0
     status_info['usage'] = usage
     status_info['usage_for_human'] = bytes2human(usage)
     if usage and size:
@@ -73,7 +64,6 @@ def get_bucket_status(bucket):
         status_info['usage_per_record'] = usage_per_record
         status_info['usage_per_record_for_human'] = bytes2human(usage_per_record)
     return status_info
-
 
 @cached(20)
 def get_current_node_status():
@@ -98,8 +88,7 @@ def get_current_node_status():
     records_count = hget('_records_count', 'all') or 0
     try:
         records_count = int(records_count)
-    except:
-        pass
+    except Exception: pass
     status_info['records_count'] = records_count
 
     status_info['db'] = get_db_system_status()
@@ -107,10 +96,6 @@ def get_current_node_status():
     status_info['date'] = now.strftime('%Y-%m-%d %H:%M:%S UTC')
 
     return status_info
-
-
-
-
 
 def fix_records_count():
     # 从数据库中，重新构建 _records_count 上的数据
@@ -123,5 +108,4 @@ def fix_records_count():
         total_count += count
         hset('_records_count', name, count)
     hset('_records_count', 'all', total_count)
-
 

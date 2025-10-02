@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 from farbox_bucket.utils.env import get_env
 from farbox_bucket.server.backend.service import keep_watch_nginx, restart_backend_per_day, keep_watch_memcache, run_logrotate
 

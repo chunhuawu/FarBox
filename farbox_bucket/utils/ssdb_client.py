@@ -1,9 +1,7 @@
-# coding: utf8
 import pyssdb
 import socket
 import random
 import time
-
 
 class SSDB_Client(object):
     def __init__(self, host='127.0.0.1', port=8888, max_connections=5):
@@ -15,7 +13,6 @@ class SSDB_Client(object):
         self.last_connect_at = None
 
         self.re_connect()
-
 
     def __nonzero__(self):
         if not self.clients:
@@ -36,8 +33,7 @@ class SSDB_Client(object):
                 if try_re_connect:
                     self.re_connect()
                 return None
-        except:
-            return None
+        except Exception: return None
 
     @property
     def current_client(self):
@@ -61,7 +57,6 @@ class SSDB_Client(object):
         self.last_connect_at = now
         if new_client:
             self.service_stopped = False
-
 
     def __getattr__(self, item):
         client = self.current_client

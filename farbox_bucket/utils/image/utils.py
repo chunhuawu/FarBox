@@ -1,10 +1,8 @@
-#coding: utf8
 import os, struct
 import io
 try:
     from pgmagick import Blob, Image
-except:
-    Blob, Image = None, None
+except Exception: Blob, Image = None, None
 
 def get_image_type(content_or_part, is_file=False):
     if is_file:
@@ -31,13 +29,9 @@ def get_image_type(content_or_part, is_file=False):
     else:
         return 'unknown'
 
-
-
-
 def get_im_size(im):
     size = im.size()
     return size.width(), size.height()
-
 
 def get_im(content):
     if hasattr(content, 'read'):
@@ -48,8 +42,7 @@ def get_im(content):
         try:
             f = Blob(content)
             return Image(f)
-        except:
-            return
+        except Exception: return
 
 def get_quality(im, quality=None):
     default_quality = 91
@@ -62,7 +55,6 @@ def get_quality(im, quality=None):
         quality = default_quality
     return quality
 
-
 def get_jpg_image_data(im, quality=90):
     # quality
     im.profile("*", Blob()) # 清掉exif信息
@@ -70,8 +62,6 @@ def get_jpg_image_data(im, quality=90):
     f = Blob()
     im.write(f, 'jpg')
     return getattr(f, 'data')
-
-
 
 def fast_get_image_size(raw_data):
     """

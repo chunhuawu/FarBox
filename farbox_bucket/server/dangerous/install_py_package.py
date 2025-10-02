@@ -1,15 +1,12 @@
-# coding: utf8
 import os
 import re
 from gevent import spawn_later
-
 
 def restart_web_service():
     try:
         with os.popen("kill -HUP `cat /tmp/web_server.pid`") as f:
             f.read()
-    except:
-        pass
+    except Exception: pass
 
 def install_py_package_by_web(url):
     if not "://" in url:
@@ -20,10 +17,7 @@ def install_py_package_by_web(url):
     try:
         with os.popen("pip install %s" % url) as f:
             result = f.read()
-    except:
-        result = ""
+    except Exception: result = ""
     spawn_later(3, restart_web_service)
     return result
-
-
 

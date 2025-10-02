@@ -1,4 +1,3 @@
-# coding: utf8
 import uuid
 import random
 import os
@@ -17,7 +16,6 @@ from farbox_bucket.server.web_app import app
 
 v_shortuuid = ShortUUID('ABCDEFGHJKMNPQRSTUVWXY345679')
 
-
 text_font = None
 def get_text_font(font_size=21):
     global text_font
@@ -30,15 +28,12 @@ def get_text_font(font_size=21):
         text_font = font
     return text_font
 
-
 def generate_chars(key=None, length=4):
     if not key:
         key = uuid.uuid1().hex
     v_to_uuid = smart_str(key) + smart_str(server_secret_key)
     result = v_shortuuid.uuid(v_to_uuid)
     return result[:length]
-
-
 
 def chars_to_image(key=None, im_size=(100,30), bg_color=(255, 255, 255), font_color=(193, 0, 30), font_size=21,):
     width, height = im_size
@@ -78,8 +73,6 @@ def chars_to_image(key=None, im_size=(100,30), bg_color=(255, 255, 255), font_co
     im = im.filter(ImageFilter.EDGE_ENHANCE)  # 滤镜，边界加强（阈值更大）
     return im
 
-
-
 def image_to_bytes(im, im_format='PNG'):
     f = BytesIO()
     if im_format.lower() != 'png':
@@ -89,7 +82,6 @@ def image_to_bytes(im, im_format='PNG'):
     im.save(f, format=im_format)
     bytes_content = f.getvalue()
     return bytes_content
-
 
 def image_to_base64(im, im_format='PNG', as_url=False):
     f = BytesIO()
@@ -105,10 +97,7 @@ def image_to_base64(im, im_format='PNG', as_url=False):
         b64_content = '%s;base64,%s' % (url_prefix, b64_content)
     return smart_str(b64_content)
 
-
-
 ############################################################################################################
-
 
 def is_verification_code_correct():
     code_id = get_cookie('verification_code')
@@ -125,7 +114,6 @@ def is_verification_code_correct():
     else:
         return False
 
-
 # todo 限制访客的请求数，避免被攻击
 @app.route('/service/verification_code', methods=['POST', 'GET'])
 def show_verification_code_by_url():
@@ -138,6 +126,4 @@ def show_verification_code_by_url():
     im_content = image_to_bytes(im, im_format='PNG')
     response = Response(im_content, mimetype='image/png')
     return response
-
-
 

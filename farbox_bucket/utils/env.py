@@ -1,9 +1,6 @@
-#coding: utf8
-from __future__ import absolute_import
 import os
 import json
 from farbox_bucket.utils.path import read_file, make_sure_path, write_file
-
 
 def _get_env(key):
     lower_key = key.lower()
@@ -27,25 +24,20 @@ def _get_env(key):
                 try:
                     with open(filepath, 'rb') as f:
                         raw_content = f.read()
-                except:
-                    continue
+                except Exception: continue
                 v = raw_content.strip()
                 if v:
                     # cache it
                     os.environ[key] = v
                     return v
 
-
 app_global_envs_may_be_paths = ["/mt/web/data/configs.json",
                                 "/mt/web/configs/configs.json",
                                 "/tmp/farbox_bucket_configs.json"]
 
-
 app_global_config_folder = "/mt/web/configs"
 app_nginx_server_ssl_cert_filepath = "/mt/web/configs/nginx/server.crt"
 app_nginx_server_ssl_key_filepath = "/mt/web/configs/nginx/server.key"
-
-
 
 def store_nginx_server_cert(ssl_key, ssl_cert):
     if not ssl_key or not ssl_cert:
@@ -59,9 +51,7 @@ def store_nginx_server_cert(ssl_key, ssl_cert):
         # reload nginx
         c_f = os.popen("/usr/nginx/sbin/nginx -s reload")
         try: c_f.read()
-        except: pass
-
-
+        except Exception: pass
 
 def set_app_global_envs(envs_configs):
     # /mt/web/data 的优先，这样 container 的变化， /mt/web/configs 的变化也不会影响到
@@ -76,11 +66,8 @@ def set_app_global_envs(envs_configs):
                 # 保存主域名的 SSL 证书，主要是提供给二级域名的 wilde ssl
                 store_nginx_server_cert(envs_configs.get("domain_ssl_key"), envs_configs.get("domain_ssl_cert"))
                 return
-            except:
-                pass
-    except:
-        return
-
+            except Exception: pass
+    except Exception: return
 
 def load_app_global_envs():
     for path in app_global_envs_may_be_paths:
@@ -91,10 +78,8 @@ def load_app_global_envs():
                 data = json.loads(raw_content)
                 if isinstance(data, dict):
                     return data
-            except:
-                pass
+            except Exception: pass
     return {} # by default
-
 
 global_envs = None
 def get_global_envs():
@@ -102,8 +87,6 @@ def get_global_envs():
     if global_envs is None:
         global_envs = load_app_global_envs()
     return global_envs
-
-
 
 def get_env(key):
     envs = get_global_envs()

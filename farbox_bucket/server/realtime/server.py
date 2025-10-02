@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 import os
 os.environ['GEVENT_RESOLVER'] = 'ares'
 from gevent.monkey import patch_all; patch_all()
@@ -19,11 +17,9 @@ from farbox_bucket.utils.memcache import get_cache_client
 
 from .utils import do_push_message_to_buckets
 
-
 ping_info = json.dumps(dict(type='ping'))
 
 MAX_CONNECTIONS_PER_IP = 100
-
 
 class WSApplication(WebSocketApplication):
     def __init__(self, *args, **kwargs):
@@ -70,9 +66,6 @@ class WSApplication(WebSocketApplication):
         server.bucket_clients.setdefault(bucket, set())
         server.bucket_clients[bucket].add(self.ws.handler.client_address)
 
-
-
-
     def on_message(self, message, *args, **kwargs):
         if message == 'ping':
             pings_per_ip = self.cache_client.incr('%s:wsp' % str(self.ws.handler.client_address), 1, default_value=1, expiration=180)
@@ -86,7 +79,6 @@ class WSApplication(WebSocketApplication):
         elif message:# 不接受对方推送的信息
             self.ws.close()
 
-
     def on_close(self, reason):
         client_address = self.ws.handler.client_address
         bucket = self.get_bucket()
@@ -96,11 +88,9 @@ class WSApplication(WebSocketApplication):
             self.ws.server.bucket_clients = {}
         bucket_client_addresses = self.ws.server.bucket_clients.get(client_address) or set()
         try: bucket_client_addresses.remove(self.ws.handler.client_address)
-        except: pass
+        except Exception: pass
         if not bucket_client_addresses:
             self.ws.server.bucket_clients.pop(client_address, None)
-
-
 
 class WebSocketResource(Resource):
     def __init__(self, *args, **kwargs):
@@ -110,16 +100,13 @@ class WebSocketResource(Resource):
 
         spawn(self.broadcast_forever)
 
-
     def broadcast_forever(self):
         try:
             do_push_message_to_buckets(self.clients, self.bucket_clients)
-        except:
-            if sentry_client:
+        except Exception: if sentry_client:
                 sentry_client.captureException()
             logging.error('push_events failed')
         spawn_later(1, self.broadcast_forever) # 1s后loop
-
 
     def __call__(self, environ, start_response):
         environ = environ
@@ -143,10 +130,6 @@ class WebSocketResource(Resource):
                 ("Content-Length", str(len(data)))
             ])
             return iter([data])
-
-
-
-
 
 # app是多个WebSocketApplication的混合，通过url自动匹配
 # re.match(path, environ['PATH_INFO'])

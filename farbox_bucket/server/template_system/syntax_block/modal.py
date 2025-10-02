@@ -1,8 +1,6 @@
-# coding: utf8
 from farbox_bucket.utils import get_random_html_dom_id
 from farbox_bucket.server.utils.cache_for_function import cache_result
 from farbox_bucket.server.template_system.api_template_render import render_api_template
-
 
 def modal(trigger='', *args, **kwargs):
     # trigger 如果是对innerHTML的处理，就是一个click_dom_id（selector）， 如果是一个url，则是超级链接的title

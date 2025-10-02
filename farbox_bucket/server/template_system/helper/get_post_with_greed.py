@@ -1,4 +1,3 @@
-# coding: utf8
 import re, os
 from farbox_bucket.utils import is_a_markdown_file, smart_unicode
 from farbox_bucket.bucket.record.utils import get_path_from_record
@@ -9,7 +8,6 @@ from farbox_bucket.utils.path import get_just_name
 from farbox_bucket.server.utils.request_context_vars import get_data_root_in_request, get_doc_in_request
 from farbox_bucket.server.utils.cache_for_function import cache_result
 from farbox_bucket.server.template_system.namespace.data import data as get_data_namespace
-
 
 @cache_result
 def get_current_data_root():
@@ -25,9 +23,6 @@ def get_current_data_root():
         return data_root
     else:
         return ""
-
-
-
 
 # todo 在 post 编译后 更新 bucket 的时候，是否也要进行 greedy 的匹配呢？
 @cache_result

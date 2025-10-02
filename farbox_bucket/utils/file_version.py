@@ -1,10 +1,7 @@
-#coding: utf8
 import os, re, time
 import datetime
 from farbox_bucket.utils import smart_str
 from farbox_bucket.utils.path import join, same_slash
-
-
 
 MARKDOWN_EXTS = ['.txt', '.md', '.markdown', '.mk']
 
@@ -14,8 +11,6 @@ def _is_a_markdown_file(path):
     ext = os.path.splitext(path)[1].lower()
     return ext in MARKDOWN_EXTS
 
-
-
 def make_sure_archive_folder(filepath):
     # 根据某一个文件路径，创建其对应的.Archive目录，主要是用来处理版本管理的
     folder_path = same_slash(os.path.dirname(filepath))
@@ -23,7 +18,6 @@ def make_sure_archive_folder(filepath):
     if not os.path.isdir(archive_path):
         os.makedirs(archive_path)
     return archive_path
-
 
 def get_file_versions_folder(filepath):
     filepath = same_slash(filepath)
@@ -33,7 +27,6 @@ def get_file_versions_folder(filepath):
     filename = os.path.split(filepath)[-1]
     versions_folder = join(archive_path, filename)
     return versions_folder
-
 
 def create_file_version(filepath, force=False, min_time_diff=60, history_max_versions=150):
     # force 表示强制version
@@ -97,8 +90,6 @@ def create_file_version(filepath, force=False, min_time_diff=60, history_max_ver
         last_mtime = os.path.getmtime(last_path)
         if 0< (now-last_mtime) < min_time_diff and not force:
             return # ignore
-
-
 
     if file_size < 10*1024: # 10k以下
         max_versions = history_max_versions

@@ -1,8 +1,5 @@
-# coding: utf8
-from __future__ import absolute_import
 from elasticsearch.exceptions import NotFoundError
 from .es_client import get_es_client
-
 
 def get_es_index_doc(index, doc_id, return_raw=False, raise_error=False):
     es = get_es_client()
@@ -21,8 +18,6 @@ def get_es_index_doc(index, doc_id, return_raw=False, raise_error=False):
             raise e
         else:
             return {}
-
-
 
 def search_es(index, q=None, body=None, fields=None, per_page=30, page=1, routing=None, sort=None, fetch_all=False, ):
     # q = 'raw_content:Hello'

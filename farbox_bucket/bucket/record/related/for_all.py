@@ -1,13 +1,9 @@
-# coding: utf8
-from __future__ import absolute_import
 from farbox_bucket.utils.ssdb_utils import hincr, py_data_to_ssdb_data
 from farbox_bucket.bucket.utils import  update_bucket_max_id
 from farbox_bucket.bucket.record.utils import get_path_from_record, get_data_type
 
 from .for_created import after_path_related_record_created
 from .for_deleted import after_path_related_record_deleted
-
-
 
 def update_path_related_when_record_changed(bucket, record_id, record_data):
     # 注意:!!!! 凡是 record 中有指定 path 段的，都是可以被更新的；如果不希望这个 record 被 删除，就不要赋予这个字段
@@ -16,7 +12,6 @@ def update_path_related_when_record_changed(bucket, record_id, record_data):
     if not bucket or not record_id:
         return
     is_deleted = record_data.get('is_deleted', False)
-
 
     # path 相关的逻辑
     path = get_path_from_record(record_data)
@@ -27,8 +22,6 @@ def update_path_related_when_record_changed(bucket, record_id, record_data):
         after_path_related_record_deleted(bucket, record_data=record_data)
     else: # create or update
         after_path_related_record_created(bucket, record_id, record_data)
-
-
 
 def after_record_created(bucket, py_record_data, object_id, should_update_bucket_max_id=False):
     if should_update_bucket_max_id and object_id:

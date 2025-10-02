@@ -1,4 +1,3 @@
-# coding: utf8
 from flask import request
 import uuid
 from farbox_bucket.utils import smart_str
@@ -25,7 +24,6 @@ def default_response_handler(response):
 
     # 用户通过模板 API 设定的 headers
     set_user_headers_for_response(response)
-
 
     r_code = get_response_code_in_request()
     if r_code:

@@ -1,4 +1,3 @@
-#coding: utf8
 import logging
 import os
 from farbox_bucket.utils.gevent_run import run_long_time, do_by_gevent_pool
@@ -7,9 +6,7 @@ def run_cmd(cmd):
     c_f = os.popen(cmd)
     try:
         return c_f.read().strip()
-    except:
-        return None
-
+    except Exception: return None
 
 @run_long_time(wait=6*60*60, sleep_at_end=12*60*60, log='run logrotate')
 def run_logrotate():
@@ -18,7 +15,6 @@ def run_logrotate():
     if not os.path.isfile("/etc/logrotate.d/farbox_bucket"):
         return
     run_cmd("/usr/sbin/logrotate /etc/logrotate.d/farbox_bucket")
-
 
 @run_long_time(wait=10, sleep_at_end=2*60, log='keep watch nginx')
 def keep_watch_nginx():
@@ -35,7 +31,6 @@ def keep_watch_nginx():
         #logging.info('the nginx is alive')
         pass
 
-
 @run_long_time(wait=10, sleep_at_end=2*60, log='keep watch memcache')
 def keep_watch_memcache():
     cmd_result = run_cmd('ps -C memcached -o pid --no-headers')
@@ -46,12 +41,9 @@ def keep_watch_memcache():
     else:
         pass
 
-
-
 @run_long_time(wait=24*60*60, sleep_at_end=24*60*60, log='restart backend per day')
 def restart_backend_per_day():
     run_cmd('/usr/local/bin/supervisorctl restart farbox_bucket_backend')
-
 
 @run_long_time(wait=24*60*60, sleep_at_end=24*60*60, log='restart websocket server per day')
 def restart_websocket_server_per_day():

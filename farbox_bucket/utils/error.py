@@ -1,9 +1,4 @@
-# coding: utf8
 import traceback, sys
-
-
-
-
 
 def print_error(exc_info=None): # 本身不要再引发错误
     f = None
@@ -13,7 +8,5 @@ def print_error(exc_info=None): # 本身不要再引发错误
             e_type, value, tb = error_info[:3]
             try:
                 traceback.print_exception(e_type, value, tb)
-            except:
-                pass
-    except:
-        pass
+            except Exception: pass
+    except Exception: pass

@@ -1,4 +1,3 @@
-#coding: utf8
 import re, os
 from farbox_bucket.utils import smart_unicode
 from farbox_bucket.utils.functional import curry
@@ -9,10 +8,8 @@ from farbox_bucket.server.utils.cache_for_function import cache_result
 from farbox_bucket.server.utils.request_context_vars import get_data_root_in_request
 from farbox_bucket.server.template_system.helper.get_post_with_greed import get_post_with_greed
 
-
 #<span class="md_line md_line_start md_line_end"><a href="/__wiki_link/xxxxxxxx.md?type=wiki_link&hash=myid#myid" class="md_wikilink">title</a>    </span>
 #<span class="md_line md_line_start md_line_end"><a href="/__wiki_tag/hello?type=wiki_link" class="md_wikilink">hello</a> 作为特殊标签？   <a href="/__tag/hello?type=wiki_link" class="md_wikilink">Hello我是title</a> 作为特殊标签？   </span>
-
 
 @cache_result
 def get_data_root_for_wiki():
@@ -28,8 +25,6 @@ def get_data_root_for_wiki():
         return data_root
     else:
         return ""
-
-
 
 def re_get_html_content_for_wiki_links_replacer(re_obj, post_doc, tag_url_prefix=None, url_root=None, url_prefix=None, hit_url_path=False):
     original_html = re_obj.group(0)
@@ -54,9 +49,6 @@ def re_get_html_content_for_wiki_links_replacer(re_obj, post_doc, tag_url_prefix
         if hash_id:
             new_url_href = "%s#%s" % (new_url_href, hash_id)
     return '<a href="%s"' % new_url_href
-
-
-
 
 def re_get_html_content_for_wiki_links(post_doc, html_content=None , tag_url_prefix=None, url_root=None,
                                        url_prefix=None, hit_url_path=False):

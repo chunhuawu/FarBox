@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 import time
 import datetime
 from flask import request
@@ -15,7 +13,6 @@ from farbox_bucket.utils.data import json_dumps
 from farbox_bucket.utils.encrypt.simple import simple_encrypt
 import ujson as json
 
-
 def is_valid_bucket_name(bucket):
     if not bucket:
         return False
@@ -26,7 +23,6 @@ def is_valid_bucket_name(bucket):
         return False
     else:
         return True
-
 
 def get_bucket_by_public_key(public_key, verify=True):
     # the bucket is from public key, client & server 端都会用到的
@@ -39,7 +35,6 @@ def get_bucket_by_public_key(public_key, verify=True):
     bucket = public_key_id
     return bucket
 
-
 def get_bucket_by_private_key(private_key):
     if not private_key:
         return None
@@ -47,18 +42,14 @@ def get_bucket_by_private_key(private_key):
     bucket = get_bucket_by_public_key(public_key, verify=False)
     return bucket
 
-
-
 def get_bucket_in_request_context():
     try: bucket = getattr(request, "bucket", None)
-    except: bucket = None
+    except Exception: bucket = None
     return bucket
-
 
 def set_bucket_in_request_context(bucket):
     try: request.bucket = bucket
-    except: pass
-
+    except Exception: pass
 
 def get_bucket_configs(bucket, config_type='init'):
     # 'init', 'user', 'pages'
@@ -90,19 +81,15 @@ def get_bucket_configs(bucket, config_type='init'):
 
     try:
         setattr(request, request_var_name, info)
-    except:
-        pass
+    except Exception: pass
     return info
-
 
 def get_bucket_init_configs(bucket):
     return get_bucket_configs(bucket, 'init')
 
-
 def get_bucket_user_configs(bucket):
     # # username, password, fields=[x, x, x, x]
     return get_bucket_configs(bucket, 'user')
-
 
 def get_bucket_pages_configs(bucket):
     return get_bucket_configs(bucket, 'pages')
@@ -114,11 +101,9 @@ def get_bucket_site_configs(bucket=None):
     bucket = bucket or get_bucket_in_request_context()
     return get_bucket_configs(bucket, 'site')
 
-
 def get_bucket_secret_site_configs(bucket=None):
     bucket = bucket or get_bucket_in_request_context()
     return get_bucket_configs(bucket, 'secret')
-
 
 def get_bucket_files_info(bucket):
     return get_bucket_configs(bucket, 'files')
@@ -129,13 +114,10 @@ def get_bucket_posts_info(bucket):
 def get_bucket_files_configs(bucket):
     return get_bucket_files_info(bucket)
 
-
-
 def get_public_key_from_bucket(bucket):
     bucket_configs = get_bucket_init_configs(bucket)
     public_key = bucket_configs.get('public_key') or ''
     return public_key
-
 
 def has_bucket(bucket):
     if not bucket:
@@ -148,8 +130,6 @@ def has_bucket(bucket):
 def get_buckets_size():
     # zset for "buckets" 会存储一些 bucket 的信息，可以认为它的存在，粗略代表了 bucket 的数量
     return zsize('buckets')
-
-
 
 cached_admin_bucket = None
 def get_admin_bucket():
@@ -164,10 +144,8 @@ def get_admin_bucket():
     cached_admin_bucket = admin_bucket
     return admin_bucket
 
-
 def get_first_bucket():
     return ssdb_get("first_bucket") or ""
-
 
 def re_configs_for_user(configs):
     # 将 user 上其 key 以 password 结尾的，进行处理，避免明文密码
@@ -175,7 +153,6 @@ def re_configs_for_user(configs):
         if k.endswith('password') and v:
             hashed_v = hash_password(v)
             configs[k] = hashed_v
-
 
 default_site_configs = {
     "utc_offset": 8,
@@ -228,8 +205,6 @@ def set_bucket_configs(bucket, configs, config_type='site', by_system=False):
     else:
         return False
 
-
-
 def update_bucket_max_id(bucket, max_id):
     # 只有在完全新的记录生成时才会处置
     # 如果只是 node 之间的同步， 并不会增加其 max_id
@@ -239,9 +214,6 @@ def update_bucket_delta_id(bucket, delta_id):
     # 这个是同步时候用的
     hset('_bucket_delta_id', bucket, delta_id)
 
-
-
-
 def get_bucket_max_id(bucket):
     max_id = hget('_bucket_max_id', bucket) or ''
     return max_id
@@ -250,7 +222,6 @@ def get_bucket_delta_id(bucket):
     delta_id = hget('_bucket_delta_id', bucket) or ''
     return delta_id
 
-
 def get_bucket_meta_info(bucket):
     meta_info = dict(
         max_id = get_bucket_max_id(bucket),
@@ -258,22 +229,18 @@ def get_bucket_meta_info(bucket):
     )
     return meta_info
 
-
 def set_bucket_into_buckets(bucket):
     # 记录到当前的 buckets 信息中, 主要表示当前什么时间，某个 bucket 被更新了
     # 更新 configs 的字段，也会更新
     # create record 会更新
     zset('buckets', bucket, int(time.time()*1000))
 
-
 def remove_bucket_from_buckets(bucket):
     zdel("buckets", bucket)
-
 
 def get_bucket_last_updated_at(bucket):
     last_updated_at = zget('buckets', bucket) or ''
     return last_updated_at
-
 
 def get_bucket_updated_at_diff_to_now(bucket):
     last_updated_at = get_bucket_last_updated_at(bucket)
@@ -294,7 +261,6 @@ def get_bucket_last_record_id(bucket):
     record_id = hget("buckets_file_cursor", bucket) or None
     return record_id
 
-
 def set_bucket_last_record_id_computed(bucket, record_id):
     # 因为 files_info 是需要计算的，只有在需要的时候 （也就是 client 端获取 files 信息的时候），才进行一次计算
     if not is_object_id(record_id):
@@ -305,18 +271,14 @@ def get_bucket_last_record_id_computed(bucket):
     record_id = hget("buckets_file_cursor_computed", bucket) or None
     return record_id
 
-
-
 def set_buckets_cursor_for_remote_node(node, cursor):
     if cursor is None:
         return
     hset('_remote_buckets_cursor', node, cursor)
 
-
 def get_buckets_cursor_for_remote_node(node):
     cursor = hget('_remote_buckets_cursor', node) or ''
     return cursor
-
 
 def get_bucket_full_info(bucket):
     info = {}
@@ -329,12 +291,7 @@ def get_bucket_full_info(bucket):
     info.update(meta_info)
     return info
 
-
-
-
 ########################################################################################################################
-
-
 
 # 在某个 namespace 上，增加记录，表示后续需要同步的；同步了，则进行删除
 # 考虑到系统保留的性质，namespace 必须以 _ 开头
@@ -356,14 +313,12 @@ def basic_mark_bucket_to_sync(namespace, bucket, **kwargs):
         data.update(kwargs)
     hset(namespace, bucket, data, ignore_if_exists=True)
 
-
 def basic_remove_mark_bucket_to_sync(namespace, bucket):
     if not bucket:
         return
     if not namespace.startswith('_'):
         namespace = '_' + namespace
     hdel(namespace, bucket)
-
 
 def basic_get_buckets_to_sync(namespace, limit=1000):
     if not namespace.startswith('_'):
@@ -374,17 +329,11 @@ def basic_get_buckets_to_sync(namespace, limit=1000):
         for bucket, bucket_data in result:
             try:
                 bucket_data = json.loads(bucket_data)
-            except:
-                continue
+            except Exception: continue
             buckets_data.append(bucket_data)
         return buckets_data
     else:
         return []
-
-
-
-
-
 
 def get_bucket_name_for_path(bucket):
     # path 从某种角度来说是 id
@@ -399,11 +348,9 @@ def get_bucket_name_for_slash(bucket):
     bucket_name = '%s_slash' % bucket
     return bucket_name
 
-
 def get_bucket_name_for_order(bucket, data_type):
     bucket_name = '%s_%s_order' % (bucket, data_type)
     return bucket_name
-
 
 def get_order_bucket_name(bucket, sort_data_type):
     sort_bucket_name = '%s_%s_order' % (bucket, sort_data_type)
@@ -422,8 +369,6 @@ def get_related_bucket_names(bucket, includes_self=False):
         related_bucket_names.append(bucket)
     return related_bucket_names
 
-
-
 def clear_related_buckets(bucket):
     related_buckets = get_related_bucket_names(bucket, includes_self=True)
     for related_bucket in related_buckets:
@@ -432,9 +377,6 @@ def clear_related_buckets(bucket):
         else:
             hclear(related_bucket)
 
-
-
-
 # for user and secret config_type
 def encrypt_configs_for_bucket(configs, private_key_md5):
     configs = dict(
@@ -442,15 +384,11 @@ def encrypt_configs_for_bucket(configs, private_key_md5):
     )
     return configs
 
-
-
-
 def get_bucket_utc_offset(bucket=None):
     bucket = bucket or get_bucket_in_request_context()
     site_configs = get_bucket_site_configs(bucket) or {}
     utc_offset = to_float(site_configs.get('utc_offset', 8), default_if_fail=8)
     return utc_offset
-
 
 def get_now_from_bucket(bucket=None, time_format='%Y-%m-%d %H:%M'):
     utc_offset = get_bucket_utc_offset(bucket)

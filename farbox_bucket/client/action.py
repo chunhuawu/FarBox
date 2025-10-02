@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 import os
 import json
 from farbox_bucket.utils import smart_unicode, string_types
@@ -10,13 +8,9 @@ from farbox_bucket.utils.encrypt.key_encrypt import get_md5_for_key
 
 from .message import send_message_for_project, send_message
 
-
 def get_pages_data(pages_dir):
     data = get_template_info(pages_dir) or {}
     return data
-
-
-
 
 ############# project starts ##########
 # project 是指本地设备上固定保存的 project， 而后面的 utils
@@ -25,7 +19,6 @@ def update_bucket_configs_for_project(project, configs, config_type='site', node
     # configs = {'nodes':[x, y]}
     send_message_for_project(project, action='config_%s' % config_type, message=configs, node=node)
 
-
 def dump_pages_for_project(project, pages_dir, node=None):
     pages_data = get_pages_data(pages_dir)
     if not pages_data:
@@ -33,14 +26,11 @@ def dump_pages_for_project(project, pages_dir, node=None):
         return
     update_bucket_configs_for_project(project, pages_data, config_type='pages', node=node)
 
-
 def create_bucket_for_project(project, token=''):
     send_message_for_project(project, action='create', message=token)
 
-
 def create_record_for_project(project, message):
     send_message_for_project(project, message=message)
-
 
 def register_domain_for_bucket_for_project(project, domain, node=None):
     message = dict(
@@ -49,9 +39,6 @@ def register_domain_for_bucket_for_project(project, domain, node=None):
     send_message_for_project(project, action='register', message=message, node=node)
 
 ############# project ends ##########
-
-
-
 
 ############## utils starts ############
 
@@ -73,7 +60,6 @@ def update_bucket_configs(node, private_key, configs, config_type='site'):
         message = configs,
     )
     return response_result
-
 
 def dump_pages(node, private_key, pages_dir, old_pages_data=None):
     pages_data = get_pages_data(pages_dir)
@@ -98,8 +84,6 @@ def dump_pages(node, private_key, pages_dir, old_pages_data=None):
             pages_data['__changed_filepaths'] = changed_filepaths
     return update_bucket_configs(node=node, private_key=private_key, configs=pages_data, config_type='pages')
 
-
-
 def update_sorts(node, private_key, sorts_config_filepath):
     if not os.path.isfile(sorts_config_filepath):
         return
@@ -110,9 +94,7 @@ def update_sorts(node, private_key, sorts_config_filepath):
                 data = data['__positions']
             update_bucket_configs(node=node, private_key=private_key, configs=data, config_type='orders')
             return
-        except:
-            pass
-
+        except Exception: pass
 
 def create_bucket(node, private_key, token=''):
     result = send_message(
@@ -131,7 +113,6 @@ def create_bucket(node, private_key, token=''):
         bucket = None
     return bucket
 
-
 def quick_set_bucket_theme(node, private_key, theme_key):
     result = send_message(
         node=node,
@@ -144,10 +125,8 @@ def quick_set_bucket_theme(node, private_key, theme_key):
     else:
         return False
 
-
 def create_record(node, private_key, message):
     return send_message(node=node, private_key=private_key,  action='record', message=message)
-
 
 def register_domain(node, private_key, domain, admin_password=None):
     message = dict(
@@ -156,7 +135,6 @@ def register_domain(node, private_key, domain, admin_password=None):
     if admin_password:
         message['admin_password'] = smart_unicode(admin_password)
     return send_message(node=node, private_key=private_key, action='register_domain', message=message)
-
 
 def unregister_domain(node, private_key, domain):
     message = dict(

@@ -1,4 +1,3 @@
-# coding: utf8
 import re
 import urllib
 from flask import request
@@ -21,7 +20,6 @@ def split_path(path):
 
     return filter(lambda x: x, parts)
 
-
 def get_offset_path(path, offset=1):
     # /a/b/c/d 如果 offset=1, 则获得 b/c/d, 如果是2，则是 c/d
     if not offset or not isinstance(offset, int):
@@ -35,7 +33,6 @@ def get_offset_path(path, offset=1):
             path += '/'
         return path
 
-
 def get_request_offset_path(offset=1, path=None):
     # 得到偏移几个单位的url，头没有  /
     if path is None:
@@ -47,13 +44,9 @@ def get_request_path_without_prefix():
     path = get_request_path()
     return get_url_without_prefix(path)
 
-
 def get_request_offset_path_without_prefix(offset=1):
     path = get_request_path_without_prefix()
     return get_request_offset_path(offset, path=path)
-
-
-
 
 def get_request_path():
     # 去掉/page/<int> 这样分页信息后的path, 并且不以/开头
@@ -71,10 +64,6 @@ def get_request_path():
     set_context_value_from_request(cache_key, path)
     return path
 
-
-
-
-
 def get_request_path_for_bucket(path=None):
     if path is None:
         request_path = request.path
@@ -84,10 +73,8 @@ def get_request_path_for_bucket(path=None):
     if bucket and bucket in request_path:
         try:
             request_path = re.search('/%s/\w+(/.*|$)'%bucket, request_path).group(1)
-        except:
-            pass
+        except Exception: pass
     return request_path
-
 
 def auto_bucket_url_path(url_path):
     if not url_path.startswith('/'):
@@ -105,8 +92,6 @@ def auto_bucket_url_path(url_path):
             return url_path
         url_path = prefix + '/' + url_path.lstrip('/')
     return url_path
-
-
 
 def get_bucket_from_url(url):
     if url and isinstance(url, string_types):

@@ -1,6 +1,4 @@
-# coding: utf8
 from farbox_bucket.clouds.wechat.utils.menu import create_menus
-
 
 def create_menus_on_wechat():
     menus = {
@@ -44,7 +42,6 @@ def create_menus_on_wechat():
     }
 
     return create_menus(menus)
-
 
 if __name__ == '__main__':
     create_menus_on_wechat()

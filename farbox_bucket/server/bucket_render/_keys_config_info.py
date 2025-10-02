@@ -1,4 +1,3 @@
-# coding: utf8
 
 
 builtin_site_settings_keys_config_info = {

@@ -1,4 +1,3 @@
-# coding: utf8
 import re
 from flask import abort, Response
 from flask.globals import _request_ctx_stack
@@ -30,7 +29,6 @@ from farbox_bucket.server.template_system.namespace.html import Html
 
 from .static_file import render_as_static_resource_in_pages_for_farbox_bucket, render_as_static_file_for_farbox_bucket
 
-
 html_content_for_timeout_page = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">\n<title>408 Request Timeout</title>\n<h1>Request Timeout</h1>\n<p>Sorry! The run time of this page is too long, maybe there were some errors in your template</p>\n'
 
 def render_html_content_for_timeout_page(reqctx):
@@ -44,7 +42,6 @@ def render_template_for_farbox_bucket_with_context(reqctx, **kwargs):
     with reqctx:
         return render_template_for_farbox_bucket(**kwargs)
 
-
 def render_template_for_farbox_bucket_by_gevent(**kwargs):
     #appctx = _app_ctx_stack.top
     reqctx = _request_ctx_stack.top
@@ -57,13 +54,10 @@ def render_template_for_farbox_bucket_by_gevent(**kwargs):
     )
     return result_html
 
-
-
 def after_render_template_for_farbox_bucket(html):
     html = re.sub(r'([ \t]*\n){10,}', '\n', html)  # 去除多余的空行, 模板引擎造成的
     html = after_render_html(html)
     return html
-
 
 def render_template_for_farbox_bucket(**kwargs):
     #import time; time.sleep(5) # test timeout
@@ -86,7 +80,7 @@ def render_template_for_farbox_bucket(**kwargs):
             post_doc = get_record_by_url(bucket, template_name)
             if post_doc:
                 try: post_template = farbox_bucket_env.get_template("post")
-                except: post_template = None
+                except Exception: post_template = None
                 if post_template:
                     html = post_template.render(**kwargs)
                     return after_render_template_for_farbox_bucket(html)
@@ -101,7 +95,6 @@ def render_template_for_farbox_bucket(**kwargs):
     except Exception as e:
         raise e
 
-
 def render_404_for_farbox_bucket():
     bucket = get_bucket_in_request_context()
     if not bucket:
@@ -111,12 +104,7 @@ def render_404_for_farbox_bucket():
         template = farbox_bucket_env.get_template("404")
         html = template.render()
         return html
-    except:
-        return
-
-
-
-
+    except Exception: return
 
 def render_bucket(bucket, web_path=""):
     set_bucket_in_request_context(bucket)
@@ -124,8 +112,7 @@ def render_bucket(bucket, web_path=""):
         cached_response = get_response_from_memcache()
         if cached_response:
             return cached_response
-    except:
-        pass
+    except Exception: pass
     if not web_path:
         web_path = get_request_path()
 
@@ -155,12 +142,9 @@ def render_bucket(bucket, web_path=""):
         return render_template_for_farbox_bucket_by_gevent()
         #return render_template_for_farbox_bucket()
 
-
-
 STATIC_FILE_VERSION_GET_VAR = '?version=%s' % STATIC_FILE_VERSION
 
 ############ for markdown scripts starts ############
-
 
 mathjax_script = """
 <script type= "text/javascript">
@@ -215,11 +199,7 @@ def after_render_html(html):
         html = html.replace('</body>', '\n%s\n</body>'%inject_template, 1)
     return html
 
-
 ############ for markdown scripts ends ############
-
-
-
 
 ############# embed_in jade template for markdown doc starts ########
 env_templates_cache = LimitedSizeDict(size_limit=10000)
@@ -231,8 +211,7 @@ def get_template_by_env(source, try_jade=True):
     if try_jade:
         try:
             template = jade_to_template(source, env=farbox_bucket_env)
-        except:
-            template = farbox_bucket_env.from_string('<b style="color:red">`code` block means template source code,'
+        except Exception: template = farbox_bucket_env.from_string('<b style="color:red">`code` block means template source code,'
                                        ' error format will break current page!!</b>')
     else:
         template = farbox_bucket_env.from_string(source)
@@ -248,9 +227,7 @@ def _render_template_in_html_func(match_obj):
     #return '`code` block means template source code, error format will break current page!!'
     #try:
     #    return template.render()
-    #except:
-    #    return raw
-
+    #except Exception:#    return raw
 
 def render_code_blocks_inside(html):
     new_html = re.sub(r'(<pre class="lang_code"><code>)(.*?)(</code></pre>)',

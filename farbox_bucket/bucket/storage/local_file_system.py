@@ -1,4 +1,3 @@
-#coding: utf8
 import os, shutil
 from farbox_bucket.settings import DEBUG, MAX_FILE_SIZE
 from farbox_bucket.utils import string_types
@@ -8,12 +7,9 @@ from farbox_bucket.bucket.record.utils import get_file_id_from_record
 from farbox_bucket.bucket.storage.helpers.before_store_image import get_image_info_from_raw_content
 from .base import Storage
 
-
-
 def get_server_side_storage_filepath_root():
     storage_root = os.environ.get('STORAGE_ROOT') or '/mt/web/data/file_storage'
     return storage_root
-
 
 def get_server_side_storage_folder(bucket, sub_root='origin', sub_folder=''):
     storage_folder = get_server_side_storage_filepath_root()
@@ -23,7 +19,6 @@ def get_server_side_storage_folder(bucket, sub_root='origin', sub_folder=''):
     if sub_folder:
         storage_folder = os.path.join(storage_folder, sub_folder)
     return storage_folder
-
 
 def get_server_side_storage_filepath(bucket, file_id=None, version=None, sub_root='origin', sub_folder='', auto_split_name=True):
     # 一般不使用 sub_folder， 在 sub_root=='cache' 的情况下有用到， 用于区分 图片类型-width-height 作为一个 space
@@ -40,9 +35,6 @@ def get_server_side_storage_filepath(bucket, file_id=None, version=None, sub_roo
         filepath = os.path.join(storage_folder, storage_key)
     return filepath
 
-
-
-
 class LocalStorage(Storage):
     def get_filepath_from_record(self, bucket, record_data):
         file_id = get_file_id_from_record(record_data)
@@ -57,7 +49,7 @@ class LocalStorage(Storage):
         filepath = self.get_filepath_from_record(bucket, record_data)
         if filepath and os.path.isfile(filepath):
             try: os.remove(filepath)
-            except: pass
+            except Exception: pass
         self.update_bucket_file_size_when_deleted(bucket, record_data)
 
     def should_upload_file_by_client(self, bucket, record_data):
@@ -99,8 +91,7 @@ class LocalStorage(Storage):
         else:
             try:
                 file_size = os.path.getsize(filepath) or 0
-            except:
-                file_size = 0
+            except Exception: file_size = 0
             self.update_record_when_file_stored(bucket, record_data, file_size=file_size)  # try to update the record
             return "existed"
 

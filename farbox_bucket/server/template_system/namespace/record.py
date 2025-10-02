@@ -1,10 +1,8 @@
-# coding: utf8
 import re
 from flask import request
 from farbox_bucket.bucket.defaults import zero_id_for_finder
 from farbox_bucket.bucket.utils import get_bucket_in_request_context
 from farbox_bucket.bucket.record.get.get import get_records_for_bucket
-
 
 def get_records_for_request_resolver(key):
     if not hasattr(request, 'cached_records_for_resolver'):

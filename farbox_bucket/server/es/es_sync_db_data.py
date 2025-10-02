@@ -1,4 +1,3 @@
-# coding: utf8
 from farbox_bucket.utils import string_types
 from farbox_bucket.settings import DEBUG
 from farbox_bucket.bucket.utils import get_bucket_last_record_id
@@ -6,12 +5,10 @@ from farbox_bucket.bucket.record.get.get import get_record
 from farbox_bucket.bucket.record.get.path_related import get_bucket_markdown_record_ids
 from elasticsearch.helpers import bulk
 
-
 # query cursor
 
 from .es_client import get_es_client, doc_fields_in_es, make_sure_es_indexes
 from .es_utils import get_es_index_doc, search_es
-
 
 def db_doc_to_es_action(bucket, doc, action_type='index'):
     # https://elasticsearch-py.readthedocs.io/en/v7.10.1/helpers.html#bulk-helpers
@@ -56,8 +53,6 @@ def db_doc_to_es_action(bucket, doc, action_type='index'):
 
     return action
 
-
-
 def force_sync_posts(bucket):
     es_client = get_es_client()
     if not es_client:
@@ -82,8 +77,6 @@ def force_sync_posts(bucket):
     if bucket_last_record_id:
         es_client.index(index='info', id=bucket, body={'cursor': bucket_last_record_id})
 
-
-
 def sync_posts(bucket, return_actions=False):
     es_client = get_es_client()
     if not es_client:
@@ -105,7 +98,6 @@ def sync_posts(bucket, return_actions=False):
     else:
         return # ignore
 
-
     search_result = search_es(index='doc', routing=bucket,
                               q='bucket:"%s"' % bucket, fetch_all=True, per_page=1000)
 
@@ -113,7 +105,6 @@ def sync_posts(bucket, return_actions=False):
     for hit in search_result['hits']:
         doc_id = hit.get("_id")
         if doc_id: post_ids_in_es.add(doc_id)
-
 
     ## step2, get from ssdb
     bucket_markdown_record_ids = set(get_bucket_markdown_record_ids(bucket))

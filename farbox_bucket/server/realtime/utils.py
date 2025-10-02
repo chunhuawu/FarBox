@@ -1,4 +1,3 @@
-# coding: utf8
 import ujson as json
 from flask import request
 from geventwebsocket.exceptions import WebSocketError
@@ -24,14 +23,12 @@ def push_message_to_ws(ws, message):
                 raw_socket = ws.stream.handler.socket
                 message = "\x00" + message + "\xFF"
                 raw_socket.sendall(message)
-            except:
-                if sentry_client:
+            except Exception: if sentry_client:
                     sentry_client.captureException()
         else:
             ws.send(message)
     except WebSocketError:  # socket已经关闭，此时会触发on_close事件
         pass
-
 
 def push_message_to_bucket(bucket, message):
     if not bucket:
@@ -39,9 +36,6 @@ def push_message_to_bucket(bucket, message):
     # 实际上是
     data = dict(bucket=bucket, message=message)
     qpush_back('_realtime', data)
-
-
-
 
 def do_push_message_to_buckets(clients, bucket_clients):
     records = qpop_front('_realtime', size=1000)
@@ -56,7 +50,7 @@ def do_push_message_to_buckets(clients, bucket_clients):
             client = clients.get(bucket_client_address)
             if not client:
                 try: bucket_client_addresses.remove(client)
-                except: pass
+                except Exception: pass
             else:
                 push_job = spawn(push_message_to_ws, client.ws, message)
                 logging.info('push event to %s:%s' % (bucket_client_address[0], bucket_client_address[1]))
@@ -65,9 +59,6 @@ def do_push_message_to_buckets(clients, bucket_clients):
                 push_jobs.append(push_job)
     if push_jobs:
         joinall(push_jobs, timeout=30 * 60)  # 30分钟后timeout
-
-
-
 
 def get_bucket_ws_url(bucket):
     if DEBUG:

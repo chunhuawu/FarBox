@@ -1,4 +1,3 @@
-# coding: utf8
 import re
 from flask import request, abort
 from farbox_bucket.utils import smart_unicode, get_value_from_data, string_types, auto_type
@@ -19,7 +18,6 @@ from farbox_bucket.utils.path import get_relative_path
 from farbox_bucket.server.utils.record_and_paginator.paginator import auto_pg
 from farbox_bucket.server.utils.request_context_vars import set_data_root_in_request
 
-
 def get_wiki_url_for_doc(wiki_root, doc):
     if not isinstance(wiki_root, string_types) or not isinstance(doc, dict):
         return ""
@@ -33,8 +31,6 @@ def get_wiki_url_for_doc(wiki_root, doc):
         return "/wiki/post/%s" % relative_path
     else:
         return "/wiki/category/%s" % relative_path
-
-
 
 def show_wiki_nodes_as_sub_site():
     bucket = get_bucket_in_request_context()
@@ -76,8 +72,6 @@ def show_wiki_nodes_as_sub_site():
         return force_response(data)
     else:
         return render_api_template("builtin_theme_wiki_nodes.jade", wiki_title=wiki_title)
-
-
 
 def show_wiki_as_sub_site():
     bucket = get_bucket_in_request_context()
@@ -181,11 +175,4 @@ def show_wiki_as_sub_site():
             abort(404, "no doc found")
         else:
             return render_api_template("builtin_theme_knowbase_post.jade", doc=doc, **kwargs)
-
-
-
-
-
-
-
 

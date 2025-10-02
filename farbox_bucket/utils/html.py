@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 import re
 from farbox_bucket.utils import smart_unicode, make_content_clean, UnicodeWithAttrs
 from farbox_markdown.compile_md import fix_relative_image_path
@@ -31,9 +29,6 @@ def linebreaks(value, post_path=None, render_markdown_image=False):
         html = fix_relative_image_path(post_path, html) # 相对路径的图片需要进行转化
     return html
 
-
-
-
 def html_to_text(content, keep_a_html=False, remove_a=True, keep_images=False, quote_tags=False):
     # keep_a_html 可以保留 a 元素 的完整逻辑
     # remove_a 表示整个A 元素删除，反之则是转为普通的文本
@@ -57,16 +52,12 @@ def html_to_text(content, keep_a_html=False, remove_a=True, keep_images=False, q
     if quote_tags:
         content = content.replace('<', '&lt;').replace('>', '&gt;')
 
-
     # 还原 A  & IMG 元素
     content = content.replace('&LT;', '<').replace('&GT;', '>')
-
 
     content = re.sub(r'\n +', '\n', content)
 
     return content
-
-
 
 def cut_content_by_words(content, max_words, mark=u'...'):
     if not isinstance(max_words, int):
@@ -94,8 +85,6 @@ def cut_content_by_words(content, max_words, mark=u'...'):
         return new_content
     else:
         return content
-
-
 
 HTML_C = re.compile(r'</?[^<]+?>')
 def limit(content, length=None, mark='......', keep_images=True, words=None, post_path=None, remove_a=False, keep_a_html=False, ignore_first_tag_name=None):

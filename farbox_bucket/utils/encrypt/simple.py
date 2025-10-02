@@ -1,9 +1,7 @@
-#coding: utf8
 import base64
 from Crypto.Cipher import DES
 from farbox_bucket.utils import to_bytes
 from itsdangerous import TimedSerializer, base64_decode, base64_encode
-
 
 class ServerSerializer(TimedSerializer):
     # .loads/lazy_loads(string)
@@ -12,26 +10,21 @@ class ServerSerializer(TimedSerializer):
         if '"' not in s and "{" not in s:
             try:
                 s = base64_decode(s)
-            except:
-                pass
+            except Exception: pass
         return TimedSerializer.loads(self, s, *args, **kwargs)
 
     def lazy_loads(self, s, *args, **kwargs):
         # 忽略 loads 会产生的错误，包括超时、解码错误
         try:
             return self.loads(s, *args, **kwargs)
-        except:
-            return ''
+        except Exception: return ''
 
     def dumps(self, obj, *args, **kwargs):
         s = TimedSerializer.dumps(self, obj, *args, **kwargs)
         try:
             s = base64_encode(s)
-        except:
-            pass
+        except Exception: pass
         return s
-
-
 
 def encrypt_des(key, text):
     key = key[:8]
@@ -44,7 +37,6 @@ def encrypt_des(key, text):
         text += chr(8-reminder) * (8-reminder)
     return base64.b64encode(des.encrypt(text))
 
-
 def decrypt_des(key, text):
     key = key[:8]
     text = base64.b64decode(text)
@@ -55,13 +47,10 @@ def decrypt_des(key, text):
         return text[:-8]
     return text[:-pad]
 
-
 def simple_encrypt(text, password):
     return encrypt_des(password, text)
-
 
 def simple_decrypt(text, password):
     try:
         return decrypt_des(password, text)
-    except:
-        return ''
+    except Exception: return ''

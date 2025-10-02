@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 import base64
 import zlib
 import re
@@ -8,10 +6,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import padding, rsa, ec
 from cryptography.hazmat.primitives import hashes
 
-
 from farbox_bucket.utils import unicode, to_bytes, to_unicode, get_md5
-
-
 
 def create_private_public_keys(password=None, is_clean=True, key_size=4096):
     private_key = rsa.generate_private_key(
@@ -42,11 +37,9 @@ def create_private_public_keys(password=None, is_clean=True, key_size=4096):
         public_key_s = to_clean_key(public_key_s)
     return private_key_s, public_key_s
 
-
 def create_private_key(is_clean=True):
     private_key, public_key = create_private_public_keys(is_clean=is_clean)
     return private_key
-
 
 def get_public_key_from_private_key(private_key, password=None, is_clean=True):
     private_key = to_key(private_key, is_public_key=False)
@@ -63,21 +56,15 @@ def get_public_key_from_private_key(private_key, password=None, is_clean=True):
         if is_clean:
             public_key_s = to_clean_key(public_key_s)
         return public_key_s
-    except:
-        print('failed to get_public_key_from_private_key')
+    except Exception: print('failed to get_public_key_from_private_key')
         return
-
-
-
 
 def to_public_key(public_key):
     public_key = to_key(public_key, is_public_key=True)
     try:
         public_key = serialization.load_pem_public_key(public_key,  backend=default_backend())
         return public_key
-    except:
-        return None
-
+    except Exception: return None
 
 def to_private_key(private_key, password=None):
     private_key = to_key(private_key, is_public_key=False)
@@ -95,17 +82,13 @@ def is_valid_public_key(public_key):
     else:
         return False
 
-
 def is_valid_private_key(private_key, password=None):
     if not private_key:
         return False
     try:
         to_private_key(private_key, password=password)
         return True
-    except:
-        return False
-
-
+    except Exception: return False
 
 def to_key(key, is_public_key=False):
     key = to_unicode(key)
@@ -122,15 +105,10 @@ def to_key(key, is_public_key=False):
     key = to_bytes(key)
     return key
 
-
 def to_clean_key(key):
     key = re.sub(r'-----(BEGIN|END).*? (PRIVATE|PUBLIC) KEY-----', '', to_unicode(key))
     key = key.strip()
     return key
-
-
-
-
 
 ############ sign and verify starts ###########
 
@@ -146,8 +124,6 @@ def get_sign_content(dict_data, excludes=None):
     sign_content = to_bytes(sign_content)
     return sign_content
 
-
-
 def verify_by_public_key(public_key, signature, content, decode_base64=True):
     if not public_key or not signature or not content:
         return False
@@ -162,18 +138,14 @@ def verify_by_public_key(public_key, signature, content, decode_base64=True):
         try:
             signature = base64.b64decode(signature)
             signature = to_bytes(signature)
-        except:
-            pass
+        except Exception: pass
     if isinstance(content, dict):
         content = get_sign_content(content)
     content = to_bytes(content)
     try:
         public_key.verify(signature, content, padding_obj, hashes.SHA256())
         return True
-    except:
-        return False
-
-
+    except Exception: return False
 
 def sign_by_private_key(private_key, content, encode_base64=True, excludes_fields=None):
     private_key = to_private_key(private_key)
@@ -189,10 +161,7 @@ def sign_by_private_key(private_key, content, encode_base64=True, excludes_field
         signature = base64.b64encode(signature)
     return signature
 
-
 ############ sign and verify ends ###########
-
-
 
 def encrypt_blob(blob, public_key, encode_type='zip'):
     blob = to_bytes(blob)
@@ -233,7 +202,6 @@ def encrypt_blob(blob, public_key, encode_type='zip'):
         encrypted_content = base64.b64encode(encrypted)
     return encrypted_content
 
-
 def decrypt_blob(encrypted_blob, private_key, password=None, encode_type='zip'):
     private_key = to_key(private_key, is_public_key=False)
     password = to_bytes(password)
@@ -267,13 +235,9 @@ def decrypt_blob(encrypted_blob, private_key, password=None, encode_type='zip'):
     decrypted = zlib.decompress(decrypted)
     return decrypted
 
-
-
 def get_md5_for_key(key):
     clean_key = re.sub('\s', '', key, flags=re.M)
     return get_md5(clean_key)
-
-
 
 if __name__ == '__main__':
     import time

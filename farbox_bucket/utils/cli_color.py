@@ -1,11 +1,8 @@
-#coding: utf8
-from __future__ import absolute_import, print_function
 
 #CSI="\x1B["
 #RED = CSI+"31;40m"
 #GREEN = CSI+'32;40m'
 #RESET =CSI+"m"
-
 
 FLAGS = dict(
     RESET = "\x1B[0m",
@@ -42,12 +39,10 @@ def print_with_color(strings, color='red', end='\r\n'):
     else:
         print(strings)
 
-
 def print_colorful_parts(string_parts, end=''):
     for strings, color in string_parts:
         print_with_color(strings, color, end)
     print(FLAGS['NEWLINE'], end='')
-
 
 if __name__ == '__main__':
     print_with_color('hello', 'green', end=' ')

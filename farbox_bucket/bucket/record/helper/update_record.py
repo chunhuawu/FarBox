@@ -1,10 +1,5 @@
-# coding: utf8
 from farbox_bucket.bucket.utils import has_bucket
 from farbox_bucket.bucket.record.create import create_record, update_path_related_when_record_changed
-
-
-
-
 
 def update_record_directly(bucket, record):
     # 通过 record 来更新 record，不需要额外的编译

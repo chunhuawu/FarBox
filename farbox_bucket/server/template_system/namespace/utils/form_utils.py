@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 import re
 import ujson as json
 from flask import request
@@ -7,7 +5,6 @@ from farbox_bucket.utils import smart_unicode, get_value_from_data, string_to_li
 from farbox_bucket.settings import BASIC_FORM_FORMATS as basic_form_formats
 from farbox_bucket.server.utils.response import force_response
 from farbox_bucket.server.template_system.api_template_render import render_api_template
-
 
 TIMEZONES = (
     (-12, 'GMT -12:00'),
@@ -42,13 +39,9 @@ TIMEZONES = (
     (13, 'GMT +13:00'),
 )
 
-
-
 DEFAULT_OPTIONS = {
     'timezone': TIMEZONES,
 }
-
-
 
 # 提取附属星系， 比如 hello (x=y, k=v) 其中括号内的内容会形成 kv 结构的字典, 仅限单行
 def extract_extra_info(line):
@@ -90,8 +83,6 @@ def extract_extra_info(line):
                     v = False
                 extra_info[k] = v
     return line, extra_info
-
-
 
 def to_form_fields_obj(data_obj, keys, formats=None, extra_handler_func=None):
     # 将一个 dict, 预处理为可HTML 格式进行编辑的数据，一般是处理 json 的可编辑性
@@ -213,7 +204,6 @@ def to_form_fields_obj(data_obj, keys, formats=None, extra_handler_func=None):
                         options.append([row, row])
                 key_matched_data['options'] = options
 
-
             # value 可能是整数，就先转为 int、 float 的类型
             if isinstance(value, string_types):
                 if re.match(r'\d+$', value):
@@ -235,7 +225,6 @@ def to_form_fields_obj(data_obj, keys, formats=None, extra_handler_func=None):
             # 将 placeholder 的内容取出来作为 filepath
             key_matched_data['placeholder'] = 'drag file here to upload/replace'
 
-
         # 额外的扩充， 由程序的逻辑控制
         if extra_handler_func and hasattr(extra_handler_func, '__call__'):
             field_type, key_matched_data = extra_handler_func(field_type, key_matched_data)
@@ -252,13 +241,11 @@ def to_form_fields_obj(data_obj, keys, formats=None, extra_handler_func=None):
                     w_h_value += 'px'
                 key_matched_data[w_h_field] = w_h_value
 
-
         # 某些file_type 比如 category / list 最后都转为HTML类型的field_type
         if field_type:
             key_matched_data['type'] = field_type
         else:
             key_matched_data['type'] = 'default'
-
 
         if key_matched_data.get('type') == 'list': # list 类型的value的处理
             if isinstance(key_matched_data.get('value', None), (list, tuple)):
@@ -266,8 +253,6 @@ def to_form_fields_obj(data_obj, keys, formats=None, extra_handler_func=None):
 
         field_objs_list.append(key_matched_data)
     return field_objs_list
-
-
 
 ############## for POST starts ##########
 def get_pure_form_keys(keys):
@@ -289,7 +274,6 @@ def get_pure_form_keys(keys):
             pure_keys.append(key)
     return pure_keys
 
-
 def get_data_obj_from_POST(keys=None):
     # 从 request.POST 中获得一个dict类型的数据对象
     pure_keys = get_pure_form_keys(keys)
@@ -303,8 +287,7 @@ def get_data_obj_from_POST(keys=None):
             k = k[:-5]
             try:
                 v = json.loads(v)
-            except:
-                pass
+            except Exception: pass
         elif v in['yes', 'no', 'true', 'false']: # bool 性质的
             if v in ['yes', 'true']:
                 v = True
@@ -323,11 +306,7 @@ def get_data_obj_from_POST(keys=None):
             data_obj[k] = v
     return data_obj
 
-
 ############## for POST ends ##########
-
-
-
 
 ############## for HTML  starts ##########
 def create_form_dom_by_field(field, field_container_class='', **kwargs):
@@ -335,7 +314,6 @@ def create_form_dom_by_field(field, field_container_class='', **kwargs):
     html_content = render_api_template('form_dom.jade', field=field, field_container_class=field_container_class,
                                         return_html=True, **kwargs)
     return html_content
-
 
 def create_form_dom(data_obj, form_keys=None, formats=None, form_key=None):
     if form_key and not form_keys: #  form_key 作为一个backup性质参数使用
@@ -352,8 +330,6 @@ def create_form_dom(data_obj, form_keys=None, formats=None, form_key=None):
     for field_obj in fields:
         html_content += create_form_dom_by_field(field_obj)
     return html_content
-
-
 
 def create_simple_form(title='', keys=(), data_obj=None, formats=None, info=None, submit_text=None, **kwargs):
     # 自动生成一个 form，但没有自动处理 POST 的能力
@@ -381,8 +357,6 @@ def create_simple_form(title='', keys=(), data_obj=None, formats=None, info=None
                                 formats=formats, return_html=True, **kwargs)
     return html_content
 
-
-
 def create_grid_form(data_obj=None, keys=None, formats=None, callback_func=None, form_id=None, **kwargs):
     # 主要是会用 pure 进行排版的生成
     if not keys:
@@ -407,7 +381,6 @@ def create_grid_form(data_obj=None, keys=None, formats=None, callback_func=None,
             if request.values.get('ajax') == 'true': # AJAX 产生的提交, 直接返回请求的结果
                 info = callback_info or ''
                 return force_response(info, 'text/plain')
-
 
     form_fields = to_form_fields_obj(data_obj, keys, formats)
 

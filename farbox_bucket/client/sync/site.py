@@ -1,4 +1,3 @@
-# coding: utf8
 import os
 import json
 import time
@@ -23,8 +22,6 @@ def get_path_with_dot_allowed(root, *keywords):
         if os.path.exists(path):
             return path
     return path
-
-
 
 def sync_bucket_config(site_folder_status, root, node, private_key, config_type='site', print_log=True):
     if config_type not in allowed_bucket_config_types:
@@ -61,7 +58,6 @@ def sync_bucket_config(site_folder_status, root, node, private_key, config_type=
         site_folder_status[md5_key] = current_md5  # update the site_folder_status
         if print_log:
             print('update %s' % filename)
-
 
 def sync_site_folder_simply(node, root, private_key, should_encrypt_file=False,
                             app_name_for_sync=None, print_log=True, exclude_rpath_func=None,):

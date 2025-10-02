@@ -1,19 +1,14 @@
-#coding: utf8
 import datetime
 from farbox_bucket.utils import to_int, bytes2human
 from farbox_bucket.utils.ssdb_utils import hincr, hlist, hget, hgetall, zincr, zget, zscan, zrscan
 from farbox_bucket.bucket.record.utils import count_records_by_type_for_bucket
 from farbox_bucket.bucket.record.get.get import  get_records_count
 
-
-
-
 def increase_file_size_for_bucket(bucket, file_size):
     file_size = to_int(file_size, default_if_fail=0)
     if not file_size:
         return
     zincr("_bucket_usage_file_size", bucket, file_size)
-
 
 def decrease_file_size_for_bucket(bucket, file_size):
     file_size = to_int(file_size, default_if_fail=0)
@@ -22,8 +17,6 @@ def decrease_file_size_for_bucket(bucket, file_size):
     if file_size > 0:
         file_size = -file_size
     zincr("_bucket_usage_file_size", bucket, file_size)
-
-
 
 def increase_bandwidth_for_bucket(bucket, bandwidth):
     # 带宽
@@ -35,7 +28,6 @@ def increase_bandwidth_for_bucket(bucket, bandwidth):
     zincr("_bucket_usage_bandwidth", bucket, bandwidth) # all buckets bandwidth
     hincr("_bucket_usage_%s"%bucket, key, bandwidth)
 
-
 def increase_request_for_bucket(bucket, num=1):
     # 请求数
     num = to_int(num, default_if_fail=0)
@@ -46,14 +38,10 @@ def increase_request_for_bucket(bucket, num=1):
     zincr("_bucket_usage_request", bucket, 1)
     hincr("_bucket_usage_%s"%bucket, key, num)
 
-
-
 def get_bucket_file_size(bucket):
     file_size = zget("_bucket_usage_file_size", bucket)
     file_size = to_int(file_size, default_if_fail=0)
     return file_size
-
-
 
 def get_all_buckets_file_size(score_start=0, per_page=1000):
     result = []
@@ -62,7 +50,6 @@ def get_all_buckets_file_size(score_start=0, per_page=1000):
         value = to_int(value, default_if_fail=0)
         result.append(dict(bucket=bucket, value=bytes2human(value)))
     return result
-
 
 def get_all_buckets_bandwidth(score_start=0, per_page=1000):
     result = []
@@ -79,7 +66,6 @@ def get_all_buckets_request(score_start=0, per_page=1000):
         value = to_int(value, default_if_fail=0)
         result.append(dict(bucket=bucket, value=value))
     return result
-
 
 def get_bucket_usage(bucket):
     name = "_bucket_usage_%s"%bucket
@@ -116,5 +102,4 @@ def get_bucket_usage(bucket):
                 value = bytes2human(v),
             ))
     return usage
-
 

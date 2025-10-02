@@ -1,4 +1,3 @@
-#coding: utf8
 import os, time
 from farbox_bucket.settings import DEBUG, MAX_FILE_SIZE
 from farbox_bucket.utils import string_types, smart_str, get_md5
@@ -12,7 +11,6 @@ from farbox_bucket.bucket.storage.helpers.before_store_image import get_image_in
 
 from .base import Storage
 
-
 class QCloudStorage(Storage):
 
     def get_filepath_from_record(self, bucket, record_data):
@@ -23,7 +21,6 @@ class QCloudStorage(Storage):
             return filepath
         else:
             return None
-
 
     def when_record_deleted(self, bucket, record_data):
         filepath = self.get_filepath_from_record(bucket, record_data)
@@ -40,7 +37,6 @@ class QCloudStorage(Storage):
                     self.update_record_when_file_stored(bucket, record_data)
                 return False
         return True
-
 
     def accept_upload_file_from_client(self, bucket, record_data, get_raw_content_func=None):
         # return ok, failed, existed

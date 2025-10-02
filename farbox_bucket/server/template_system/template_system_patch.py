@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 from jinja2.runtime import Context, Undefined, Macro
 from jinja2.compiler import CodeGenerator
 from werkzeug.exceptions import HTTPException
@@ -11,7 +9,6 @@ from farbox_bucket.server.template_system.namespace.record import get_records_fo
 from farbox_bucket.server.template_system.namespace.built_in import set_property
 from .exceptions import TemplateDebugException
 from jinja2.runtime import Undefined
-
 
 def context_resolve(self, key):
     if key in self.vars:
@@ -39,10 +36,6 @@ def context_resolve(self, key):
 
     # at last
     return self.environment.undefined(name=key)
-
-
-
-
 
 old_context_call = Context.call
 
@@ -90,30 +83,22 @@ def context_call(self, context_obj, *args, **kwargs):
 
         return '<error>%s</error>' % error_info
 
-
-
-
 old_visit_name_func = CodeGenerator.visit_Name
 def visit_name(self, node, frame):
     try:
         # for jinja2 old version
         hit =  node.name not in frame.identifiers.declared_locally or node.ctx=='load'
-    except:
-        hit = node.ctx=='load'
+    except Exception: hit = node.ctx=='load'
 
     if node.name in namespace_functions and hit:
         # 默认变量最终转化为 call 的模式，因为本身就是函数，这样不会改变模板内代码整体的执行次序
         try:
             ref = frame.symbols.ref(node.name)
-        except:
-            # for jinja2 old version context.resolve(node.name)
+        except Exception:# for jinja2 old version context.resolve(node.name)
             ref = 'l_%s' % node.name
         self.write("environment.call(context, %s)" % ref)
     else:
         old_visit_name_func(self, node, frame)
-
-
-
 
 def patch_context():
     Context.resolve = context_resolve
@@ -122,9 +107,7 @@ def patch_context():
     Context.call = context_call
     CodeGenerator.visit_Name = visit_name
 
-
 ############
-
 
 def return_error_message(message):
     if 'error_ignored' in message:
@@ -132,9 +115,6 @@ def return_error_message(message):
     else:
         error_info = '<span style="color:red" class="template_api_error">&lt;%s&gt:</span>' % message
     return error_info
-
-
-
 
 class SafeUndefined(Undefined):
     # 直接融入到用户的API渲染的页面中，我们自己程序中不做callback
@@ -166,7 +146,6 @@ class SafeUndefined(Undefined):
         if self._undefined_name in ['caller', 'join', 'json', 'content']:
             return ''
         return return_error_message('`%s` is not a valid function' % self._undefined_name)
-
 
     def __repr__(self):
         return 'SafeUndefined'

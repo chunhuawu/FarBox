@@ -1,4 +1,3 @@
-# coding: utf8
 from flask import abort, redirect, request
 from farbox_bucket.utils import smart_unicode
 from farbox_bucket.server.web_app import app
@@ -9,13 +8,10 @@ from farbox_bucket.server.utils.doc_url import get_doc_url, get_post_url_with_ur
 from farbox_bucket.server.template_system.helper.get_post_with_greed import get_post_with_greed
 from farbox_bucket.server.bucket_render.builtin_theme.wiki import get_wiki_url_for_doc
 
-
-
 def get_wiki_root(bucket):
     wiki_configs = get_json_content_by_path(bucket, "__wiki.json", force_dict=True)
     wiki_root = smart_unicode(wiki_configs.get("wiki_root", ""))
     return wiki_root
-
 
 @app.route("/__wiki_tag/<path:tag>")
 def show_wiki_tag_fallback(tag):
@@ -29,8 +25,6 @@ def show_wiki_tag_fallback(tag):
     else:
         new_url = "/tag/%s?type=wiki_link" % tag
     return redirect(new_url)
-
-
 
 @app.route("/__wiki_link/<path:post_path>")
 def show_wiki_link_fallback(post_path):
@@ -52,5 +46,4 @@ def show_wiki_link_fallback(post_path):
         return abort(404, "post is not found, post_url get failed")
     else:
         return redirect(post_url)
-
 

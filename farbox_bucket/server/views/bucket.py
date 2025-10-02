@@ -1,4 +1,3 @@
-#coding: utf8
 import re
 import ujson as json
 from flask import abort, request, Response, redirect
@@ -25,8 +24,6 @@ from farbox_bucket.server.helpers.bucket import show_bucket_records_for_web_requ
 from farbox_bucket.server.utils.response import p_redirect
 from farbox_bucket.server.utils.request_context_vars import set_pending_bucket_bucket_in_request, set_site_in_request
 
-
-
 # server_sync_token 是用来同步服务器之间同步 records-list 用的
 # endpoint_password 主要是呈现非 records-list 的一些信息的管理员密码
 
@@ -46,12 +43,10 @@ def allowed_to_display_some_bucket_info(bucket=None):
         return True
     return False
 
-
 @app.route('/__theme', methods=['POST', 'GET'])
 def show_bucket_theme():
     bucket = request.values.get("bucket") or get_bucket_from_request()
     return show_bucket_pages_configs_by_web_api(bucket)
-
 
 @app.route('/bucket/<bucket>/configs_for_<configs_type>')
 def show_bucket_configs(bucket, configs_type):
@@ -65,8 +60,6 @@ def show_bucket_configs(bucket, configs_type):
         configs = get_bucket_configs(bucket, configs_type) or {}
     return jsonify(configs)
 
-
-
 @app.route('/bucket/<bucket>/paths', methods=['POST', 'GET'])
 def list_bucket_paths(bucket):
     if not allowed_to_display_some_bucket_info(bucket):
@@ -76,8 +69,6 @@ def list_bucket_paths(bucket):
     per_page = to_per_page(200, request.values.get('per_page'), max_per_page=1000)
     records = hscan(path_bucket, key_start=pre_record_id, limit=per_page)
     return jsonify(records)
-
-
 
 @app.route('/bucket/<bucket>/info')
 def show_bucket_info(bucket):
@@ -101,8 +92,6 @@ def show_bucket_info(bucket):
 
     return response
 
-
-
 # 需要 API TOKEN 的校验
 default_records_per_page = 100
 @app.route('/bucket/<bucket>/list', methods=['POST', 'GET'])
@@ -110,9 +99,7 @@ def list_bucket(bucket):
     set_pending_bucket_bucket_in_request(bucket) # 校验用的, 不直接把 bucket 传给  show_bucket_records_for_web_request
     return show_bucket_records_for_web_request(default_records_per_page=default_records_per_page, includes_zero_ids=True)
 
-
 ################# for web pages starts ##########
-
 
 @app.route('/_the_server_status')
 def show_server_stats_bucket():
@@ -122,13 +109,10 @@ def show_server_stats_bucket():
     else:
         return p_redirect('/bucket/%s/web/' % status_bucket)
 
-
 @app.route('/bucket/<bucket>/web/', methods=['POST', 'GET'])
 @app.route('/bucket/<bucket>/web/<path:web_path>', methods=['POST', 'GET'])
 def bucket_web(bucket, web_path=''):
     return render_bucket(bucket, web_path)
-
-
 
 @app.route('/', methods=['POST', 'GET'])
 @app.route('/<path:web_path>', methods=['POST', 'GET'])
@@ -157,6 +141,5 @@ def bucket_web_for_independent_domain(web_path=''):
         return render_bucket(bucket, web_path)
     else:
         abort(404, 'no bucket found')
-
 
 ################# for web pages ends ##########

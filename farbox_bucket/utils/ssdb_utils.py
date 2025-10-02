@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 #import ujson as json
 import re
 from functools import partial
@@ -14,10 +12,8 @@ def py_data_to_ssdb_data(py_data):
     else:
         try:
             ssdb_data = json_dumps(py_data)
-        except:
-            ssdb_data = ''
+        except Exception: ssdb_data = ''
         return ssdb_data
-
 
 ssdb_data_to_py_data_cache = {}
 def ssdb_data_to_py_data(ssdb_data, hit_cache=False):
@@ -36,13 +32,10 @@ def ssdb_data_to_py_data(ssdb_data, hit_cache=False):
             py_data = json_loads(ssdb_data)
             if data_cache_key:
                 ssdb_data_to_py_data_cache[data_cache_key] = py_data
-        except:
-            py_data = to_unicode(ssdb_data)
+        except Exception: py_data = to_unicode(ssdb_data)
     else:
         py_data = to_unicode(ssdb_data)
     return py_data
-
-
 
 def hset(namespace, key, value, ignore_if_exists=False):
     if not db_client:
@@ -56,15 +49,13 @@ def hset(namespace, key, value, ignore_if_exists=False):
     db_client.hset(namespace, key, value)
     return True
 
-
 def hincr(namespace, key,  num=1):
     if not num:
         return # ignore
     try:
         new_value = db_client.hincr(namespace, key, num)
         new_value = int(new_value)
-    except:
-        new_value = int(num) # failed
+    except Exception: new_value = int(num) # failed
         db_client.hset(namespace, key, num)
     return new_value
 
@@ -74,19 +65,15 @@ def hdel(namespace, key):
     done = db_client.hdel(namespace, key)
     return bool(done)
 
-
 def hdel_many(namespace, keys):
     if not keys:
         return True
     done = db_client.multi_hdel(namespace, *keys)
     return bool(done)
 
-
 def hclear(namespace):
     done = db_client.hclear(namespace)
     return bool(done)
-
-
 
 def hget(namespace, key, force_dict=False):
     if not db_client:
@@ -116,8 +103,6 @@ def just_hget(namespace, key):
     value = db_client.hget(namespace, key)
     return value
 
-
-
 def hget_many(namespace, keys, return_raw=True, force_dict=False, ):
     if not db_client:
         return []
@@ -142,7 +127,6 @@ def hget_many(namespace, keys, return_raw=True, force_dict=False, ):
         records.append(record)
     return records
 
-
 def hexists(namespace, key):
     if not db_client:
         return False
@@ -153,15 +137,11 @@ def hexists(namespace, key):
     exists = db_client.hexists(namespace, key)
     try:
         exists = int(exists)
-    except:
-        pass
+    except Exception: pass
     return bool(exists)
-
 
 def hsize(namespace):
     return db_client.hsize(namespace)
-
-
 
 def hscan(namespace, key_start='', key_end='', limit=1000, reverse_scan=False):
     # (key_start, key_end]
@@ -180,11 +160,9 @@ def hscan(namespace, key_start='', key_end='', limit=1000, reverse_scan=False):
     #result = {raw_result[i]: raw_result[i+1] for i in xrange(0, len(raw_result), 2)}
     return result
 
-
 def hscan_for_dict_docs(namespace, key_start='', key_end='', limit=1000, reverse_scan=False):
     raw_result = hscan(namespace, key_start, key_end, limit=limit, reverse_scan=reverse_scan)
     return to_py_dict_records_from_ssdb_hscan_records(raw_result)
-
 
 def hgetall(namespace):
     if not db_client:
@@ -194,8 +172,6 @@ def hgetall(namespace):
     raw_result = db_client.hgetall(namespace)
     result = [(raw_result[i], raw_result[i + 1]) for i in xrange(0, len(raw_result), 2)]
     return result
-
-
 
 def hkeys(namespace, key_start='', key_end='', limit=1000):
     # (key_start, key_end]
@@ -208,7 +184,6 @@ def hkeys(namespace, key_start='', key_end='', limit=1000):
     keys = db_client.hkeys(namespace, key_start, key_end, limit) or []
     return keys
 
-
 def hlist(name_start='', name_end='', limit=1000):
     # all namespaces under  Hashmap
     if not db_client:
@@ -218,7 +193,6 @@ def hlist(name_start='', name_end='', limit=1000):
     namespaces = db_client.hlist(name_start, name_end, limit)
     return namespaces
 
-
 def zset(namespace, key, score):
     # name is zset_key, key is zset_score
     if not db_client:
@@ -226,18 +200,15 @@ def zset(namespace, key, score):
     score = to_unicode(int(score))
     db_client.zset(namespace, key, score)
 
-
 def zincr(namespace, key,  num=1):
     if not num:
         return # ignore
     try:
         new_value = db_client.zincr(namespace, key, num)
         new_value = int(new_value)
-    except:
-        new_value = int(num) # failed
+    except Exception: new_value = int(num) # failed
         db_client.zset(namespace, key, num)
     return new_value
-
 
 def zget(namespace, name):
     if not db_client:
@@ -273,18 +244,15 @@ def zlist(namespace, name_start='', name_end=''):
 def zcount(namespace, name_start='', name_end=''):
     return db_client.zcount(namespace, name_start, name_end)
 
-
 def zdel(namespace, key):
     if not namespace:
         return
     done = db_client.zdel(namespace, key)
     return bool(done)
 
-
 def zclear(namespace):
     done = db_client.zclear(namespace)
     return bool(done)
-
 
 def zget_many(namespace, keys):
     if not keys:
@@ -292,10 +260,6 @@ def zget_many(namespace, keys):
     raw_result = db_client.multi_zget(namespace, *keys)
     result = [(raw_result[i], raw_result[i + 1]) for i in xrange(0, len(raw_result), 2)]
     return result
-
-
-
-
 
 def zscan(namespace, key_start='', score_start='', score_end='', limit=1000):
     # 如果 key_start 为空, 那么对应权重值大于或者等于 score_start 的 key 将被返回.
@@ -311,15 +275,12 @@ def zscan(namespace, key_start='', score_start='', score_end='', limit=1000):
     result = [(raw_result[i],raw_result[i+1]) for i in xrange(0, len(raw_result), 2)]
     return result
 
-
 def zrscan(namespace, key_start='', score_start='', score_end='', limit=1000):
     if not db_client:
         return []
     raw_result = db_client.zrscan(namespace, key_start, score_start, score_end, limit)
     result = [(raw_result[i],raw_result[i+1]) for i in xrange(0, len(raw_result), 2)]
     return result
-
-
 
 def zrange(namespace, offset=0, limit=100, reverse=False):
     # 根据下标索引区间 [offset, offset + limit) 获取 key-score 对, 下标从 0 开始. zrrange 是反向顺序获取.
@@ -332,8 +293,6 @@ def zrange(namespace, offset=0, limit=100, reverse=False):
     result = [(raw_result[i], raw_result[i + 1]) for i in xrange(0, len(raw_result), 2)]
     return result
 
-
-
 def auto_cache_by_ssdb(key, value_func, ttl=60, force_update=False):
     cached_value = db_client.get(key)
     if cached_value is not None and not force_update:
@@ -344,12 +303,9 @@ def auto_cache_by_ssdb(key, value_func, ttl=60, force_update=False):
         db_client.setx(key, data, ttl)
     return value
 
-
-
 def ssdb_cache_set(key, value, ttl=60):
     data = py_data_to_ssdb_data(value)
     db_client.setx(key, data, ttl)
-
 
 def ssdb_set(key, value):
     data = py_data_to_ssdb_data(value)
@@ -367,8 +323,6 @@ def ssdb_cache_get(key):
         value = ssdb_data_to_py_data(cached_value, hit_cache=True)
         return value
 
-
-
 def get_hlist_and_count(name_start='', result=None):
     # hashmap 的所有统计
     name_start = name_start
@@ -384,8 +338,6 @@ def get_hlist_and_count(name_start='', result=None):
         get_hlist_and_count(name_start=name_start, result=result)
     return result
 
-
-
 def get_hlist_and_count_and_cache(ttl=10*60):
     value_func = partial(get_hlist_and_count, db_client=db_client)
     key = 'hlist_and_count'
@@ -396,8 +348,6 @@ def get_hlist_all_records_count():
     hlist_count_result = get_hlist_and_count()
     records_count = sum(hlist_count_result.values())
     return records_count
-
-
 
 # List starts
 def qpush_front(name, *items):
@@ -424,7 +374,6 @@ def qtrim_back(name, size):
     # 从尾部删除元素
     db_client.qtrim_back(name, size)
 
-
 def qpop_front(name, size=''):
     # raw result 可能是 None/True/List/String
     raw_items = db_client.qpop_front(name, size) or []
@@ -449,8 +398,6 @@ def qclear(name):
 
 # List ends
 
-
-
 def get_db_system_status():
     if not db_client:
         return {}
@@ -467,9 +414,6 @@ def get_db_system_status():
     }
     return status_info
 
-
-
-
 def get_path_related_key_start_end(path):
     # chr(48)='0', chr(47)='/'
     path = path.strip().strip('/').lower()
@@ -480,9 +424,6 @@ def get_path_related_key_start_end(path):
         key_start = path + '/'
         key_end = path + '0'
     return key_start, key_end
-
-
-
 
 def to_py_dict_records_from_ssdb_hscan_records(records):
     # 直接从 ssdb 过来的数据， 第一个是 record_id

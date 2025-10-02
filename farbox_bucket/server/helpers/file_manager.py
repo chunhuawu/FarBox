@@ -1,4 +1,3 @@
-# coding: utf8
 import time
 import ujson as json
 from flask import request
@@ -12,7 +11,6 @@ from farbox_bucket.bucket.token.utils import is_bucket_login, get_logined_bucket
 from farbox_bucket.server.utils.response import jsonify, json_if_error
 from farbox_bucket.server.utils.request import get_file_content_in_request
 from farbox_bucket.utils import smart_unicode, to_int, string_types, get_md5, is_a_markdown_file
-
 
 def sync_file_by_server_side(bucket, relative_path, content=None, is_dir=False, is_deleted=False, return_record=False, real_relative_path=None):
     utc_offset = get_bucket_utc_offset(bucket=bucket)
@@ -39,9 +37,6 @@ def sync_file_by_server_side(bucket, relative_path, content=None, is_dir=False, 
         return None
     else:
         return result
-
-
-
 
 def sync_file_by_web_request():
     relative_path = (request.values.get('path') or request.values.get('relative_path') or '').strip()
@@ -79,8 +74,7 @@ def sync_file_by_web_request():
                     if isinstance(sorts_data, dict):
                         set_bucket_configs(bucket, configs=sorts_data, config_type="orders")
                         content_handled = True
-            except:
-                pass
+            except Exception: pass
         if not content_handled:
             error_info = sync_file_by_server_side(bucket=bucket, relative_path=relative_path, content=content,
                                                   is_dir=is_dir, is_deleted=is_deleted, real_relative_path=real_relative_path)
@@ -88,7 +82,6 @@ def sync_file_by_web_request():
         return jsonify(dict(status='ok'))
     else:
         return json_if_error(400, dict(status='failed', message=error_info))
-
 
 def check_should_sync_files_by_web_request():
     bucket = get_logined_bucket() or get_logined_bucket_by_token()
@@ -98,8 +91,7 @@ def check_should_sync_files_by_web_request():
     if raw_json_data:
         try:
             json_data = json.loads(raw_json_data)
-        except:
-            json_data = {}
+        except Exception: json_data = {}
     else:
         json_data = request.json or {}
     to_return = [] # 需要上传的 paths 集合
@@ -126,10 +118,6 @@ def check_should_sync_files_by_web_request():
                 else:
                     to_return.append(path)
     return jsonify(to_return)
-
-
-
-
 
 # record.get('raw_content') or record.get('content') or ''
 
@@ -167,11 +155,4 @@ def append_to_markdown_record(bucket, relative_path, content_to_append, lines_to
         content = '%s%s' % (new_content, old_content)
     error_info = sync_file_by_server_side(bucket=bucket, relative_path=relative_path, content=content)
     return error_info
-
-
-
-
-
-
-
 

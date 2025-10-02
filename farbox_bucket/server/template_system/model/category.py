@@ -1,4 +1,3 @@
-# coding: utf8
 import os
 from farbox_bucket.utils import smart_unicode, string_types
 from farbox_bucket.utils.functional import cached_property
@@ -9,7 +8,6 @@ from farbox_bucket.bucket.record.get.folder import get_folder_children_count, ge
 from farbox_bucket.bucket.record.get.tag_related import get_tags_info, get_tags_and_count, get_tags_info_under_path
 from farbox_bucket.server.utils.request_path import auto_bucket_url_path
 from farbox_bucket.server.template_system.namespace.data import get_data
-
 
 class Category(object):
     def __init__(self, path_or_record):
@@ -32,24 +30,20 @@ class Category(object):
     def __nonzero__(self):
         return bool(self.raw)
 
-
     def __getattr__(self, item):
         from farbox_bucket.server.template_system.env import SafeUndefined
         if item in self.raw:
             return self.raw.get(item)
         return self.__dict__.get(item, SafeUndefined())
 
-
     def __getitem__(self, item):
         return self.__getattr__(item)
-
 
     @cached_property
     def tags(self):
         # [(tag, count), (tag, count)]
         tags_info = get_tags_info_under_path(self.bucket, self.path)
         return get_tags_and_count(tags_info)
-
 
     @cached_property
     def parents(self):
@@ -108,7 +102,6 @@ class Category(object):
         # 兼容旧的 bitcron
         return self.path
 
-
     @cached_property
     def posts_count(self):
         num = get_folder_children_count(self.bucket, self.path, field='posts')
@@ -140,7 +133,6 @@ class Category(object):
         # 仅仅当前
         pager_name = '%s_child_images' % self.path
         return get_data(type='image', path=self.path, pager_name=pager_name, level=1)
-
 
 def get_record_parent_category(record):
     if not isinstance(record, dict):

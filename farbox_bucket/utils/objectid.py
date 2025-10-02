@@ -1,4 +1,3 @@
-# coding: utf8
 # Copyright 2009-2015 MongoDB, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +31,6 @@ from datetime import timedelta, tzinfo
 
 PY3 = sys.version_info[0] == 3
 
-
 if PY3:
     text_type = str
     string_type = str
@@ -43,8 +41,6 @@ else:
     string_type = basestring
     def bytes_from_hex(h):
         return h.decode('hex')
-
-
 
 ZERO = timedelta(0)
 
@@ -74,10 +70,7 @@ class FixedOffset(tzinfo):
     def dst(self, dt):
         return ZERO
 
-
 utc = FixedOffset(0, "UTC")
-
-
 
 def _machine_bytes():
     """Get the machine portion of an ObjectId.
@@ -97,7 +90,6 @@ def _machine_bytes():
         machine_hash.update(socket.gethostname())
     return machine_hash.digest()[0:3]
 
-
 class InvalidId(ValueError):
     """Raised when trying to create an ObjectId from invalid data.
     """
@@ -106,7 +98,6 @@ def _raise_invalid_id(oid):
     raise InvalidId(
         "%r is not a valid ObjectId, it must be a 12-byte input"
         " or a 24-character hex string" % oid)
-
 
 class ObjectId(object):
     """A MongoDB ObjectId.
@@ -200,13 +191,11 @@ class ObjectId(object):
             ">i", int(timestamp)) + b"\x00\x00\x00\x00\x00\x00\x00\x00"
         return cls(oid)
 
-
     @classmethod
     def from_timestamp(cls, timestamp):
         oid = struct.pack(
             ">i", int(timestamp)) + b"\x00\x00\x00\x00\x00\x00\x00\x00"
         return cls(oid)
-
 
     @classmethod
     def is_valid(cls, oid):
@@ -358,9 +347,7 @@ class ObjectId(object):
         """Get a hash value for this :class:`ObjectId`."""
         return hash(self.__id)
 
-
 ObjectID  = ObjectId
-
 
 def is_object_id(object_id):
     if not isinstance(object_id, string_type):
@@ -371,5 +358,4 @@ def is_object_id(object_id):
             return True
         else:
             return False
-    except:
-        return False
+    except Exception: return False

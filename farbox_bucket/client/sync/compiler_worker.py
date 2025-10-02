@@ -1,4 +1,3 @@
-#coding: utf8
 import os
 from farbox_bucket.settings import MAX_RECORD_SIZE, DEBUG
 from farbox_bucket.utils import is_a_markdown_file
@@ -14,12 +13,9 @@ from farbox_bucket.client.sync.compiler.comments_compiler import CommentsSyncCom
 from farbox_bucket.utils.mime import guess_type
 from farbox_bucket.utils.encrypt.key_encrypt import get_md5_for_key
 
-
-
 FILE_TYPE_FILENAMES = ['robots.txt', 'robot.txt']
 
 VISITS_FILEPATHS = ['_data/visits.csv']
-
 
 def is_a_image_file(filepath):
     mimetype = guess_type(filepath) or ''
@@ -27,7 +23,6 @@ def is_a_image_file(filepath):
         return True
     else:
         return False
-
 
 class FarBoxSyncCompilerWorker(object):
     def __init__(self, server_node, root, filepath,
@@ -74,7 +69,6 @@ class FarBoxSyncCompilerWorker(object):
         else:
             return None
 
-
     @property
     def should_md_doc_hit_folder_compiler(self):
         if not self.filepath:
@@ -89,7 +83,6 @@ class FarBoxSyncCompilerWorker(object):
         else:
             return False
 
-
     def pre_data_for_sync(self, data):
         if data and isinstance(data, dict):
             if self.auto_clean_bucket:
@@ -98,7 +91,6 @@ class FarBoxSyncCompilerWorker(object):
             if doc_type in ['visits', 'comments']:
                 # visits & comments 是强制要进行 clean 的， 不然数据会无限冗余下去
                 data['_auto_clean_bucket'] = True
-
 
     def json_dumps(self, data):
         self.pre_data_for_sync(data)
@@ -176,8 +168,6 @@ class FarBoxSyncCompilerWorker(object):
         compiled_json_data = self.json_dumps(data)
         return compiled_json_data
 
-
-
     def send_message(self, action, message, file_to_post=None, timeout=None):
         reply = send_message(
             node = self.server_node,
@@ -188,8 +178,6 @@ class FarBoxSyncCompilerWorker(object):
             timeout = timeout,
         )
         return reply
-
-
 
     def sync(self):
         # one record only, push to server  now
@@ -234,9 +222,6 @@ class FarBoxSyncCompilerWorker(object):
             print(info)
 
         return sync_status
-
-
-
 
 def get_compiler_data_directly(relative_path, content=None, is_deleted=False, is_dir=False,
                                real_relative_path=None, utc_offset=None):

@@ -1,4 +1,3 @@
-#coding:utf8
 """
 for graphics magick
 """
@@ -30,7 +29,6 @@ EXIF_KEYS = {
     'distance': 'SubjectDistance',
 }
 
-
 def convert_to_degress(value):
     """Helper function to convert the GPS coordinates stored in the EXIF to degress in float format"""
     if value is None:
@@ -49,7 +47,6 @@ def convert_to_degress(value):
     s = float(s0) / float(s1)
 
     return abs(d + (m / 60.0) + (s / 3600.0))
-
 
 EXIF_FUNCS ={
     'exposure': lambda x: int(x) if isinstance(x, float) else x ,
@@ -70,7 +67,6 @@ EXIF_FUNCS ={
     'altitude_ref': int,
 }
 
-
 ORIENTATIONS = {
     1: ("Normal", 0),
     2: ("Mirrored left-to-right", 0),
@@ -81,7 +77,6 @@ ORIENTATIONS = {
     7: ("Mirrored along top-right diagonal", 0),
     8: ("Rotated 270 degrees", 270)
 }
-
 
 class Exif(object):
     def __init__(self, im, auto_orientation=False):
@@ -128,8 +123,7 @@ class Exif(object):
                 v1, v2 = v.split('/')[:2]
                 try:
                     return int(v1), int(v2)
-                except:
-                    return v
+                except Exception: return v
             else:
                 return v
 
@@ -141,15 +135,13 @@ class Exif(object):
 
         return value
 
-
     @staticmethod
     def for_human(value, func=None):
         if type(value) in (tuple, list) and len(value)==2:
             x, y = value
             try:
                 float(x), float(y)
-            except:
-                return '-'.join([x,y])
+            except Exception: return '-'.join([x,y])
             try:
                 value = float(x)/y
             except ZeroDivisionError:
@@ -161,6 +153,6 @@ class Exif(object):
 
         if func is not None:
             try: value = func(value)
-            except: pass
+            except Exception: pass
         return value
 

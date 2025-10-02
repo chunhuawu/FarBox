@@ -1,4 +1,3 @@
-#coding: utf8
 from math import ceil
 from flask import abort
 from farbox_bucket.utils.functional import cached_property
@@ -7,8 +6,6 @@ from farbox_bucket.bucket.utils import get_order_bucket_name, get_bucket_configs
 from farbox_bucket.bucket.record.get.mix import mix_get_record_paths
 from farbox_bucket.bucket.record.get.path_related import get_records_by_paths
 from farbox_bucket.server.utils.record_and_paginator.base_paginator import BasePaginator
-
-
 
 # 只针对 zrange，不然无法获取
 class SortedRecordsPaginator(BasePaginator):
@@ -47,7 +44,6 @@ class SortedRecordsPaginator(BasePaginator):
 
         self.ignore_marked_id = ignore_marked_id
 
-
     @cached_property
     def _all_matched_paths(self):
         if self.sort_by in ['-date','desc']:
@@ -66,14 +62,12 @@ class SortedRecordsPaginator(BasePaginator):
                                      )
         return paths
 
-
     @cached_property
     def total_count(self):
         # count = zsize(self.z_bucket) or 0
         #if self.path or self.date_start or self.date_end:
         count = len(self._all_matched_paths)
         return count
-
 
     @cached_property
     def bucket_orders_configs(self):
@@ -90,5 +84,4 @@ class SortedRecordsPaginator(BasePaginator):
         #ignore_marked_id = False if self.path.startswith('_') else True
         records = get_records_by_paths(bucket=self.bucket, paths=paths, ignore_marked_id=ignore_marked_id)
         return records
-
 

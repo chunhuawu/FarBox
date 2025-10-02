@@ -1,8 +1,6 @@
-# coding: utf8
 import requests
 from farbox_bucket.utils import get_md5, string_types
 from farbox_bucket.utils.ssdb_utils import hexists
-
 
 def get_avatar_id(email): # 根据邮件地址，或者对应的m5值作为avatar_id
     if isinstance(email, string_types) and email:
@@ -12,8 +10,6 @@ def get_avatar_id(email): # 根据邮件地址，或者对应的m5值作为avata
         else:
             return email
     return None # if not
-
-
 
 def get_gavatar_image_content(email):
     avatar_id = get_avatar_id(email)
@@ -30,8 +26,7 @@ def get_gavatar_image_content(email):
                 return ''  # ignore
             else:
                 return image_response.content
-        except:
-            return ''
+        except Exception: return ''
 
 def has_avatar(email_md5):
     if '@' in email_md5:
@@ -43,16 +38,8 @@ def has_avatar(email_md5):
     email_md5 = email_md5.lower().strip()
     return hexists('_avatar', email_md5)
 
-
 def get_avatar_url(email):
     avatar_id = get_avatar_id(email)
     url = '/service/avatar/%s' % avatar_id
     return url
-
-
-
-
-
-
-
 

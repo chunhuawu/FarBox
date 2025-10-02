@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 from farbox_bucket.utils import get_value_from_data, smart_unicode
 from farbox_bucket.bucket.utils import get_bucket_in_request_context, get_bucket_site_configs
 from farbox_bucket.bucket.record.get.folder import get_folder_children_count
@@ -14,19 +12,15 @@ def set(obj, key, value):
     obj[key] = value
     return ''
 
-
 def visits(obj):
     value = get_post_visits_count(obj, 'visits')
     obj['visits'] = value
     return value
 
-
 def visitors(obj):
     value = get_post_visits_count(obj, 'visitors')
     obj['visitors'] = value
     return value
-
-
 
 def comments(obj):
     from farbox_bucket.server.comments.utils import get_comments
@@ -34,12 +28,10 @@ def comments(obj):
     obj['comments'] = cmts
     return cmts
 
-
 def comments_count(obj):
     value = len(comments(obj))
     obj['comments_count'] = value
     return value
-
 
 def images_count(obj):
     if get_type_from_record(obj) == "folder":
@@ -47,17 +39,14 @@ def images_count(obj):
         return get_folder_children_count(bucket, obj.get("path"), field="images")
     return 0
 
-
 def posts_count(obj):
     if get_type_from_record(obj) == "folder":
         bucket = get_bucket_in_request_context()
         return get_folder_children_count(bucket, obj.get("path"), field="posts")
     return 0
 
-
 def __type(obj):
     return get_type_from_record(obj)
-
 
 def cover(obj):
     if get_type_from_record(obj) == "folder":
@@ -69,10 +58,8 @@ def cover(obj):
                 return get_doc_url(result[0])
     return ""
 
-
 def url(obj):
     return get_doc_url(obj)
-
 
 def comments_as_html(obj):
     doc = obj
@@ -93,7 +80,6 @@ def comments_as_html(obj):
     html = render_api_template('comments.jade', doc=doc)
     return html
 
-
 def get_comments_people(obj, prefix='@'):
     from farbox_bucket.server.comments.contacts import get_all_contacts_from_post
     if not obj:
@@ -107,7 +93,6 @@ def get_comments_people(obj, prefix='@'):
     for person in contacts.keys():
         people.append('%s%s'%(prefix, person))
     return people
-
 
 def category(obj):
     c = get_record_parent_category(obj)

@@ -1,4 +1,3 @@
-# coding: utf8
 from flask import abort
 from farbox_bucket.utils.env import get_env
 from farbox_bucket.server.web_app import app
@@ -14,7 +13,6 @@ wechat_account_url2 = get_env("wechat_account_url2") or ""
 @app.route("/__wechat_api", methods=["POST", "GET"])
 def wechat_api_view():
     return wechat_web_handler()
-
 
 @app.route("/__wechat_bind", methods=["POST", "GET"])
 def wechat_bind_view():
@@ -32,5 +30,4 @@ def wechat_bind_view():
                                                wechat_account_url=wechat_account_url,
                                                wechat_account_url2 = wechat_account_url2)
         return response
-
 

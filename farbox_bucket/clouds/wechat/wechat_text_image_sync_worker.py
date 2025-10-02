@@ -1,4 +1,3 @@
-#coding: utf8
 import re
 from farbox_bucket.utils import smart_unicode
 from farbox_bucket.bucket.utils import get_now_from_bucket
@@ -8,7 +7,6 @@ from farbox_bucket.server.helpers.markdown_doc_append_worker import append_to_ma
 from farbox_bucket.server.helpers.file_manager import sync_file_by_server_side
 
 from .bind_wechat import set_name_by_wechat_user_id, get_name_by_wechat_user_id
-
 
 #    #tag #hello [[ #wiki_tag ]] [[#more]] test
 def compile_tag_to_wiki_link_syntax(content, is_voice=False):
@@ -22,7 +20,6 @@ def compile_tag_to_wiki_link_syntax(content, is_voice=False):
             if len(p2) <= 5:
                 content = u"%s[[#%s]]。" % (p1, p2)
     return content
-
 
 def wechat_text_image_handler(wechat_user_id, bucket, xml_data):
     msg_id = xml_data.get("MsgId")
@@ -95,7 +92,6 @@ def wechat_text_image_handler(wechat_user_id, bucket, xml_data):
             post_path = post_root + "/" + get_now_from_bucket(bucket, "%Y-%m-%d.txt")
         else:
             post_path = get_now_from_bucket(bucket, "%Y/%Y-%m-%d.txt")
-
 
     if text_to_append.strip() == "reset":
         if one_user_one_post:

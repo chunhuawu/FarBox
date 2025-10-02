@@ -1,4 +1,3 @@
-# coding: utf8
 import os, io
 from flask import send_file
 from gevent import spawn
@@ -54,7 +53,6 @@ class Storage(object):
             if file_size:
                 increase_bandwidth_for_bucket(bucket, file_size)
 
-
     def get_image_size_from_raw_content(self, raw_content):
         if isinstance(raw_content, str_type):
             return fast_get_image_size(raw_content)
@@ -107,7 +105,6 @@ class Storage(object):
             else:
                 return
 
-
     def get_download_response_for_record(self, bucket, record_data, try_resized_image=False):
         # 同步回去的 response
         # 如果是 Web 端给普通访客的，则会根据需要自动提供缩略图的逻辑支持
@@ -115,8 +112,7 @@ class Storage(object):
         if raw_content and record_data.get('_zipped'):
             try:
                 raw_content = ungzip_content(raw_content, base64=True)
-            except:
-                pass
+            except Exception: pass
         mime_type = guess_type(record_data.get("path", "")) or "application/octet-stream"
         if raw_content:
             raw_content = to_bytes(raw_content)
@@ -124,7 +120,6 @@ class Storage(object):
         else:
             file_response = self.as_web_response(bucket, record_data, try_resized_image=try_resized_image)
             return file_response # 可能是 None
-
 
     ########### others starts ###########
     def when_record_deleted(self, bucket, record_data):
@@ -147,15 +142,11 @@ class Storage(object):
         # if stored on a Cloud, return the url
         return ""
 
-
     def get_raw_content(self, bucket, record_data):
         # get the raw content from local or a Cloud
         return ""
 
-
     def exists(self, bucket, record_data):
         # like is_file
         return False
-
-
 

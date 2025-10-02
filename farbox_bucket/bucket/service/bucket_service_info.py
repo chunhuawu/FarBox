@@ -1,4 +1,3 @@
-#coding: utf8
 import datetime
 from farbox_bucket.utils.ssdb_utils import hset, hget
 from farbox_bucket.bucket.utils import is_valid_bucket_name
@@ -6,15 +5,12 @@ from farbox_bucket.utils.date import utc_date_parse
 from farbox_bucket.utils.env import get_env
 from farbox_bucket.utils import to_int
 
-
-
 def get_bucket_service_info(bucket):
     if not bucket:
         return {}
     if not is_valid_bucket_name(bucket):
         return {}
     return hget("_bucket_info", bucket, force_dict=True)
-
 
 def set_bucket_service_info(bucket, order_id=None, **kwargs):
     if not is_valid_bucket_name(bucket):
@@ -34,12 +30,9 @@ def set_bucket_service_info(bucket, order_id=None, **kwargs):
     info.update(kwargs)
     hset("_bucket_info", bucket, info)
 
-
-
 def get_bucket_expired_date(bucket):
     info = get_bucket_service_info(bucket)
     return info.get("expired_date")
-
 
 def change_bucket_expired_date(bucket, expired_date=None, days=None, order_id=None, **kwargs):
     if expired_date is None and days is None:
@@ -56,8 +49,6 @@ def change_bucket_expired_date(bucket, expired_date=None, days=None, order_id=No
     if not isinstance(expired_date, datetime.datetime):
         try:
             expired_date = utc_date_parse(expired_date)
-        except:
-            return
+        except Exception: return
     set_bucket_service_info(bucket, expired_date=expired_date, order_id=order_id, **kwargs)
-
 

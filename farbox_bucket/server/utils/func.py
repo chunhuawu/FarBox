@@ -1,9 +1,6 @@
-# coding: utf8
-from __future__ import absolute_import
 import inspect
 from farbox_bucket.utils import smart_str, smart_unicode
 from farbox_bucket.utils.functional import cached_property
-
 
 def get_functions_in_a_file_obj(obj):
     obj_filepath = inspect.getmodule(obj).__file__
@@ -28,9 +25,6 @@ def get_functions_in_a_file_obj(obj):
                 functions.append((func_name, sub_function))
     return dict(functions)
 
-
-
-
 class AttrFunc(object):
     # value.int -> to_int(value)
     # value.int(9) -> to_int(value, 9)
@@ -43,9 +37,7 @@ class AttrFunc(object):
     def default_value(self):
         try:
             return self.func()
-        except:
-            return smart_unicode(self.func)
-
+        except Exception: return smart_unicode(self.func)
 
     def __call__(self, *args, **kwargs):
         return self.func(*args, **kwargs)
@@ -61,7 +53,6 @@ class AttrFunc(object):
 
     def __nonzero__(self):
         return bool(self.func)
-
 
     def __add__(self, other):
         # 对相加的特殊处理

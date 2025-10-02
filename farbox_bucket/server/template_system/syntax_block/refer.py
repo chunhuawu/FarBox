@@ -1,9 +1,6 @@
-# coding: utf8
 import re
 from farbox_bucket.utils.functional import curry
 from farbox_bucket.server.utils.cache_for_function import cache_result
-
-
 
 def re_sub_refer(re_obj, handler=None):
     prefix = re_obj.group(1)
@@ -27,11 +24,9 @@ def re_sub_refer(re_obj, handler=None):
         try: new_html = handler(url, original_html)
         except TypeError:
             try: new_html = handler(url)
-            except: pass
-    except:
-        pass
+            except Exception: pass
+    except Exception: pass
     return new_html
-
 
 def refer(handler=None, refer_type='link', **kwargs):
     caller = kwargs.pop('caller', None)
@@ -47,8 +42,6 @@ def refer(handler=None, refer_type='link', **kwargs):
         # 链接
         inner_html = re.sub(r"""(<[^<>]+>)?<a [^<>]*?href=['"](.*?)['"][^<>]*?>.*?</a>(</\w+>)?""", curry(re_sub_refer, handler=handler), inner_html)
     return inner_html
-
-
 
 # demo for sub post
 """
@@ -86,7 +79,6 @@ block content
 
             +post.comments_as_html()
 """
-
 
 ## demo for image
 """

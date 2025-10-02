@@ -1,4 +1,3 @@
-#coding: utf8
 import json, urllib
 from farbox_bucket.utils import smart_str, smart_unicode, string_types
 from urlparse import urlparse, parse_qs
@@ -13,7 +12,6 @@ def get_url_path(url): # like /xxx
     u = urlparse(url)
     return u.path
 
-
 def get_host_from_url(url):
     if not url:
         return
@@ -23,7 +21,6 @@ def get_host_from_url(url):
     if result:
         result = result.lower().strip()
     return result
-
 
 def is_same_url(url1, url2, check_GET=False):
     if not isinstance(url1, (str, unicode)):
@@ -42,8 +39,6 @@ def is_same_url(url1, url2, check_GET=False):
         url1 = url1.split('?')[0].rstrip('/').rstrip()
         url2 = url2.split('?')[0].rstrip('/').rstrip()
         return url1==url2
-
-
 
 def get_get_var(url, key):
     u = urlparse(url)
@@ -66,8 +61,6 @@ def get_GET_dict_data(query_string):
             v = v[0]
         dict_data[k] = v
     return dict_data
-
-
 
 def join_url(url, **params):
     if not params:
@@ -97,21 +90,17 @@ def join_url(url, **params):
     url += '?'+p_strings
     return url
 
-
 def encode_url_arg(arg):
     if '%' in arg: # 认为已经encode过了的
         return arg
     try:
         return urllib.quote(arg)
-    except:
-        return arg
+    except Exception: return arg
 
 def decode_url_arg(arg):
     try:
         return urllib.unquote(arg)
-    except:
-        return arg
-
+    except Exception: return arg
 
 def unqote_url_path_to_unicode(url_path):
     if not isinstance(url_path, string_types):
@@ -124,7 +113,6 @@ def unqote_url_path_to_unicode(url_path):
             url_path = _url_path
             return url_path
     return url_path
-
 
 def get_url_without_prefix(url, prefix=None):
     # url 去除 prefix 后， 一般以 '/' 开头

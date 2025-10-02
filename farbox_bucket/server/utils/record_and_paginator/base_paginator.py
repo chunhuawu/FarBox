@@ -1,10 +1,8 @@
-#coding: utf8
 from flask import request
 from farbox_bucket.utils import smart_unicode, to_int
 from farbox_bucket.utils.functional import cached_property
 from farbox_bucket.utils.url import unqote_url_path_to_unicode
 import urllib
-
 
 def compute_auto_pages(pages, current_page=1, max_count=10):
     # 1 ...... n
@@ -40,8 +38,6 @@ def compute_auto_pages(pages, current_page=1, max_count=10):
     result += foot
     return result
 
-
-
 class BasePaginator(object):
     def __init__(self, page=1, total_pages=1, list_object=None):
         self.page = page
@@ -58,14 +54,12 @@ class BasePaginator(object):
         if hasattr(self.list_object, '__getitem__'):
             return self.list_object.__getitem__(item)
 
-
     @cached_property
     def list_object(self):
         if self.page > self.total_pages or self.page < 1:
             return []
         else:
             return self._list_object
-
 
     @cached_property
     def pre_page(self):

@@ -1,4 +1,3 @@
-# coding: utf8
 import time
 from jinja2 import Template
 from ._message_template import SEND_MESSAGE_WECHAT_TEMPLATE
@@ -10,7 +9,6 @@ def get_wechat_message_template():
         return wechat_message_template
     wechat_message_template = Template(SEND_MESSAGE_WECHAT_TEMPLATE)
     return wechat_message_template
-
 
 def send_wechat_message(message, from_user_name="", to_user_name=""):
     # xml.FromUserName, xml.ToUserName

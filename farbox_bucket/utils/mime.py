@@ -1,4 +1,3 @@
-#coding: utf8
 import os
 
 MIMETYPES = {'.zirz': 'application/vnd.zul', '.conf': 'text/plain', '.obd': 'application/x-msbinder',
@@ -385,7 +384,6 @@ MIMETYPES = {'.zirz': 'application/vnd.zul', '.conf': 'text/plain', '.obd': 'app
 
              '.coffee': 'text/x-coffeescript',
 
-
 }
 
 def guess_type(name, default_type=''):
@@ -395,8 +393,6 @@ def guess_type(name, default_type=''):
     if '?' in ext:
         ext = ext.split('?')[0]
     return MIMETYPES.get(ext) or default_type
-
-
 
 def is_a_image_file(filepath):
     mimetype = guess_type(filepath) or ''

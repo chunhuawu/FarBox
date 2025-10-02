@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 import re
 
 # 必须要有的一个系统公共函数

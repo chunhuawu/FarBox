@@ -1,12 +1,9 @@
-# coding: utf8
-from __future__ import absolute_import
 import re
 from farbox_bucket.bucket import get_bucket_pages_configs, get_bucket_site_configs
 from farbox_bucket.bucket.utils import get_bucket_in_request_context
 from farbox_bucket.client.dump_template import get_template_content_from_name
 from farbox_bucket.utils import get_value_from_data, string_types, smart_unicode, auto_type
 from farbox_bucket.server.template_system.templates.info import api_templates as system_builtin_templates
-
 
 def get_template_source(template_name):
     bucket = get_bucket_in_request_context()
@@ -30,8 +27,6 @@ def get_template_source(template_name):
     else:
         return
 
-
-
 def has_template_by_name(name_or_path, templates_info=None ):
     if not isinstance(templates_info, dict):
         templates_info = get_pages_configs()
@@ -41,8 +36,6 @@ def has_template_by_name(name_or_path, templates_info=None ):
     else:
         return True
 
-
-
 def get_pages_configs():
     bucket = get_bucket_in_request_context()
     pages_configs = get_bucket_pages_configs(bucket) or {}
@@ -50,14 +43,10 @@ def get_pages_configs():
         pages_configs = {}
     return pages_configs
 
-
 def get_template_static_resource_content(relative_filepath):
     pages_configs = get_pages_configs()
     raw_content = pages_configs.get(relative_filepath) or ''
     return raw_content
-
-
-
 
 def get_site_configs():
     bucket = get_bucket_in_request_context()
@@ -67,7 +56,6 @@ def get_site_configs():
     if not isinstance(site_configs, dict):
         site_configs = {}
     return site_configs
-
 
 def just_get_site_config(config_key, default_value=None):
     bucket = get_bucket_in_request_context()
@@ -80,18 +68,15 @@ def just_get_site_config(config_key, default_value=None):
     value = site_configs.get(config_key, default_value)
     return value
 
-
 def get_site_config_int(config_key, default_value=None):
     # 确保是以 int 的形式返回
     value = just_get_site_config(config_key, default_value)
     try:
         value = int(float(value))
-    except:
-        pass
+    except Exception: pass
     if not isinstance(value, int):
         value = None
     return value
-
 
 def get_site_config(fields, type_required=None, default_value=None):
     if isinstance(type_required, list):
@@ -119,5 +104,4 @@ def get_site_config(fields, type_required=None, default_value=None):
         return default_value
     else:
         return None
-
 

@@ -1,4 +1,3 @@
-# coding: utf8
 import re
 from flask import request, Response
 from farbox_bucket.utils import to_float
@@ -6,13 +5,10 @@ from farbox_bucket.utils.functional import cached_property
 from farbox_bucket.utils.env import get_env
 from .alipay_api import AlipayAPI
 
-
 ALIPAY_PID = get_env('ALIPAY_PID')
 ALIPAY_APP_ID = get_env('ALIPAY_APP_ID')
 ALIPAY_PRIVATE_KEY = get_env('ALIPAY_PRIVATE_KEY')
 ALIPAY_PUBLIC_KEY = get_env('ALIPAY_PUBLIC_KEY')
-
-
 
 class AliPay(object):
     def __init__(self, private_key=None, public_key=None, pid=None, app_id=None):
@@ -20,7 +16,6 @@ class AliPay(object):
         self.alipay_private_key = private_key or ALIPAY_PRIVATE_KEY
         self.alipay_pid = pid or ALIPAY_PID
         self.alipay_app_id = app_id or ALIPAY_APP_ID
-
 
     @cached_property
     def alipay_api(self):
@@ -73,7 +68,6 @@ class AliPay(object):
         # 告诉支付宝，处理成功了
         return Response('success')
 
-
     def pay(self, price, title, content, callback_url='', notify_url='', return_url='', order_id='', note=''):
         if not self.alipay_api:
             return
@@ -87,7 +81,5 @@ class AliPay(object):
                                            out_trade_no = order_id, note=note,
                                            )
         return redirect_url
-
-
 
 alipay = AliPay()

@@ -1,4 +1,3 @@
-# coding: utf8
 import time
 import gevent
 import requests
@@ -10,10 +9,6 @@ from farbox_bucket.bucket.utils import has_bucket
 from farbox_bucket.bucket.token.utils import get_logined_bucket
 from farbox_bucket.bucket.utils import set_bucket_configs, get_bucket_pages_configs
 from farbox_bucket.bucket.token.bucket_signature_and_check import get_signature_for_bucket, check_signature_for_bucket
-
-
-
-
 
 def do_set_bucket_pages_configs_by_web_api(bucket, remote_url, timeout=3):
     if not has_bucket(bucket):
@@ -32,9 +27,7 @@ def do_set_bucket_pages_configs_by_web_api(bucket, remote_url, timeout=3):
         raw_pages_configs["can_copy"] = False
         set_bucket_configs(bucket, raw_pages_configs, config_type="pages")
         return True
-    except:
-        pass
-
+    except Exception: pass
 
 def set_bucket_pages_configs_by_web_api(bucket, remote_url, timeout=3):
     # True or False
@@ -44,8 +37,7 @@ def set_bucket_pages_configs_by_web_api(bucket, remote_url, timeout=3):
     try:
         result = gevent_job.get(block=True, timeout=timeout)
         return result
-    except:
-        gevent_job.kill(block=False)
+    except Exception: gevent_job.kill(block=False)
         return False
 
 def show_bucket_pages_configs_by_web_api(bucket):
@@ -60,8 +52,4 @@ def show_bucket_pages_configs_by_web_api(bucket):
     data = json_dumps(pages_config)
     response = Response(data, mimetype='application/json')
     return response
-
-
-
-
 

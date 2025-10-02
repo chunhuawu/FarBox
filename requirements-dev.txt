@@ -1,0 +1,9 @@
+# Development dependencies for FarBox Bucket
+# Install with: pip install -r requirements-dev.txt
+
+# Install package in editable mode with dev extras
+-e .[dev]
+
+# Additional development tools
+ipython>=8.12.0
+ipdb>=0.13.13

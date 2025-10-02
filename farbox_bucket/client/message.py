@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 import requests
 import time
 import os
@@ -12,8 +10,6 @@ from farbox_bucket.utils.gzip_content import gzip_content
 from farbox_bucket.bucket import get_bucket_by_private_key
 from .project import get_project_config
 
-
-
 def get_node_url(node, route='farbox_bucket_message_api'):
     node = node or ''
     if '://' in node:
@@ -23,8 +19,6 @@ def get_node_url(node, route='farbox_bucket_message_api'):
         node = os.environ.get('DEFAULT_NODE') or '127.0.0.1:7788'
     node_url = 'http://%s/%s' % (node, route.lstrip('/'))
     return node_url
-
-
 
 def get_data_to_post(node, private_key, message='', action='record'):
     message = message or ''
@@ -46,7 +40,6 @@ def get_data_to_post(node, private_key, message='', action='record'):
         data = message,
     )
 
-
     if action in ['create_bucket', 'check'] or action.startswith('config'): # create bucket, should put public_key in data
         data_to_post['public_key'] = public_key
     signature = sign_by_private_key(private_key, content=data_to_post)
@@ -62,8 +55,6 @@ def get_data_to_post(node, private_key, message='', action='record'):
         data_to_post['data'] = gzip_content(message, base64=True)
 
     return node_url, data_to_post
-
-
 
 def send_message(node, private_key, message='', action='record', file_to_post=None, timeout=60, return_response=False):
     node_url, data_to_post = get_data_to_post(node=node, private_key=private_key, message=message, action=action)
@@ -86,8 +77,7 @@ def send_message(node, private_key, message='', action='record', file_to_post=No
         )
         if return_response:
             return response
-    except:
-        if return_response:
+    except Exception: if return_response:
             return None
         result = {'message': 'request failed', 'code': 410}
         return result
@@ -95,16 +85,12 @@ def send_message(node, private_key, message='', action='record', file_to_post=No
         # like {u'message': u'ok', u'code': 200}
         response_result = response.json()
         return response_result
-    except:
-        result = {'message': 'json error', 'code': 404, 'content': response.content, "response_code": response.status_code}
+    except Exception: result = {'message': 'json error', 'code': 404, 'content': response.content, "response_code": response.status_code}
         return result
     #response_code = response_result.get('code')
     #response_message = response_result.get("message")
     #if response_code != 200:
     #    print('error: %s' % response_message)
-
-
-
 
 ############# for project starts ########
 

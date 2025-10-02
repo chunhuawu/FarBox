@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 import datetime, re
 from flask import request, abort
 
@@ -16,15 +14,12 @@ from farbox_bucket.server.utils.request import safe_get, get_visitor_ip
 from farbox_bucket.server.utils.response import jsonify
 from farbox_bucket.server.template_system.api_template_render import render_api_template
 
-
 from farbox_bucket.server.web_app import app
 
 from .utils import get_comments_record, get_comments_by_comments_doc, get_comment_author_name, get_comment_avatar
 from .dump import add_new_comment_to_doc
 
-
 from .notification import send_notification_emails
-
 
 class NewComment(object):
     def __init__(self):
@@ -53,7 +48,6 @@ class NewComment(object):
     def id(self): # the comment id
         origin_id = '%s %s' % (self.email, self.date)
         return get_md5(origin_id)
-
 
     @cached_property
     def author(self):
@@ -96,7 +90,6 @@ class NewComment(object):
         )
         return doc
 
-
     def is_site_url_allowed(self):
         # 确认填入的 url 是否符合格式
         if self.domain:
@@ -117,15 +110,13 @@ class NewComment(object):
         block_times = cache_client.get(cache_key) or 0
         try:
             block_times = int(block_times)
-        except:
-            block_times = 0
+        except Exception: block_times = 0
         if block_times >= 5:
             return False
         else:
             cache_client.incr(cache_key, expiration=10*60)
 
         return True # at last
-
 
     ################# run on the web ######################
 
@@ -203,9 +194,6 @@ class NewComment(object):
         comments = get_comments_by_comments_doc(comments_doc=self.comments_record, as_tree=False, utc_offset=self.utc_offset)
         return comments
 
-
-
-
 # 作为外部的 view 被调用的
 def add_comment():
     # 最后返回一个 json 的字符串
@@ -231,8 +219,6 @@ def add_comment():
     send_notification_emails(new_comment_instance)
 
     return new_comment_instance.as_doc
-
-
 
 @app.route('/service/comment/new', methods=['POST'])
 def add_new_comment_web_view():

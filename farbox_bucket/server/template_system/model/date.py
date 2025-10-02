@@ -1,9 +1,6 @@
-# coding: utf8
-from __future__ import absolute_import
 from farbox_bucket.utils import to_int, to_float, get_value_from_data, smart_str, smart_unicode
 from farbox_bucket.server.utils.site_resource import just_get_site_config
 import datetime
-
 
 class Date(object):
     def __init__(self, core):
@@ -24,7 +21,6 @@ class Date(object):
         if len(args) and isinstance(args[0], (str, unicode)):
             return self.format(args[0])
         return self.__repr__()
-
 
     def __gt__(self, other):
         if hasattr(other, 'core'):
@@ -51,7 +47,6 @@ class Date(object):
             other = other.core
         return self.core == other
 
-
     def before(self, seconds):
         seconds = to_int(seconds, 0)
         return Date(self.core-datetime.timedelta(seconds=seconds))
@@ -67,8 +62,7 @@ class Date(object):
         utc_offset = just_get_site_config('utc_offset')
         try:
             utc_offset = float(utc_offset)
-        except:
-            utc_offset = 8
+        except Exception: utc_offset = 8
         if utc_offset > 12 or utc_offset < -12:
             utc_offset = 8
         if utc_offset is None:

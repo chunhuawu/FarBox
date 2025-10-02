@@ -1,7 +1,4 @@
-#coding: utf8
-from __future__ import absolute_import
 import os
-
 
 def get_node_url(node, route='farbox_bucket_message_api'):
     node = node or ''

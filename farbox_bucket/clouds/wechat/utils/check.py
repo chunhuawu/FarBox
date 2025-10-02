@@ -1,8 +1,6 @@
-# coding: utf8
 from flask import request, abort
 from farbox_bucket.utils import get_sha1, to_int
 import time
-
 
 def _is_from_wechat(token, ttl=120):
     # 这里的 token，实际上实在 wechat 的后台自己设置的
@@ -25,8 +23,6 @@ def _is_from_wechat(token, ttl=120):
             return False
 
     return True # at last
-
-
 
 def check_is_from_wechat(token, ttl=120, raise_error=True):
     status = _is_from_wechat(token, ttl=ttl)

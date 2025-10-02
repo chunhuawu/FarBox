@@ -1,4 +1,3 @@
-#coding: utf8
 import time
 from flask import request, abort
 from farbox_bucket.settings import DEBUG, WEBSOCKET, MAX_FILE_SIZE
@@ -25,15 +24,12 @@ from farbox_bucket.server.utils.response import jsonify
 
 from farbox_bucket.themes import themes
 
-
-
 # request 过来的必要字段 farbox_bucket.client.message: send_message & get_data_to_post
 # bucket: 针对某个 bucket 的操作
 # action: 当前 API 的动作
 # timestamp: 与服务器上的时间差，不能超过 120s，另外也是作为内容校验的一个字段
 # data: 必然是字符串，可以是 JSON，有些场合会转为 Python 的数据进行处理
 # public_key: 只有 create_bucket 的时候，才会有；如果它存在，也会参与 signature 的校验
-
 
 class FarBoxBucketMessageAPIHandler(object):
     def __init__(self):
@@ -113,7 +109,6 @@ class FarBoxBucketMessageAPIHandler(object):
             values.append(json_data.get(key))
         return values
 
-
     def handle(self):
         if not isinstance(self.verified_message, dict):  # 校验出错了
             return json_with_status_code(500, message=self.verified_message)
@@ -128,7 +123,6 @@ class FarBoxBucketMessageAPIHandler(object):
         # call the action_handler, should return a response
         return action_handler()
 
-
     def do(self):
         return self.handle()
 
@@ -136,7 +130,6 @@ class FarBoxBucketMessageAPIHandler(object):
         return self.handle()
 
     ########### actions below ##############
-
 
     def register_domain(self):
         domain = self.get_value_from_data('domain')
@@ -150,7 +143,6 @@ class FarBoxBucketMessageAPIHandler(object):
             else:
                 return json_with_status_code(200, 'ok')
 
-
     def unregister_domain(self):
         domain = self.get_value_from_data('domain')
         if not domain:
@@ -161,7 +153,6 @@ class FarBoxBucketMessageAPIHandler(object):
                 return json_with_status_code(400, error_info)
             else:
                 return json_with_status_code(200, 'ok')
-
 
     def update_bucket_config(self):
         config_type = self.action.replace('config_', '').strip()
@@ -185,7 +176,6 @@ class FarBoxBucketMessageAPIHandler(object):
                 #mark_bucket_to_sync_ipfs(self.bucket)
             return json_with_status_code(200, 'ok')
 
-
     def set_bucket_theme(self):
         # 从系统默认提供的 theme 中进行直接的设定
         theme_key = self.raw_json_data.get('theme') or self.raw_json_data.get('theme_key')
@@ -197,7 +187,6 @@ class FarBoxBucketMessageAPIHandler(object):
                 theme_content['_theme_key'] = theme_key
             set_bucket_configs(self.bucket, theme_content, config_type='pages')
             return json_with_status_code(200, 'ok')
-
 
     def create_record(self):
         # the default action
@@ -236,8 +225,6 @@ class FarBoxBucketMessageAPIHandler(object):
 
             return json_with_status_code(200, 'ok')
 
-
-
     def should_upload_file(self):
         file_size = self.raw_json_data.get("size") or self.raw_json_data.get("file_size")
         if file_size > MAX_FILE_SIZE:
@@ -245,7 +232,6 @@ class FarBoxBucketMessageAPIHandler(object):
         else:
             should = storage.should_upload_file_by_client(self.bucket, self.raw_json_data)
         return json_with_status_code(200, 'yes' if should else 'no')
-
 
     def upload_file(self):
         path = self.raw_json_data.get('path')
@@ -271,7 +257,6 @@ class FarBoxBucketMessageAPIHandler(object):
         files = auto_update_bucket_and_get_files_info(self.bucket)
         return json_with_status_code(200, files)
 
-
     def download_file(self):
         record_id = self.raw_json_data.get("record") or self.raw_json_data.get("record_id")
         if not record_id:
@@ -291,13 +276,11 @@ class FarBoxBucketMessageAPIHandler(object):
                                                        per_page=per_page, includes_zero_ids=False)
             return response
 
-
     def check_bucket(self):
         if self.bucket and has_bucket(self.bucket):
             return json_with_status_code(200, 'ok')
         else:
             return json_with_status_code(404, 'not found')
-
 
     def check_filepaths(self):
         filepaths = self.raw_json_data.get('filepaths') or self.raw_json_data.get('paths')
@@ -308,7 +291,6 @@ class FarBoxBucketMessageAPIHandler(object):
             path_record_id = get_record_id_by_path(self.bucket, path) or ''
             result[path] = path_record_id
         return json_with_status_code(200, result)
-
 
     def get_configs(self):
         config_type = self.raw_json_data.get('type') or self.raw_json_data.get('config_type') or 'site'

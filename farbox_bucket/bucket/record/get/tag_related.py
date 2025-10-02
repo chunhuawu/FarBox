@@ -1,9 +1,7 @@
-# coding: utf8
 from farbox_bucket.utils import smart_unicode, to_int, sort_objects_by
 from farbox_bucket.utils.path import is_sub_path, get_just_name, get_relative_path
 from farbox_bucket.bucket.utils import get_bucket_posts_info
 from .path_related import get_record_by_path, get_records_by_paths
-
 
 def get_tags_info(bucket):
     # k:v --> tag: [path1, path2]
@@ -15,7 +13,6 @@ def get_tags_info(bucket):
     if not isinstance(info, dict):
         info = {}
     return info
-
 
 def get_tags_info_under_path(bucket, under):
     # return info,  k:v --> tag: [path1, path2]
@@ -31,7 +28,6 @@ def get_tags_info_under_path(bucket, under):
                 info.setdefault(tag, []).append(path)
     return info
 
-
 def get_tags_and_count(tags_info):
     # k:v --> tag: [path1, path2]  -->  [(tag, count), (tag, count)]
     if not isinstance(tags_info, dict):
@@ -45,8 +41,6 @@ def get_tags_and_count(tags_info):
         result.append([tag, len(tag_paths)])
     result.sort(lambda x,y: y[1]-x[1])
     return result
-
-
 
 def get_records_by_tag(bucket, tag, sort_by='-date'):
     if not bucket:
@@ -71,7 +65,4 @@ def get_records_by_tag(bucket, tag, sort_by='-date'):
     records = get_records_by_paths(bucket, paths, limit=500)
     records = sort_objects_by(records, attr=sort_by)
     return records
-
-
-
 

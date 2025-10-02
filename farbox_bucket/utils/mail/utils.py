@@ -1,22 +1,16 @@
-#coding: utf8
-from __future__ import absolute_import
 import boto3
 
 from farbox_bucket.utils import smart_str, smart_unicode
 from farbox_bucket.utils.mail.basic_utils import pure_email_address, is_email_address, get_valid_addresses
 
-
 #https://stackoverflow.com/questions/62757921/is-aws-boto-python-supporting-ses-signature-version-4
 # https://docs.aws.amazon.com/general/latest/gr/sigv4-signed-request-examples.html
-
 
 def get_mail_server_domain(address):
     if not is_email_address(address):
         return
     domain = address.split('@')[-1].lower().strip()
     return domain
-
-
 
 def get_address_and_sub_info_from_address(address):
     # 解析 a+subinfo@domain.com 这种格式的邮箱地址
@@ -29,7 +23,6 @@ def get_address_and_sub_info_from_address(address):
     address = '%s@%s' % (prefix, suffix)
     address = address.lower()
     return address, sub_info
-
 
 # us-east-1 Region
 
@@ -64,10 +57,7 @@ def send_email_by_ses(from_address, to_address,  content, ses_id, ses_key, subje
         #message_id = result['SendEmailResponse']['SendEmailResult']['MessageId']
         message_id = result["MessageId"]
         return message_id
-    except:
-        return result
-
-
+    except Exception: return result
 
 def send_email_by_amazon(from_address, to_address, content,  ses_id, ses_key, subject="", raw=False):
     # 对 SES 的直接调用
@@ -76,10 +66,4 @@ def send_email_by_amazon(from_address, to_address, content,  ses_id, ses_key, su
     message_id = send_email_by_ses(from_address=from_address, to_address=to_address, content=content, subject=subject, ses_id=ses_id, ses_key=ses_key)
 
     return message_id
-
-
-
-
-
-
 

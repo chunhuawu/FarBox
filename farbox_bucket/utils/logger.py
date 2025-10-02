@@ -1,7 +1,4 @@
-#coding: utf8
-from __future__ import absolute_import
 import logging
-
 
 cached_file_loggers = {}
 
@@ -14,8 +11,7 @@ def get_file_logger(name):
     # create a file handler
     try:
         handler = logging.FileHandler('/var/log/%s.log'%name)
-    except:
-        handler = logging.FileHandler('/tmp/log_%s.log' % name)
+    except Exception: handler = logging.FileHandler('/tmp/log_%s.log' % name)
     handler.setLevel(logging.INFO)
     # create a logging format
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')

@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 from farbox_bucket.server.utils.cache_for_function import cache_result
 from .data import data, paginator, get_data
 from .request import request
@@ -25,15 +23,11 @@ namespace_functions = {
     'b': bucket,
 }
 
-
-
 # shortcuts
-
 
 @cache_result
 def i18n(key, *args): # i18n 专用函数名
     return Html.i18n(key, *args)
-
 
 namespace_shortcuts = {
     "_": i18n,

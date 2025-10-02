@@ -1,4 +1,3 @@
-# coding: utf8
 import json, re
 from flask import request
 from farbox_bucket.utils import get_value_from_data, to_int, string_types
@@ -46,17 +45,14 @@ class Site(dict):
     def _posts_info(self):
         return get_bucket_posts_info(self.bucket)
 
-
     @cached_property
     def files(self):
         return self._files_info
-
 
     @cached_property
     def tags(self):
         # [(tag, count), (tag, count)]
         return get_tags_and_count(self._tags_info)
-
 
     @cache_result
     def get_tags_under(self, under):
@@ -79,7 +75,6 @@ class Site(dict):
     def count_folder(self, folder_path, field='posts'):
         return get_folder_children_count(self.bucket, folder_path, field=field)
 
-
     def get_image_url(self, filename, default_value=None):
         if has_record_by_path(self.bucket, filename):
             return '/%s' % filename
@@ -96,11 +91,9 @@ class Site(dict):
     def avatar(self):
         return self.get_image_url("avatar.png")
 
-
     @cached_property
     def background_image(self):
         return self.get_image_url("bg.jpg")
-
 
     @cached_property
     def site_avatar(self):
@@ -118,17 +111,14 @@ class Site(dict):
     def favicon(self):
         return self.get_image_url("favicon.icon")
 
-
     @cached_property
     def title(self):
         return self.get('title') or 'Site Title'
-
 
     @cached_property
     def pages_configs(self):
         configs = get_bucket_pages_configs(self.bucket) or {}
         return configs
-
 
     ############# 导航相关 starts ##########
     @cached_property
@@ -190,7 +180,6 @@ class Site(dict):
             settings_from_json = {}
         return settings_from_json
 
-
     def get_settings_keys_config(self, keys_config_path):
         if not isinstance(keys_config_path, string_types):
             return {}
@@ -198,7 +187,6 @@ class Site(dict):
         if not isinstance(keys_config, dict):
             keys_config = {}
         return keys_config
-
 
     def settings_json_editor(self, keys_config_path, private_config_keys=None, formats=None, **kwargs):
         # 对站点的 config 文件的编辑
@@ -243,7 +231,6 @@ class Site(dict):
                 content = json.dumps(new_data_obj, indent=4)
                 sync_file_by_server_side(bucket=self.bucket, relative_path=config_store_path, content=content)
 
-
         if request.method != "POST":
             # 处理 data
             if private_config_keys:
@@ -260,8 +247,6 @@ class Site(dict):
         return Html.grid_form(data_obj, config_keys, formats=formats,
                               callback_func=settings_json_editor_callback,
                               hide_submit_button=hide_submit_button, **kwargs)
-
-
 
 @cache_result
 def site():

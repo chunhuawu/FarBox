@@ -1,6 +1,4 @@
-# coding: utf8
 from jinja2 import Template
-
 
 comment_notification_template_source = u"""<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -20,7 +18,6 @@ comment_notification_template_source = u"""<!DOCTYPE HTML PUBLIC "-//W3C//DTD HT
 
             <p>Hey,</p>
 
-
             <p><b>{{ comment.author }}</b> ({{comment.email}}) Said on <a href="{{ link }}" style="text-decoration: none; color: #333;">{{ parent.title }}</a></p>
 
             <div>
@@ -29,11 +26,9 @@ comment_notification_template_source = u"""<!DOCTYPE HTML PUBLIC "-//W3C//DTD HT
 
             </div>
 
-
             <div style="text-align: right">
                 <a href="{{ link }}" style="color: #008aff;">&gt;visit and reply comment</a>
             </div>
-
 
             <hr style="margin-top:35px;border:none; border-bottom: 1px solid #eee; height: 1px;"/>
 
@@ -49,7 +44,6 @@ comment_notification_template_source = u"""<!DOCTYPE HTML PUBLIC "-//W3C//DTD HT
 </body>
 </html>"""
 
-
 comment_notification_template = None
 def get_comment_notification_template():
     global comment_notification_template
@@ -57,11 +51,8 @@ def get_comment_notification_template():
         comment_notification_template = Template(comment_notification_template_source)
     return comment_notification_template
 
-
-
 def get_comment_notification_content(comment_obj, parent_obj, current_link):
     template = get_comment_notification_template()
     html = template.render(link=current_link, parent=parent_obj, comment=comment_obj)
     return html
-
 

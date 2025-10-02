@@ -1,4 +1,3 @@
-#coding: utf8
 from farbox_bucket.utils.convert.jade2jinja import convert_jade_to_html
 
 SEND_MESSAGE_WECHAT_TEMPLATE = convert_jade_to_html("""
@@ -10,7 +9,6 @@ xml
     Content <![CDATA[{{message}}]]>
     FuncFlag 0
 """)
-
 
 SEND_POSTS_WECHAT_TEMPLATE = convert_jade_to_html("""
 xml

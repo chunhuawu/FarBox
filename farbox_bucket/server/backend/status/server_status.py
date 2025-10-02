@@ -1,4 +1,3 @@
-# coding: utf8
 import time, os
 from farbox_bucket.bucket.utils import get_bucket_by_public_key, set_bucket_configs, has_bucket
 from farbox_bucket.bucket.create import create_bucket_by_public_key
@@ -30,15 +29,12 @@ def get_server_status_bucket_configs():
         server_status_bucket_configs = configs
     return server_status_bucket_configs
 
-
-
 def get_server_status_bucket():
     global server_status_bucket
     if not server_status_bucket:
         configs = get_server_status_bucket_configs()
         server_status_bucket = configs.get('bucket')
     return server_status_bucket
-
 
 def init_server_status_bucket():
     if 'utc_offset' not in os.environ:
@@ -48,10 +44,8 @@ def init_server_status_bucket():
             utc_offset = 8
         try:
             utc_offset = str(utc_offset)
-        except:
-            utc_offset = '8'
+        except Exception: utc_offset = '8'
         os.environ['utc_offset'] = utc_offset
-
 
     configs = get_server_status_bucket_configs()
     bucket = configs['bucket']
@@ -62,14 +56,10 @@ def init_server_status_bucket():
     create_bucket_by_public_key(public_key)
     set_bucket_configs(bucket, config_type='pages', configs=bucket_web_template)
 
-
-
 def update_server_status_bucket_template():
     bucket = get_server_status_bucket()
     if bucket and has_bucket(bucket):
         set_bucket_configs(bucket, config_type='pages', configs=bucket_web_template)
-
-
 
 # per 2 minutes report once
 @run_long_time(wait=10, sleep_at_end=2*60, log='report server status')

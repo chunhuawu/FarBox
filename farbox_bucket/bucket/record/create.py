@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 from farbox_bucket.bucket.storage.default import storage
 from farbox_bucket.utils import to_md5, smart_unicode
 from farbox_bucket.utils.objectid import ObjectId, is_object_id
@@ -82,12 +80,10 @@ def create_record(bucket, record_data, avoid_repeated=True, auto_id=True, file_c
             site_settings = json_loads(py_record_data.get("raw_content"))
             if isinstance(site_settings, dict):
                 set_bucket_configs(bucket, site_settings, config_type="site")
-        except:
-            pass
+        except Exception: pass
 
     if return_record:
         return py_record_data
-
 
 # 通过 node 之间同步创建的 record 信息
 # record 必然是 dict 类型

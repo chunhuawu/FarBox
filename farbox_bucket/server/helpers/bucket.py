@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 from flask import request, abort, Response
 from farbox_bucket.utils.env import get_env
 from farbox_bucket.utils.web_utils.response import jsonify
@@ -36,8 +34,6 @@ def sync_download_file_by_web_request(record_id, bucket=None):
     else:
         abort(404, error_info)
 
-
-
 def show_bucket_records_for_web_request(bucket=None, default_records_per_page=100, includes_zero_ids=True,
                                         cursor=None, per_page=None):
     # return response or abort error
@@ -59,5 +55,4 @@ def show_bucket_records_for_web_request(bucket=None, default_records_per_page=10
     per_page = per_page or to_per_page(default_records_per_page, request.values.get('per_page'), max_per_page=1000)
     records = get_records_for_bucket(bucket, start_record_id=pre_record_id, limit=per_page)
     return jsonify(records)
-
 

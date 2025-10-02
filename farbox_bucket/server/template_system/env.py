@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 from farbox_bucket.utils import to_unicode, to_md5, smart_unicode, string_types
 
 from jinja2.loaders import  BaseLoader
@@ -20,8 +18,6 @@ from farbox_bucket.server.utils.site_resource import get_template_source
 
 from farbox_bucket.server.template_system.attr_patch import render_attr_func_without_call, patch_attr_func_for_obj
 
-
-
 class FarboxBucketTemplateLoader(BaseLoader):
     def get_source(self, environment, template_name):
         template_source = get_template_source(template_name)
@@ -38,7 +34,6 @@ class FarboxBucketTemplateLoader(BaseLoader):
         template = environment.template_class.from_code(environment, code, globals, uptodate)
         template.source = source
         return template
-
 
 def is_child_parent_repeated(child, parent, tree):
     # tree -> {child: parent}
@@ -60,7 +55,6 @@ def is_child_parent_repeated(child, parent, tree):
     else:
         return False
 
-
 def _get_is_string_or_number(value):
     if isinstance(value, (int, float)):
         return True
@@ -68,9 +62,6 @@ def _get_is_string_or_number(value):
         return True
     else:
         return False
-
-
-
 
 class FarboxBucketEnvironment(SandboxedEnvironment): #  Environment
     intercepted_binops = frozenset(['**', '*', '/', '+'])
@@ -122,8 +113,6 @@ class FarboxBucketEnvironment(SandboxedEnvironment): #  Environment
             else:
                 return self.template_not_found(name)
 
-
-
     def call_binop(self, context, operator, left, right):
         if isinstance(left, Undefined):
             left = ''
@@ -162,7 +151,6 @@ class FarboxBucketEnvironment(SandboxedEnvironment): #  Environment
             else:
                 return SandboxedEnvironment.call_binop(self, context, operator, left, right)
 
-
     def handle_exception(self, exc_info=None, rendered=False, source_hint=None):
         source_hint = source_hint or ''
         if not rendered:
@@ -188,7 +176,6 @@ class FarboxBucketEnvironment(SandboxedEnvironment): #  Environment
         else:
             # 这里不要尝试直接 500， 有可能是 redirect 或者其它错误
             return SandboxedEnvironment.handle_exception(self, exc_info, rendered, source_hint)
-
 
     def getattr(self, obj, attribute):
         if isinstance(obj, Undefined):
@@ -254,15 +241,11 @@ class FarboxBucketEnvironment(SandboxedEnvironment): #  Environment
 
         return value
 
-
 farbox_bucket_env = FarboxBucketEnvironment()
-
-
 
 def render_by_farbox_bucket_env(template_path, **kwargs):
     try:
         template = farbox_bucket_env.get_template(template_path)
         html = template.render(**kwargs)
-    except:
-        html = 'render error'
+    except Exception: html = 'render error'
     return html

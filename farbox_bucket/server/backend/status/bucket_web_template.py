@@ -1,7 +1,3 @@
-# coding: utf8
-
-#coding: utf8
-from __future__ import absolute_import
 
 
 bucket_web_template = {
@@ -233,8 +229,6 @@ bucket_web_template = {
 
     </script>
 
-
-
     {% set date_values=[] %}
     {% set cpu_values=[] %}
     {% set mem_values=[] %}
@@ -286,7 +280,6 @@ bucket_web_template = {
         </div>
         <div class="basic_info">
 
-
         </div>
     {% endif %}
 
@@ -303,7 +296,6 @@ bucket_web_template = {
         )
     </script>
 
-
     <h2> Network Speed (Mb/Second)</h2>
     <div class="md_echarts"  id="network_echart" style="width:100%;min-width: 600px;height:400px;"></div>
     <script type="text/javascript">
@@ -314,8 +306,6 @@ bucket_web_template = {
         )
     </script>
 
-
-
     {% if latest_record %}
         <h2> Processes (latest record)</h2>
         <table id="processes_table" class="display" width="100%"></table>
@@ -325,8 +315,6 @@ bucket_web_template = {
             {% do table_data_set.append(table_record) %}
         {% endfor %}
 
-
-
         <script>
             $(document).ready(function() {
                 show_processes_table({{ table_data_set | tojson}});
@@ -334,7 +322,6 @@ bucket_web_template = {
         </script>
 
     {% endif %}
-
 
     <div class="page_info" style="margin-top:50px; margin-bottom: 50px;">
         {% if request.values.cursor or request.values.icursor%}
@@ -344,9 +331,7 @@ bucket_web_template = {
             <a class="older_page" href="?cursor={{oldest_record._id}}" style="float:right">Older Page</a>
         {% endif %}
 
-
     </div>
-
 
 </body>
 </html>"""

@@ -1,4 +1,3 @@
-#coding: utf8
 import re
 from flask import request
 from farbox_bucket.settings import WEBSITE_DOMAINS, DEBUG, TMP_BUCKET_FOR_DEBUG
@@ -7,9 +6,6 @@ from farbox_bucket.bucket.utils import get_admin_bucket, get_buckets_size
 from farbox_bucket.bucket.domain.utils import get_bucket_from_domain
 from farbox_bucket.server.utils.request_path import get_bucket_from_url
 from farbox_bucket.server.utils.cache_for_function import cache_result
-
-
-
 
 @cache_result
 def get_bucket_from_request(try_referrer=True, hit_admin_bucket=True):

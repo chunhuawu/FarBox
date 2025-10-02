@@ -1,4 +1,3 @@
-# coding: utf8
 import re
 import time
 from farbox_bucket.utils import string_types, smart_unicode, is_a_markdown_file, to_int
@@ -6,7 +5,6 @@ from farbox_bucket.bucket.utils import has_bucket, get_now_from_bucket
 from farbox_bucket.bucket.record.utils import get_type_from_record
 from farbox_bucket.bucket.record.get.path_related import get_record_by_path
 from farbox_bucket.server.helpers.file_manager import sync_file_by_server_side
-
 
 def append_to_markdown_doc_and_sync(bucket, path, content, lines_to_append=1, reverse=False,
                                     do_not_repeat=True, lines_more_diff=None, draft_by_default=False):
@@ -32,8 +30,7 @@ def append_to_markdown_doc_and_sync(bucket, path, content, lines_to_append=1, re
                 diff = time.time() - old_doc.get('timestamp')
                 if diff > lines_more_diff:
                     lines_to_append += 1
-            except:
-                pass
+            except Exception: pass
 
     interval =  '\r\n' * abs(to_int(lines_to_append, max_value=10)) # 间隔换行
 

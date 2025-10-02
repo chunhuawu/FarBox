@@ -1,9 +1,6 @@
-#coding: utf8
-from __future__ import absolute_import
 from farbox_bucket.utils import smart_unicode, get_md5, string_types
 from farbox_bucket.utils.functional import curry
 from flask import _request_ctx_stack, request
-
 
 # treat request as g
 
@@ -58,8 +55,6 @@ def cache_wrapper(func, cache_name):
     _func.original_func = func
 
     return _func
-
-
 
 def cache_result(*args, **kwargs):
     prefix = 'cached_by_func_'

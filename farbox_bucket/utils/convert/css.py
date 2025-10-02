@@ -1,13 +1,10 @@
-#coding: utf8
 from scss import Scss
 from scss.errors import SassSyntaxError
 compiler = Scss()
 import os, re
 try:
     import gevent
-except:
-    gevent = None
-
+except Exception: gevent = None
 
 def compile_css(content, filename=None, hash_key=None, cache_client=None):
     # 计算 cache_key
@@ -34,8 +31,7 @@ def compile_css(content, filename=None, hash_key=None, cache_client=None):
         try:
             message = str(e)
             to_return = '/*%s*/\n%s' % (message, raw_content)
-        except:
-            to_return = raw_content
+        except Exception: to_return = raw_content
     except Exception, e:
         to_return = raw_content
 
@@ -45,14 +41,12 @@ def compile_css(content, filename=None, hash_key=None, cache_client=None):
 
     return to_return
 
-
 def compile_css_with_timeout(content, filename=None, hash_key=None, cache_client=None, timeout=2):
     if not gevent:
         return
     gevent_job = gevent.spawn(compile_css, content, filename, hash_key, cache_client)
     try:
         content = gevent_job.get(block=True, timeout=timeout)
-    except:
-        content = ''
+    except Exception: content = ''
         gevent_job.kill(block=False)
     return content

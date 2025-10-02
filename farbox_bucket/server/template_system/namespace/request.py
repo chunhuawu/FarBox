@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 from flask import request as _request
 import copy, re, os, time
 from farbox_bucket.utils.functional import cached_property
@@ -10,8 +8,6 @@ from farbox_bucket.server.utils.cache_for_function import cache_result
 from farbox_bucket.server.utils.request_path import get_request_path, get_request_offset_path
 from farbox_bucket.server.utils.request import get_language
 from farbox_bucket.server.utils.request_context_vars import get_url_prefix_in_request
-
-
 
 def get_url_without_prefix(url, prefix=None):
     # url 去除 prefix 后， 一般以 '/' 开头
@@ -31,7 +27,6 @@ def get_url_without_prefix(url, prefix=None):
             return url
     return raw_url
 
-
 def get_visitor_ip():
     # 得到访客的 ip
     if _request.remote_addr: # 比如 nginx 过来的，proxy-pass & 走 unix socket 的缘故，remote_addr 会是空的, 而是打到 X-Forwarded-For 上
@@ -45,8 +40,6 @@ def get_visitor_ip():
         else:
             return ''
 
-
-
 class Request(object):
     def __init__(self):
         self.url_fields = ['path', 'url', 'base_url', 'url_root', ]
@@ -55,7 +48,6 @@ class Request(object):
         self.__setattr__ = lambda key,value: None # not allowed
 
         self.set_property_allowed = True
-
 
     def __getattr__(self, item):
         if item == 'refer':
@@ -95,23 +87,19 @@ class Request(object):
             path = get_url_without_prefix(path)
         return get_request_offset_path(offset, path=path)
 
-
     @cached_property
     def web_path(self):
         request_path = get_request_path()
         request_path = '/' + request_path.lstrip('/')
         return request_path
 
-
     @cached_property
     def raw_user_agent(self):
         return _request.environ.get('HTTP_USER_AGENT') or ''
 
-
     @cached_property
     def ip(self):
         return get_visitor_ip()
-
 
     @cached_property
     def protocol(self):
@@ -142,7 +130,6 @@ class Request(object):
     def language(self):
         return get_language() or ""
 
-
     def get_mime_type(self, path=''):
         if not isinstance(path, (str, unicode)):
             path = to_unicode(path)
@@ -151,7 +138,6 @@ class Request(object):
             return guess_type(path) or ''
         else:
             return ''
-
 
     def get_ext(self, path=''):
         if not isinstance(path, (str, unicode)):
@@ -167,8 +153,6 @@ class Request(object):
             return join_url(base_url, **kwargs)
         else:
             return base_url
-
-
 
 @cache_result
 def request():

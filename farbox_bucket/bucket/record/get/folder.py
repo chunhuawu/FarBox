@@ -1,11 +1,8 @@
-# coding: utf8
 from farbox_bucket.utils import smart_unicode, to_int
 from farbox_bucket.bucket.utils import get_bucket_files_info
 from .path_related import get_records_by_paths
 from .path_related import excludes_paths
 from .mix import mix_get_record_paths
-
-
 
 def get_folder_children_count(bucket, folder_path, field='posts', direct=False, files_info=None):
     # posts & images
@@ -26,9 +23,6 @@ def get_folder_children_count(bucket, folder_path, field='posts', direct=False, 
     num = folder_matched_info.get(count_key, 0)
     num = to_int(num, default_if_fail=0)
     return num
-
-
-
 
 def get_folder_records(bucket, under=None, level_start=0, level_end=1, min_posts_count=0, min_images_count=0,
                        excludes=("_", "template", "configs", "licenses"), limit=300):

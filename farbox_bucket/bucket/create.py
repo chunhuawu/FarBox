@@ -1,4 +1,3 @@
-#coding: utf8
 import time
 import datetime
 import gevent
@@ -14,9 +13,7 @@ from farbox_bucket.bucket.invite import can_use_invitation, check_invitation_by_
 from farbox_bucket.bucket.service.bucket_service_info import change_bucket_expired_date
 #from farbox_bucket.server.template_system.exceptions import TemplateDebugException
 
-
 from flask import request
-
 
 def create_bucket_by_public_key(public_key, init_configs=None, force_to_create=False):
     # 本质上是创建一个 创世configs
@@ -61,8 +58,6 @@ def create_bucket_by_public_key(public_key, init_configs=None, force_to_create=F
     #else:
     #    return True
 
-
-
 def create_bucket_by_web_request(invitation_code=None):
     # return None or error_info
     # token, bucket(check by private_key), private_key, domain,
@@ -71,8 +66,7 @@ def create_bucket_by_web_request(invitation_code=None):
     private_key = request.values.get('private_key', '').strip()
     try:
         bucket = get_bucket_by_private_key(private_key)
-    except:
-        bucket = None
+    except Exception: bucket = None
     if not bucket:
         return 'invalid private key'
     public_key = get_public_key_from_private_key(private_key)
@@ -100,7 +94,4 @@ def create_bucket_by_web_request(invitation_code=None):
     mark_bucket_login_by_private_key(private_key)
     #else:
     #    return "exists already"
-
-
-
 

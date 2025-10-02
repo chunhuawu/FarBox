@@ -1,4 +1,3 @@
-# coding: utf8
 import time
 from gevent import spawn
 from flask import request
@@ -9,9 +8,7 @@ from farbox_bucket.bucket.utils import get_bucket_in_request_context, get_bucket
 from farbox_bucket.server.utils.request_context_vars import get_doc_in_request, get_doc_type_in_request, get_doc_path_in_request
 from farbox_bucket.server.helpers.file_manager import sync_file_by_server_side
 
-
 one_year_seconds = 365 * 24 * 60 * 60
-
 
 def get_visits_db_name_for_bucket(bucket):
     name = '_visits_%s' % bucket
@@ -21,7 +18,6 @@ def get_visits_key(doc_path, field='visits'):
     doc_path = doc_path.strip().strip('/').lower()
     visits_key = '%s/%s' % (field, doc_path)
     return visits_key
-
 
 def update_post_visits_for_response(response):
     doc = get_doc_in_request()
@@ -45,7 +41,6 @@ def update_post_visits_for_response(response):
     # set cookie to know it's not a new visitor
     response.set_cookie('last_visited_at', str(now), max_age=one_year_seconds)
 
-
     last_visited_at = to_float(request.cookies.get('last_visited_at', 0)) or 0
 
     diff = now - last_visited_at
@@ -56,7 +51,6 @@ def update_post_visits_for_response(response):
 
     # 异步更新到数据库
     spawn(async_update_visits, bucket, visits_key, visitors_key, is_visitor=is_visitor)
-
 
 def async_update_visits(bucket, visits_key, visitors_key, is_visitor=False):
     visits_db_name = get_visits_db_name_for_bucket(bucket)
@@ -71,7 +65,6 @@ def async_update_visits(bucket, visits_key, visitors_key, is_visitor=False):
             return
         sync_file_by_server_side(bucket, relative_path="_data/visits.csv", content=visits_csv_raw_content)
 
-
 def get_post_visits_count(doc, field='visits'):
     # field is in ['visits', 'visitors']
     bucket = get_bucket_in_request_context()
@@ -85,8 +78,6 @@ def get_post_visits_count(doc, field='visits'):
     count = hget(visits_db_name, key) or 0
     count = to_int(count, default_if_fail=0)
     return count
-
-
 
 def load_all_posts_visits_from_csv(bucket, csv_file_record):
     visits_db_name = get_visits_db_name_for_bucket(bucket)
@@ -115,7 +106,6 @@ def load_all_posts_visits_from_csv(bucket, csv_file_record):
         hset(visits_db_name, visits_key, visits)
         hset(visits_db_name, visitors_key, visitors)
 
-
 def get_all_posts_visits(bucket):
     visits_db_name = get_visits_db_name_for_bucket(bucket)
     raw_result = hgetall(visits_db_name)
@@ -127,7 +117,6 @@ def get_all_posts_visits(bucket):
         path = path.strip('/').lower()
         visits_data.setdefault(path, {})[prefix] = to_int(v, default_if_fail=0)
     return visits_data
-
 
 def export_all_posts_visits_as_csv(bucket):
     visits_data = get_all_posts_visits(bucket)

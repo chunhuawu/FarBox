@@ -1,4 +1,3 @@
-# coding: utf8
 import re
 from farbox_bucket.utils import smart_unicode, to_int, to_float
 from farbox_bucket.server.utils.cache_for_function import cache_result
@@ -48,8 +47,6 @@ def get_grid_factor(k, base=24, odd_base=5):
         k = 1
     return k, base
 
-
-
 # jinja2 2.9+ 之后，就不用写成渲染器的模式
 def pure(*args, **kwargs): # 对 pure css 的处理
     do_grid = True
@@ -72,7 +69,7 @@ def pure(*args, **kwargs): # 对 pure css 的处理
             grid_factor = get_grid_factor(raw_factor)
             grid_value, grid_base = grid_factor
             try: prefix = factors_devices[i]
-            except: break
+            except Exception: break
             grid_class = '%s-%s-%s' % (prefix, grid_value, grid_base)
             html_class += ' %s'%grid_class
         do_grid = False

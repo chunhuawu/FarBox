@@ -1,4 +1,3 @@
-# coding: utf8
 from farbox_bucket.settings import DEBUG, sentry_client
 from farbox_bucket.utils import smart_unicode, get_md5
 from farbox_bucket.utils.cache import LimitedSizeDict
@@ -15,8 +14,6 @@ def get_api_template_env():
     if not api_template_env:
         api_template_env = FarboxBucketEnvironment() # SandboxedEnvironment
     return api_template_env
-
-
 
 template_source_cache = LimitedSizeDict(size=500)
 
@@ -41,14 +38,11 @@ def render_template_source(template_source, *args, **kwargs):
         html_content = '<div style="color:red">api template error</div>'
     return html_content
 
-
-
 def render_api_template(name, *args, **kwargs):
     name = name.replace('.jade', '')
     template_source = api_templates.get(name, '')
     template_source = smart_unicode(template_source)
     return render_template_source(template_source, *args, **kwargs)
-
 
 def render_api_template_as_response(name, *args, **kwargs):
     html = render_api_template(name, *args, **kwargs)

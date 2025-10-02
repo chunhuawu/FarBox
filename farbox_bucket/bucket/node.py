@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 import os
 import socket
 import uuid
@@ -17,17 +15,14 @@ def get_current_node_id():
             node_id_content = f.read().strip()
         if node_id_content:
             return node_id_content
-    except:
-        pass
+    except Exception: pass
     # at last， 构造并保存
     node_id = uuid.uuid4().hex
     try:
         with open(node_id_filepath, 'wb') as f:
             f.write(node_id)
-    except:
-        pass
+    except Exception: pass
     return node_id
-
 
 def get_node_url(node, route='farbox_bucket_message_api'):
     node = node or ''
@@ -37,8 +32,6 @@ def get_node_url(node, route='farbox_bucket_message_api'):
         node = "http://%s" % (node.lstrip("/"))
     node_url = '%s/%s' % (node, route.lstrip('/'))
     return node_url
-
-
 
 def get_node_ip(node):
     node_url = get_node_url(node)
@@ -52,12 +45,8 @@ def get_node_ip(node):
     else:
         try:
             ip = socket.gethostbyname(node_host)
-        except:
-            ip = '0.0.0.0'
+        except Exception: ip = '0.0.0.0'
         return ip
-
-
-
 
 def get_remote_nodes_to_sync_from():
     # 从本地配置中，引入要同步的节点 list，每一行一条记录; 简单有效的是，每行一个 ip

@@ -1,11 +1,7 @@
-# coding: utf8
 from flask import request
 from farbox_bucket.server.utils.cache_for_function import cache_result
 from farbox_bucket.server.utils.response import force_response
 from farbox_bucket.server.template_system.api_template_render import render_api_template
-
-
-
 
 def page(*sub_args, **kwargs):
     caller = kwargs.pop('caller', None)

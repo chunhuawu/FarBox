@@ -1,4 +1,3 @@
-# coding: utf8
 from math import ceil
 from flask import request
 from farbox_bucket.utils import to_int, string_types
@@ -11,7 +10,6 @@ from farbox_bucket.server.utils.record_and_paginator.base_paginator import BaseP
 from farbox_bucket.server.utils.request_context_vars import get_context_value_from_request
 
 MAX_PER_PAGE = 1000
-
 
 def pg_with_keywords_search(bucket, keywords, limit=None, page=None, pager_name=None, with_page=True,
             path=None, status=None,  sort_by=None,excludes=None,
@@ -57,8 +55,6 @@ def pg_with_keywords_search(bucket, keywords, limit=None, page=None, pager_name=
     else:
         records = filter_records(records, path_prefix=path, status=status, data_type="post", excludes=excludes)
     return records
-
-
 
 def auto_pg(bucket, data_type, limit=None, page=None, pager_name=None, with_page=True,
             path=None, status=None, level_start=None, level_end=None, excludes=None,
@@ -123,16 +119,13 @@ def auto_pg(bucket, data_type, limit=None, page=None, pager_name=None, with_page
 
     return records
 
-
-
 def get_paginator(index_or_name=0, match_name=False):
     paginators  = list(getattr(request, 'paginators', []))
     paginators_dict = getattr(request, 'paginators_dict', {})
     if paginators and isinstance(index_or_name, int):
         try:
             return paginators[index_or_name]
-        except:
-            return paginators[0]
+        except Exception: return paginators[0]
     elif paginators_dict and isinstance(index_or_name, string_types):
         # 必然有paginators
         if match_name:

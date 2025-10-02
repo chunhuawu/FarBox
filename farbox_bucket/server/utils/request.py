@@ -1,10 +1,8 @@
-#coding: utf8
 import base64
 from flask import request, escape, abort
 import re, urlparse
 from farbox_bucket.utils import smart_unicode, get_value_from_data
 from farbox_bucket.bucket.token.utils import get_logined_bucket
-
 
 def does_browser_support_webp():
     browser_accept = request.headers.get('Accept') or ''
@@ -13,8 +11,6 @@ def does_browser_support_webp():
         return True
     else:
         return False
-
-
 
 def need_login(bucket=None, check=True):
     logined_bucket = get_logined_bucket(check=check)
@@ -27,8 +23,6 @@ def need_login(bucket=None, check=True):
     else:
         return True
 
-
-
 def has_file_in_request():
     """request中是否有文件内容"""
     if request.files or 'raw_content' in request.form or 'base64' in request.form:
@@ -37,7 +31,6 @@ def has_file_in_request():
         return True
     else:
         return False
-
 
 def get_file_content_in_request():
     """提取request的文件内容，常和has_file_in_request配合使用"""
@@ -59,13 +52,11 @@ def get_file_content_in_request():
             head, content = content.split(',', 1)
         try:
             file_content = base64.b64decode(content)
-        except:
-            file_content = ''
+        except Exception: file_content = ''
     else:
         file_content = ''
     request.cached_file_content = file_content
     return file_content
-
 
 def has_args(args):
     for arg in args:
@@ -81,7 +72,6 @@ def get_args(args, lower=False):
             value = value.lower()
         values.append(value)
     return values
-
 
 def get_language(environ=None):
     # todo 可以在 cookie 中尝试也读取, lang
@@ -102,8 +92,6 @@ def get_language(environ=None):
         lang = ''
     return lang.replace('-', '_')
 
-
-
 def get_referrer_host(referrer=None):
     try:
         referrer = referrer or request.referrer
@@ -113,12 +101,9 @@ def get_referrer_host(referrer=None):
         try:
             host = urlparse.urlparse(referrer).netloc
             return host.lower()
-        except:
-            return ''
+        except Exception: return ''
     else:
         return ''
-
-
 
 def safe_get(key): # from request.form
     value = request.form.get(key)
@@ -130,8 +115,6 @@ def safe_get(key): # from request.form
         if value and '://' not in value:
             value = 'http://' + value
     return value
-
-
 
 def get_visitor_ip():
     # 得到访客的 ip

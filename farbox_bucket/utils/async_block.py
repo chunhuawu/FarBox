@@ -1,12 +1,8 @@
-# coding: utf8
-from __future__ import absolute_import
 from flask import request
 from gevent.event import Event
 import gevent
 
-
 async_website_blocks = {}
-
 
 def run_in_website_with_block(func):
     def _func(*args, **kwargs):

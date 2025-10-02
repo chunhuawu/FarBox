@@ -1,11 +1,9 @@
-# coding: utf8
 from functools import partial
 from farbox_bucket.utils import to_int, smart_unicode, is_a_markdown_file
 from farbox_bucket.bucket.utils import get_bucket_posts_info, set_bucket_configs
 from farbox_bucket.bucket.record.utils import get_path_from_record
 from farbox_bucket.bucket.record.get.path_related import has_record_by_path
 from farbox_bucket.utils.md_related.markdown_doc_links import get_linked_docs_from_markdown_content
-
 
 # for Markdown document only
 # 服务器端每次 path 相关的 record 过来，会更新，但同时，也允许 client 直接覆盖性更新这部分数据
@@ -83,7 +81,6 @@ def update_post_tags_words_info(bucket, record_data):
                 links_info_link_back_paths.remove(lower_path)
                 if not links_info_link_back_paths: # 空的 links 了
                     links_info_links.pop(link, None)
-
 
     else:
         bucket_text_words += text_words

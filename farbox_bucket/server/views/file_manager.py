@@ -1,4 +1,3 @@
-# coding: utf8
 from flask import request, abort
 from farbox_bucket.server.web_app import app
 from farbox_bucket.bucket.utils import set_bucket_in_request_context, get_bucket_in_request_context
@@ -8,9 +7,6 @@ from farbox_bucket.server.template_system.api_template_render import render_api_
 from farbox_bucket.server.helpers.file_manager import sync_file_by_web_request, \
     check_should_sync_files_by_web_request
 from farbox_bucket.server.helpers.bucket import sync_download_file_by_web_request, show_bucket_records_for_web_request
-
-
-
 
 ######### 简单的 client 的对应 starts #########
 
@@ -33,8 +29,6 @@ def file_manager_download_api():
 
 ######### 简单的 client 的对应 ends #########
 
-
-
 def get_bucket_for_file_manager():
     bucket = get_bucket_in_request_context() or request.values.get('bucket')
     if not bucket:
@@ -53,19 +47,13 @@ def show_file_manager_related_page(subname, path=''):
     template_name = 'page_file_%s.jade' % subname
     return render_api_template_as_response(template_name)
 
-
-
 @app.route("/__web_editor", methods=["POST", "GET"])
 def show_web_editor():
     set_bucket_in_request_context(get_bucket_for_file_manager())
     return render_api_template_as_response("page_web_editor.jade")
 
-
-
 @app.route("/__web_editor_posts", methods=["POST", "GET"])
 def show_web_editor_posts():
     set_bucket_in_request_context(get_bucket_for_file_manager())
     return render_api_template_as_response("page_web_editor_posts.jade")
-
-
 

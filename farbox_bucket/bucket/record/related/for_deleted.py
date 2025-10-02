@@ -1,4 +1,3 @@
-# coding: utf8
 import os
 from farbox_bucket.bucket.storage.default import storage
 from farbox_bucket.utils.ssdb_utils import hset, hget, hdel, zset, zdel, hincr, py_data_to_ssdb_data
@@ -41,11 +40,8 @@ def after_path_related_record_deleted(bucket, record_data):
         hdel(bucket_name_for_url, url_path)
     hdel(bucket_name_for_url, path)
 
-
     # 删除文件, 使用 storage 来处理这里的逻辑
     storage.when_record_deleted(bucket, record_data)
-
-
 
 def delete_path_related_record_by_path(bucket, path, record_data=None, continue_to_create_record=False):
     record_id = None
@@ -68,10 +64,6 @@ def delete_path_related_record_by_path(bucket, path, record_data=None, continue_
     if not continue_to_create_record:
         # 后面如果是继续创建 record，还是会调用到 update_files_and_tags 的逻辑
         update_tags_info_for_posts(bucket=bucket, record_data=record_data)  # files and posts info
-
-
-
-
 
 def auto_clean_record_before_handle_path_related_record(bucket, record_data):
     # 有 path 的情况，并且 client 过来的数据要求 _auto_clean_bucket 的，则进行如此处理

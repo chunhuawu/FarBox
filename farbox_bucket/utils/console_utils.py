@@ -1,8 +1,4 @@
-#coding: utf8
-from __future__ import absolute_import
 import sys, getopt
-
-
 
 # getopt.getopt(['--file=error.txt', '-h', '-v', '6',  '--version', '9'], 'hv:', ['file=', 'version'])
 #getopt.getopt([ 'farbox', '--file=error.txt', '--version','-h', '-v', '6'], 'hv:', ['file=', 'version'])
@@ -19,7 +15,6 @@ def get_args_from_console(raw_args=None, short_opts='', long_opts=None):
         k = k.strip('-')
         kwargs[k] = v
     return kwargs, args
-
 
 def get_first_arg_from_console():
     raw_args = sys.argv[1:]

@@ -1,15 +1,13 @@
-#coding: utf8
 import os
 import datetime
 try: import send2trash
-except: send2trash = None
+except Exception: send2trash = None
 from functools import partial
 from farbox_bucket import settings
 from farbox_bucket.utils import get_md5_for_file, smart_str
 from farbox_bucket.utils.error import print_error
 from farbox_bucket.utils.path import join, make_sure_path, read_file
 from farbox_bucket.client.message import send_message
-
 
 def default_get_cursor_func(root):
     if not os.path.isdir(root):
@@ -20,16 +18,13 @@ def default_get_cursor_func(root):
     else:
         return None
 
-
 def default_set_cursor_func(root, cursor):
     cursor_file = join(root, ".farbox.cursor")
     try:
         with open(cursor_file, "wb") as f:
             f.write(cursor)
             return  True
-    except:
-        return False
-
+    except Exception: return False
 
 def store_sync_from_log(root, log):
     now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -39,11 +34,7 @@ def store_sync_from_log(root, log):
         make_sure_path(sync_log_filepath)
         with open(sync_log_filepath, 'a') as f:
             f.write(log)
-    except:
-        pass
-
-
-
+    except Exception: pass
 
 def sync_from_farbox(root, private_key, node,
                      get_cursor_func=None, save_cursor_func=None,
@@ -117,8 +108,7 @@ def sync_from_farbox(root, private_key, node,
         # 如果文件已经存在，保存之前，先放到回收站了，给用户多一个反悔的可能；另外 Windows 上 send2trash 并不总是正确的，except 就直接 pass
         if os.path.isfile(abs_filepath) and send2trash is not None:
             try: send2trash.send2trash(abs_filepath)
-            except: pass
-
+            except Exception: pass
 
         try:
             make_sure_path(abs_filepath)
@@ -126,8 +116,7 @@ def sync_from_farbox(root, private_key, node,
                 f.write(smart_str(raw_file_content))
             if settings.DEBUG:
                 print("downloaded %s" % abs_filepath)
-        except:
-            if settings.DEBUG:
+        except Exception: if settings.DEBUG:
                 print_error()
             error_happened = True
 
@@ -137,7 +126,6 @@ def sync_from_farbox(root, private_key, node,
 
         # 存储日志
         store_sync_from_log(root, abs_filepath)
-
 
     if not error_happened and last_cursor:
         # 没有错误发生，才会保存 cursor，确保同步的数据尽可能保持一致性
@@ -155,5 +143,4 @@ def sync_from_farbox(root, private_key, node,
                 store_sync_from_log(root, "sync finished, no need to update")
             if settings.DEBUG:
                 print("sync-from finished, %s records" % len(records))
-
 

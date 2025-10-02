@@ -1,4 +1,3 @@
-#coding: utf8
 from flask import request
 from farbox_bucket.settings import WEBSITE_DOMAINS
 from farbox_bucket.utils import to_sha1
@@ -12,14 +11,11 @@ from .bucket_api_token import check_bucket_api_token, check_bucket_login_token, 
 from farbox_bucket.server.utils.request_context_vars import get_logined_bucket_in_request, \
     set_logined_bucket_in_request, get_logined_bucket_checked_in_request, get_pending_bucket_bucket_in_request
 
-
-
 def get_bucket_login_key(bucket):
     bucket_login_token = get_bucket_login_token(bucket)
     raw_value = '%s-%s-%s' % (bucket, 'login_key', bucket_login_token)
     login_key = to_sha1(raw_value)
     return login_key
-
 
 def mark_bucket_login_by_private_key(private_key):
     if not private_key:
@@ -41,7 +37,6 @@ def mark_bucket_logout():
 def refresh_bucket_login_key(bucket):
     set_bucket_login_token(bucket)
     mark_bucket_logout()
-
 
 def is_bucket_login(bucket=None):
     # 会进行校验
@@ -82,7 +77,6 @@ def get_logined_bucket(check=True):
                 return None
     return bucket_in_cookie
 
-
 def get_logined_admin_bucket():
     # 获得 login 并且是管理员的 bucket
     logined_bucket = get_logined_bucket(check=True)
@@ -90,7 +84,6 @@ def get_logined_admin_bucket():
         admin_bucket = get_admin_bucket()
         if admin_bucket == logined_bucket:
             return admin_bucket
-
 
 def refresh_bucket_client_api_token(bucket):
     """
@@ -100,7 +93,6 @@ def refresh_bucket_client_api_token(bucket):
     """
     set_bucket_api_token(bucket)
     return get_bucket_client_api_token(bucket)
-
 
 def get_bucket_client_api_token(bucket):
     api_token = get_bucket_api_token(bucket)

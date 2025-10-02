@@ -1,8 +1,6 @@
-# coding: utf8
 
 from .wiki import show_wiki_as_sub_site, show_wiki_nodes_as_sub_site
 from .album import show_albums_as_sub_site
-
 
 sub_site_funcs = [
     show_albums_as_sub_site,

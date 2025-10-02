@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 from farbox_bucket.utils import smart_str, smart_unicode
 from farbox_bucket.utils.functional import cached_property
 from dateutil.parser import parse as date_parse
@@ -18,16 +16,13 @@ class UTCDateJSONEncoder(json.JSONEncoder):
             return v
         return json.JSONEncoder.default(self, o)
 
-
-
 def json_object_hook(dct):
     if '$date_string' in dct:
         value = dct['$date_string']
         try: value = date_parse(value)
-        except: pass
+        except Exception: pass
         return value
     return dct
-
 
 def json_dumps(obj, indent=None):
     # 主要是 mongodb 上的一些 obj
@@ -35,12 +30,9 @@ def json_dumps(obj, indent=None):
         obj['_id'] = smart_str(obj['_id'])
     return json.dumps(obj, cls=UTCDateJSONEncoder, indent=indent)
 
-
 def json_loads(raw_content):
     # 主要是 mongodb 上的一些 obj
     return json.loads(raw_content, object_hook=json_object_hook)
-
-
 
 def csv_to_list(raw_content, max_rows=None, max_columns=None, return_max_length=False, auto_fill=False):
     # auto_fill 表示会自动补充缺失的空 cell
@@ -68,7 +60,6 @@ def csv_to_list(raw_content, max_rows=None, max_columns=None, return_max_length=
     else:
         return result
 
-
 def list_to_csv(data_list, max_rows=None):
     content_list = []
     i = 0
@@ -81,7 +72,6 @@ def list_to_csv(data_list, max_rows=None):
     content = '\n'.join(content_list)
     return smart_unicode(content)
 
-
 def dump_csv(list_obj, lines=True):
     f = BytesIO()
     wr = csv.writer(f, quoting=csv.QUOTE_ALL)
@@ -93,8 +83,6 @@ def dump_csv(list_obj, lines=True):
         list_obj = [smart_str(e) for e in list_obj]
         wr.writerow(list_obj)
     return f.getvalue()
-
-
 
 def csv_list_to_dict(data_list):
     # 用第一行，作为 key，形成一个 obj list，每个 obj 是一个 dict 对象
@@ -126,7 +114,7 @@ def csv_list_to_dict(data_list):
                     value = obj_list[i]
                     #if key == 'date' and value:
                     #    try: value = date_parse(value, utc_offset=utc_offset)
-                    #    except: pass
+                    #    except Exception: pass
                     if value:
                         obj[key] = value
                 except IndexError:
@@ -134,7 +122,6 @@ def csv_list_to_dict(data_list):
         if obj:
             result.append(obj)
     return result
-
 
 def csv_data_to_objects(data):
     # csv_data 本身是一个list组成的list，要转化为dict组成的list
@@ -144,7 +131,6 @@ def csv_data_to_objects(data):
         objects = []
     return objects
 
-
 def csv_records_to_object(keys, *records):
     # 多个records，对应的keys，组成的object
     data = [keys] + list(records)
@@ -153,23 +139,18 @@ def csv_records_to_object(keys, *records):
         return objects[0]
     return {}
 
-
 def json_b64_loads(raw_content):
     try:
         raw_content = base64.b64decode(raw_content)
-    except:
-        pass
+    except Exception: pass
     try:
         data = json_loads(raw_content)
-    except:
-        data = {}
+    except Exception: data = {}
     return data
-
 
 def json_b64_dumps(obj):
     json_data = json_dumps(obj)
     return base64.b64encode(json_data)
-
 
 class DataWorker(object):
     def __init__(self, keys, origin):
@@ -187,11 +168,9 @@ class DataWorker(object):
             if old_value is not None and not isinstance(old_value, (str, unicode)):
                 try:
                     value = type(old_value)(value)
-                except:
-                    pass
+                except Exception: pass
             obj[key] = value
         return obj
-
 
     @cached_property
     def changed_properties(self):
@@ -213,7 +192,6 @@ class DataWorker(object):
     def old(self):
         return self.origin
 
-
     def get_obj_with_processors(self, processors):
         # processors是key/v形式的，确定new_obj是否合适作为存储的对象
         # 比如email修改了，但是email是不会存储的
@@ -230,11 +208,6 @@ class DataWorker(object):
                 else: # update
                     new_obj[key] = new_value
         return new_obj
-
-
-
-
-
 
 def make_tree(docs, kept_fields=None):
     if not docs:

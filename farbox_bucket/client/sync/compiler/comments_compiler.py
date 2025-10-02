@@ -1,9 +1,6 @@
-# coding: utf8
 import time, os
 from farbox_bucket.client.sync.compiler.basic_compiler import BasicSyncCompiler
 from farbox_bucket.utils.data import csv_to_list, csv_data_to_objects
-
-
 
 class CommentsSyncCompiler(BasicSyncCompiler):
     def __init__(self, *args, **kwargs):

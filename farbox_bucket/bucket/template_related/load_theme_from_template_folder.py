@@ -1,4 +1,3 @@
-# coding: utf8
 import os
 from farbox_bucket.utils.functional import curry
 from farbox_bucket.utils import smart_unicode, get_md5
@@ -9,7 +8,6 @@ from farbox_bucket.utils.convert.css import compile_css_with_timeout
 from farbox_bucket.utils.convert.jade2jinja import convert_jade_to_html
 from farbox_bucket.utils.memcache import get_cache_client
 
-
 def compile_css(content):
     hash_key = get_md5(content)
     return compile_css_with_timeout(content, timeout=2, hash_key=hash_key, cache_client=get_cache_client())
@@ -18,14 +16,11 @@ def compile_jade(content):
     hash_key = get_md5(content)
     return convert_jade_to_html(content, hash_key=hash_key, cache_client=get_cache_client())
 
-
-
 server_side_template_resource_compilers = {
     'scss': ('css', compile_css),
     'less': ('css', compile_css),
     'jade': ('html', compile_jade)
 }
-
 
 def load_theme_from_template_folder_for_bucket(bucket, prefix="template"):
     if not has_bucket(bucket):
@@ -58,5 +53,4 @@ def load_theme_from_template_folder_for_bucket(bucket, prefix="template"):
     set_bucket_configs(bucket, info, config_type='pages')
 
     return info
-
 

@@ -1,10 +1,7 @@
-# coding: utf8
 import os
 from farbox_bucket.utils import string_types, to_int, smart_unicode
 
 default_excludes = ["_", "template", "configs", "licenses"]
-
-
 
 def should_exclude_record(record, excludes):
     should = False
@@ -28,8 +25,6 @@ def should_exclude_record(record, excludes):
         should = True
     return should
 
-
-
 def does_hit_level(record, level, path_prefix):
     path = record.get('path')
     base_slash_number = path_prefix.strip('/').count('/') if path_prefix else -1
@@ -50,7 +45,6 @@ def does_hit_level(record, level, path_prefix):
                 return  True
     return False # at last
 
-
 def does_hit_status(record, status):
     if status == "all":
         return True
@@ -60,15 +54,12 @@ def does_hit_status(record, status):
     else:
         return False
 
-
 def does_hit_type(record, data_type):
     record_type = record.get('_type') or record.get('type')
     if record_type == data_type:
         return True
     else:
         return False
-
-
 
 def filter_records(records, path_prefix='', status=None, excludes=None, data_type=None):
     # 主要是获取list数据类型的， 然后最最终的结果进行一次过滤

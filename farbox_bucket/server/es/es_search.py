@@ -1,4 +1,3 @@
-# coding: utf8
 import re
 from gevent import spawn, Timeout
 from flask import request
@@ -24,7 +23,6 @@ def to_sort_str(sort):
         sort = default_sort
     return sort
 
-
 def es_search_posts(bucket, keywords, sort=None, status=None, path='', limit=None, page=1,
                     search_fields=None, date_start=None, date_end=None, print_query=False, should_sync_es=True):
     # 异步进行一次同步（从Mongodb到ES)
@@ -34,8 +32,7 @@ def es_search_posts(bucket, keywords, sort=None, status=None, path='', limit=Non
         # 在 web app 应用时候的调用，不然会产生异常
         try:
             search_sync_is_blocked = getattr(request, 'search_sync_block', None)
-        except:
-            search_sync_is_blocked = True
+        except Exception: search_sync_is_blocked = True
         if search_sync_is_blocked:
             # 其它函数中已经请求同步了 或者是不支持读取 request 的（比如直接非 web 形式调用）
             sync_job = None
@@ -110,7 +107,6 @@ def es_search_posts(bucket, keywords, sort=None, status=None, path='', limit=Non
         #must.append({'prefix': {'path': {'prefix': path}}})
         must.append({'prefix': {'path': {'value': path}}})
 
-
     if sort == 'position':
         es_sort = {"position": {"order": 'asc'}}
     elif sort == '-position':
@@ -169,10 +165,7 @@ def es_search_posts(bucket, keywords, sort=None, status=None, path='', limit=Non
             post_ids.append(hit_post_id)
             post_ids_with_highlight.append([hit_post_id, highlight_result])
 
-
     return total, post_ids_with_highlight
-
-
 
 def get_one_post_by_es(bucket, keywords, under=None):
     if not bucket:
@@ -183,7 +176,6 @@ def get_one_post_by_es(bucket, keywords, under=None):
         return posts[0]
     else:
         return None
-
 
 def search_posts(bucket, keywords, sort=None, status=None, path='', limit=None, page=1,
                     search_fields=None, date_start=None, date_end=None,  return_count=False, should_sync_es=True):
@@ -196,8 +188,7 @@ def search_posts(bucket, keywords, sort=None, status=None, path='', limit=None, 
                                            date_start = date_start, date_end = date_end, should_sync_es=should_sync_es)
         if return_count: # 直接返回匹配的数量就可以了
             return total
-    except:
-        total = 0
+    except Exception: total = 0
         posts = []
         sentry_client.captureException()
         set_not_cache_current_request()
@@ -230,8 +221,4 @@ def search_posts(bucket, keywords, sort=None, status=None, path='', limit=None, 
                 post["highlight"] = highlight
                 posts.append(post)
     return total, posts
-
-
-
-
 

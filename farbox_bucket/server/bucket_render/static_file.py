@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 import os, io
 from flask import send_file, request, abort
 from farbox_bucket.utils import to_bytes, string_types, get_md5
@@ -14,9 +12,6 @@ from farbox_bucket.bucket.token.utils import is_bucket_login
 from farbox_bucket.server.utils.site_resource import get_pages_configs, get_template_static_resource_content
 from farbox_bucket.server.utils.response import set_304_response_for_doc, get_304_response, is_doc_modified, p_redirect
 from farbox_bucket.server.utils.request_context_vars import set_context_value_from_request
-
-
-
 
 def render_as_static_resource_in_pages_for_farbox_bucket(template_filename):
     ext = os.path.splitext(template_filename)[-1].lower()
@@ -44,8 +39,6 @@ def render_as_static_resource_in_pages_for_farbox_bucket(template_filename):
         if bucket:
             set_304_response_for_doc(response=file_response, doc=pages_configs, date_field='mtime')
         return file_response
-
-
 
 def render_as_static_file_for_farbox_bucket(path):
     if not path or path == "/":

@@ -1,4 +1,3 @@
-# coding: utf8
 import xmltodict
 from flask import request
 from farbox_bucket.settings import DEBUG
@@ -11,11 +10,9 @@ from .wechat_text_image_sync_worker import wechat_text_image_handler
 from .bind_wechat import unbind_wechat_account, get_wechat_account_bind_status_reply, bind_bucket_by_wechat, \
     get_bucket_by_wechat_user_id
 
-
 WECHAT_TOKEN = (get_env("wechat_token") or "").strip()
 
 is_wechat_server_valid = True if WECHAT_TOKEN else False
-
 
 def compile_for_wechat(raw_data):
     if isinstance(raw_data, dict):
@@ -51,7 +48,6 @@ def compile_for_wechat(raw_data):
                 return bind_bucket_by_wechat(wechat_user_id, scan_result)
         return ""
 
-
     bucket = get_bucket_by_wechat_user_id(wechat_user_id)
 
     if not bucket:
@@ -68,8 +64,6 @@ def compile_for_wechat(raw_data):
         return ""
 
     return wechat_text_image_handler(wechat_user_id=wechat_user_id, bucket=bucket, xml_data=xml_data)
-
-
 
 def wechat_web_handler():
     if request.method == "GET": # 微信端过来的验证行为，其它时候，都是 POST 数据过来

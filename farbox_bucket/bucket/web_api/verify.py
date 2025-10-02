@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 from flask import request
 from farbox_bucket.utils.memcache import cache_client
 from farbox_bucket.bucket.utils import is_valid_bucket_name
@@ -9,15 +7,12 @@ from farbox_bucket.utils.encrypt.key_encrypt import verify_by_public_key
 from farbox_bucket.utils.gzip_content import ungzip_content
 import time
 
-
-
 def allowed_empty_data_for_action(action):
     if action in ['create_bucket', 'check', 'reset']:
         return True
     if '_' in action and action.split('_')[0] in ['show', 'config', 'check']:
         return True
     return False
-
 
 def get_verified_message_from_web_request(raw_data=None):
     # return dict, if done
@@ -29,11 +24,10 @@ def get_verified_message_from_web_request(raw_data=None):
     action = raw_data.get('action') # record & config
     data = raw_data.get('data') # if action==create, data is None
     try: data = ungzip_content(data, base64=True)
-    except: pass
+    except Exception: pass
     try:
         timestamp = int(timestamp)
-    except:
-        return 'timestamp is error'
+    except Exception: return 'timestamp is error'
 
     if not bucket or not timestamp or not signature:
         return 'fields not filled, bucket is %s, timestamp is %s, signature is %s' % (bucket, timestamp, signature)
@@ -100,6 +94,4 @@ def get_verified_message_from_web_request(raw_data=None):
                 message["public_key"] = user_public_key
 
     return message
-
-
 

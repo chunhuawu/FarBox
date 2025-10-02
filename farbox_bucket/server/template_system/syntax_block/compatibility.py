@@ -1,7 +1,5 @@
-# coding: utf8
 
 #+font
-
 
 def syntax_block_compatibility(**kwargs):
     caller = kwargs.pop('caller', None)
@@ -10,5 +8,4 @@ def syntax_block_compatibility(**kwargs):
     else:
         try:
             return caller()
-        except:
-            return ""
+        except Exception: return ""

@@ -1,14 +1,10 @@
-# coding: utf8
 from farbox_bucket.utils.ssdb_utils import hset, just_hget
 from farbox_bucket.bucket.utils import is_valid_bucket_name, has_bucket
 import shortuuid
 
-
-
 def get_a_random_api_token(length = 8):
     token = shortuuid.uuid()[:length]
     return token
-
 
 def get_bucket_api_token(bucket, db_name="_bucket_api_token",  auto_create=True):
     """
@@ -48,8 +44,6 @@ def check_bucket_api_token(bucket, token, db_name="_bucket_api_token"):
     else:
         return False
 
-
-
 def get_bucket_login_token(bucket):
     return get_bucket_api_token(bucket, db_name="_bucket_login_token")
 
@@ -58,5 +52,4 @@ def set_bucket_login_token(bucket):
 
 def check_bucket_login_token(bucket, token):
     return check_bucket_api_token(bucket, token, db_name="_bucket_login_token")
-
 

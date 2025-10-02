@@ -1,4 +1,3 @@
-#coding: utf8
 from farbox_bucket.utils import string_types, smart_unicode, smart_str
 from farbox_bucket.utils.path import get_just_name
 from farbox_bucket.utils.date import utc_date_parse, date_to_timestamp
@@ -7,7 +6,6 @@ import re
 import unidecode
 import os
 import time
-
 
 def get_meta_value(key, metadata=None, default=None):
     if not isinstance(metadata, dict) or not metadata:
@@ -26,8 +24,6 @@ def get_meta_value(key, metadata=None, default=None):
         value = type(default)(value)  # 变量格式化
 
     return value
-
-
 
 def get_file_timestamp(relative_path=None, metadata=None, abs_filepath=None, utc_offset=None):
     # 主要是获取 post 的date信息
@@ -59,8 +55,7 @@ def get_file_timestamp(relative_path=None, metadata=None, abs_filepath=None, utc
                     s = '%s %s' % (part1, part2.replace('-', ':'))
                     date = utc_date_parse(s, utc_offset=utc_offset)
                     return date
-                except:
-                    pass
+                except Exception: pass
             # 从文件名中获取 2012-1?2-1?2, date模式
             date_search = re.search('/?([123]\d{3}-\d{1,2}-\d{1,2})[^/]*', relative_path)
             if date_search: # 可以从文件的路径中取， 兼容jekyll
@@ -72,9 +67,6 @@ def get_file_timestamp(relative_path=None, metadata=None, abs_filepath=None, utc
     if not timestamp:
         timestamp = time.time()
     return timestamp
-
-
-
 
 def split_title_and_position(title):
     position_c = re.search(r'^\d+(\.\d+)? ', title)
@@ -92,9 +84,6 @@ def split_title_and_position(title):
             position = int(position)
     return title.strip(), position
 
-
-
-
 def slugify(value, must_lower=True, auto=False):
     # auto=True 表示是自动生成的
     value= smart_unicode(value)
@@ -110,10 +99,6 @@ def slugify(value, must_lower=True, auto=False):
     value = value.strip('/') # 头尾不能包含 /
     return value
 
-
-
-
-
 def unique_list(data):
     # 类似 set 功能，但是保留原来的次序
     new_data = []
@@ -121,7 +106,6 @@ def unique_list(data):
         if row not in new_data:
             new_data.append(row)
     return new_data
-
 
 def string_to_list(value):
     if not value:
@@ -140,9 +124,6 @@ def string_to_list(value):
         return [smart_unicode(row).strip() for row in value if row]
     else:
         return [smart_unicode(value)]
-
-
-
 
 def get_images_from_html(content, relative_to_site=False):
     raw_images = re.findall("""<\s*img.*?src=['"]([^'"]+).*?>""", content, flags=re.I)

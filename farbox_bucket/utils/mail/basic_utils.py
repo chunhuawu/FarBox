@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 from farbox_bucket.utils import email_re, string_types
 
 def pure_email_address(address, check=False):
@@ -16,14 +14,12 @@ def pure_email_address(address, check=False):
             return
     return address
 
-
 def is_email_address(email):
     if isinstance(email, string_types):
         email = email.strip()
         if email:
             return bool(email_re.match(email))
     return False
-
 
 def get_valid_addresses(addresses, max_size=None):
     if isinstance(addresses, string_types): # 单一的一个邮箱地址
@@ -39,5 +35,4 @@ def get_valid_addresses(addresses, max_size=None):
     if max_size and isinstance(max_size, int):
         result = result[:max_size]
     return result
-
 

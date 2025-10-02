@@ -1,8 +1,5 @@
-#coding: utf8
-from __future__ import absolute_import
 import operator
 from farbox_bucket.utils import get_value_from_data, split_list, to_int, smart_str, smart_unicode, string_types
-
 
 def all_has(objects, key, check_value=None, opt=None):
     """objects是一个list，内个element都是dict，并且都有指定key对应的值"""
@@ -28,9 +25,6 @@ def all_has(objects, key, check_value=None, opt=None):
             elif opt=='<' and value_got>=check_value:
                 return False
     return True
-
-
-
 
 ##### sort_by
 
@@ -60,15 +54,12 @@ def sort(objects, attr='position', ordered_attr=None, ordered_keys=None, match=F
             if key_matched_obj is not None:
                 head_objects.append(key_matched_obj)
                 try: new_objects.remove(key_matched_obj)
-                except: pass
+                except Exception: pass
         if match: # 仅仅处理 ordered_keys 的逻辑
             return head_objects
         return head_objects + new_objects
 
     return new_objects
-
-
-
 
 ##### group
 def _get_sort_key(value, per=10):
@@ -94,7 +85,6 @@ def _get_sort_key(value, per=10):
             return ','.join([str(row) for row in ls])
     else:
         return value
-
 
 def group(objects, attr, *args, **kwargs):
     """
@@ -170,11 +160,6 @@ def group(objects, attr, *args, **kwargs):
 
     return to_return
 
-
-
-
-
-
 def insert(objects, to_insert, position=-1): # 默认插入最后
     #if isinstance(to_insert, (list, tuple)):
         #return ''
@@ -187,11 +172,8 @@ def insert(objects, to_insert, position=-1): # 默认插入最后
     if to_insert:
         try:
             objects.insert(position, to_insert)
-        except:
-            objects.append(to_insert)
+        except Exception: objects.append(to_insert)
     return '' # 对objects的id没有操作，返回空值
-
-
 
 #### filter
 def __filter(objects, attr=None, attr_value=None, opt=None, return_one=False, **kwargs):
@@ -239,7 +221,6 @@ def __filter(objects, attr=None, attr_value=None, opt=None, return_one=False, **
     else:
         return result
 
-
 def join(objects, link_str=' '):
     link_str = smart_unicode(link_str)
     if all([isinstance(obj, (str, unicode, int, float)) for obj in objects]):
@@ -249,16 +230,12 @@ def join(objects, link_str=' '):
     else:
         return objects
 
-
 def length(objects):
     return len(objects)
-
-
 
 def split(objects, per=3):
     per = to_int(per, min_value=1) or 3
     return split_list(objects, per)
-
 
 for func in [length]:
     func.is_just_property = True

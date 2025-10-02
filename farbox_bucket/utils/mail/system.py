@@ -1,11 +1,7 @@
-# coding: utf8
 import datetime
 from farbox_bucket.settings import SES_ID, SES_KEY, SES_SENDER
 from farbox_bucket.utils.ssdb_utils import qpush_back
 from .utils import send_email_by_amazon
-
-
-
 
 def send_mail_by_system(to_address, content,  subject=None, raw=False):
     if not SES_KEY or not SES_ID:

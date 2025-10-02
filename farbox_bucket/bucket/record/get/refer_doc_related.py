@@ -1,8 +1,6 @@
-# coding: utf8
 from farbox_bucket.utils import smart_unicode, to_int, sort_objects_by
 from farbox_bucket.bucket.utils import get_bucket_posts_info
 from .path_related import get_record_by_path, get_records_by_paths
-
 
 def get_links_info(bucket):
     # k:v --> tag: [path1, path2]
@@ -25,7 +23,6 @@ def get_links_paths_info(bucket):
     if not isinstance(info, dict):
         info = {}
     return info
-
 
 def get_records_by_post_path_back_referred(bucket, post_path, sort_by='-date'):
     # post_path 的 back-link-docs
@@ -51,7 +48,6 @@ def get_records_by_post_path_back_referred(bucket, post_path, sort_by='-date'):
     records = get_records_by_paths(bucket, paths, limit=500)
     records = sort_objects_by(records, attr=sort_by)
     return records
-
 
 def get_records_by_post_path_referred(bucket, post_path, sort_by='-date'):
     if not bucket:

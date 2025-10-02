@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 import os
 import time
 import re
@@ -21,7 +19,6 @@ def is_real(path):
             return False
     return True
 
-
 def is_a_hidden_path(path):
     if re.search('(^|/)(\.|~$)', path):
         return True
@@ -36,8 +33,6 @@ def is_a_hidden_path(path):
     else:
         return False
 
-
-
 def get_just_name(filepath, for_folder=False):
     if not filepath:
         return ""
@@ -48,7 +43,6 @@ def get_just_name(filepath, for_folder=False):
         return filename
     just_name, ext = os.path.splitext(filename)
     return just_name
-
 
 def split_path_by_name(name, length=7, hash_name=True):
     name = name.strip()
@@ -62,8 +56,6 @@ def split_path_by_name(name, length=7, hash_name=True):
     path = '/'.join(path_parts)
     return path
 
-
-
 def make_sure_path(path, is_file=False, is_dir=False):
     # 保证path是有效的，特别是写入一个文件的时候，避免没有父目录，而写入失败
     # 如果返回False，表示有问题...
@@ -75,17 +67,13 @@ def make_sure_path(path, is_file=False, is_dir=False):
     if not os.path.isdir(folder):
         try:
             os.makedirs(folder)
-        except:
-            return False
+        except Exception: return False
     if is_file: # like touch in linux
         try:
             with open(path, 'w') as f:
                 f.write("%s" % time.time())
-        except:
-            pass
+        except Exception: pass
     return True
-
-
 
 def get_file_list(root_path, split=False):
     # 遍历folder
@@ -119,8 +107,6 @@ def get_file_list(root_path, split=False):
     else:
         return just_folders, just_files
 
-
-
 def get_all_sub_files(root, accept_func=None, max_tried_times=None):
     # ignore_folders 里的文件，不处理； accept_func可以处理当前的 path 是否支持
     root = same_slash(root)
@@ -153,7 +139,6 @@ def get_all_sub_files(root, accept_func=None, max_tried_times=None):
             break
     return result
 
-
 def get_relative_path(filepath, root, return_name_if_fail=True):
     filepath = same_slash(filepath)
     root = same_slash(root)
@@ -167,16 +152,12 @@ def get_relative_path(filepath, root, return_name_if_fail=True):
         else:
             return filepath
 
-
-
 _join = os.path.join
 
 def join(*args, **kwargs):
     args = [smart_unicode(arg) for arg in args]
     path = _join(*args, **kwargs)
     return same_slash(path)
-
-
 
 def same_slash(path):
     path = path.replace('\\', '/')
@@ -190,7 +171,6 @@ def is_same_path(p1, p2):
     p1 = smart_unicode(p1.strip('/').lower())
     p2 = smart_unicode(p2.strip('/').lower())
     return p1 == p2
-
 
 def is_sub_path(filepath, parent_path, direct=False):
     if not parent_path: # ignore
@@ -207,16 +187,12 @@ def is_sub_path(filepath, parent_path, direct=False):
             return False
     return is_under_parent
 
-
-
-
 def write_file(filepath, content):
     make_sure_path(filepath)
     if isinstance(content, unicode):
         content = content.encode('utf8')
     with open(filepath, 'wb') as f:
         f.write(content)
-
 
 def read_file(filepath):
     if not os.path.isfile(filepath):
@@ -226,16 +202,13 @@ def read_file(filepath):
             raw_content = f.read()
         return raw_content
 
-
 def delete_file(file_path):
     if not os.path.exists(file_path):
         return # ignore
     if os.path.isfile(file_path):
         try:
             os.remove(file_path)
-        except:
-            pass
-
+        except Exception: pass
 
 def load_json_file(filepath):
     raw_content = read_file(filepath)
@@ -244,8 +217,7 @@ def load_json_file(filepath):
     try:
         raw_content = smart_unicode(raw_content)
         return json.loads(raw_content)
-    except:
-        return {}
+    except Exception: return {}
 
 def dump_json_file(filepath, data):
     json_data = json.dumps(data, indent=4)

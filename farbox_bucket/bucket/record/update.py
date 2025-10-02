@@ -1,4 +1,3 @@
-# coding: utf8
 from farbox_bucket.utils.data import json_dumps, json_loads
 from .get.get import get_record
 from .get.path_related import get_record_id_by_path
@@ -31,18 +30,10 @@ def update_record(bucket, record_id, **kwargs):
 
     return True
 
-
-
 def update_record_by_path(bucket, path, **kwargs):
     record_id = get_record_id_by_path(bucket, path)
     if record_id:
         return update_record(bucket, record_id, **kwargs)
     else:
         return False
-
-
-
-
-
-
 

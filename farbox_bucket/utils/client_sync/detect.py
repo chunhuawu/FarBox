@@ -1,14 +1,9 @@
-# coding: utf8
-from __future__ import absolute_import
 import os
 import json
 from farbox_bucket.utils import md5_for_file
 from farbox_bucket.utils.path import same_slash, join, is_real, is_a_hidden_path, get_relative_path
 
-
 from .sync_utils import get_sync_data, get_sync_data_folder
-
-
 
 def should_sync(filepath, root, app_name, check_md5=True, extra_should_sync_func=None):
     if not os.path.exists(filepath):
@@ -18,13 +13,11 @@ def should_sync(filepath, root, app_name, check_md5=True, extra_should_sync_func
     elif not is_real(filepath):
         return False
 
-
     if check_md5:
         sync_data = get_sync_data(filepath, root, app_name)
         if sync_data:
             if sync_data.get('md5') == md5_for_file(filepath): # has been synced
                 return False
-
 
     # 比如 Bitcron, 不允许超过 100 mb 的文件上传
     # elif os.path.getsize(filepath) > 100*1024*1024: # 100Mb+ is not supported
@@ -34,19 +27,14 @@ def should_sync(filepath, root, app_name, check_md5=True, extra_should_sync_func
             result = extra_should_sync_func(filepath, root)
             if isinstance(result, bool):
                 return result
-        except:
-            try:
+        except Exception: try:
                 relative_path = get_relative_path(filepath, root=root)
                 result = extra_should_sync_func(relative_path)
                 if isinstance(result, bool):
                     return result
-            except:
-                pass
-
+            except Exception: pass
 
     return True
-
-
 
 def sync_loop_local_filesystem(root_path, app_name, check_md5=True, extra_should_sync_func=None):
     root_path = same_slash(root_path)
@@ -69,8 +57,6 @@ def sync_loop_local_filesystem(root_path, app_name, check_md5=True, extra_should
 
     #for filepath in file_paths:
     #    sync_a_filer_or_folder(filepath)
-
-
 
 def sync_find_files_to_delete(root_path, app_name, as_dict=False):
     sync_data_folder = get_sync_data_folder(root_path, app_name)
@@ -95,8 +81,7 @@ def sync_find_files_to_delete(root_path, app_name, as_dict=False):
                     if is_dir:
                         old_dir_paths.add(filepath)
 
-        except:
-            pass
+        except Exception: pass
     _filepaths_to_delete = list(set(old_file_paths) - set(files))
 
     # 让 folder 类型的排在最后
@@ -111,7 +96,6 @@ def sync_find_files_to_delete(root_path, app_name, as_dict=False):
             dirs_to_delete.append(path)
     filepaths_to_delete += dirs_to_delete
 
-
     if as_dict:
         filepaths_to_delete_as_dict = []
         for filepath in filepaths_to_delete:
@@ -125,5 +109,4 @@ def sync_find_files_to_delete(root_path, app_name, as_dict=False):
 
     else:
         return filepaths_to_delete
-
 

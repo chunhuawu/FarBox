@@ -1,8 +1,5 @@
-#coding: utf8
-from __future__ import absolute_import
 import time, hashlib
 from collections import OrderedDict
-
 
 class LimitedSizeDict(OrderedDict):
     def __init__(self, *args, **kwds):
@@ -24,7 +21,6 @@ class LimitedSizeDict(OrderedDict):
             while len(self) > self.size_limit:
                 self.popitem(last=True)
 
-
 def get_md5(content, block_size=0): # 1024*1024 2**20, block_size=1Mb
     if isinstance(content, unicode):
         content = content.encode('utf8')
@@ -36,7 +32,6 @@ def get_md5(content, block_size=0): # 1024*1024 2**20, block_size=1Mb
         for i in range(0, n, block_size):
             md5_obj.update(content[i:i+block_size])
         return md5_obj.hexdigest()
-
 
 class cached(object):
     """

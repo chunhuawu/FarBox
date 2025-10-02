@@ -1,7 +1,4 @@
-# coding: utf8
-from __future__ import absolute_import
 import socket, binascii, os, re, requests
-
 
 def ip_to_integer(ip_address):
     version = socket.AF_INET
@@ -9,10 +6,8 @@ def ip_to_integer(ip_address):
         ip_hex = socket.inet_pton(version, ip_address)
         ip_integer = int(binascii.hexlify(ip_hex), 16)
         return ip_integer
-    except:
-        pass
+    except Exception: pass
     raise ValueError("invalid IP address")
-
 
 def subnetwork_to_ip_range(subnetwork):
     try:
@@ -27,13 +22,10 @@ def subnetwork_to_ip_range(subnetwork):
             ip_lower = int(binascii.hexlify(ip_hex), 16) & netmask
             ip_upper = ip_lower + suffix_mask
             return ip_lower, ip_upper
-        except:
-            pass
-    except:
-        pass
+        except Exception: pass
+    except Exception: pass
 
     raise ValueError("invalid subnetwork")
-
 
 def load_ip_subsets(filepath):
     if not filepath or not os.path.isfile(filepath):
@@ -47,17 +39,14 @@ def load_ip_subsets(filepath):
         try:
             subset = subnetwork_to_ip_range(line)
             subsets.append(subset)
-        except:
-            pass
+        except Exception: pass
     subsets.sort()
     return subsets
-
 
 def search_ip_in_subsets(subsets, ip):
     try:
         ip = ip_to_integer(ip)
-    except:
-        return
+    except Exception: return
     low = 0
     height = len(subsets)-1
     tried = 0
@@ -95,7 +84,6 @@ def is_ipv4_ip(ip):
             return True
     return False
 
-
 def get_current_ip():
     ip_in_env = os.environ.get('HOSTIP')
     if ip_in_env:
@@ -108,14 +96,11 @@ def get_current_ip():
         try:
             with open('/tmp/ip.txt') as f:
                 return f.read().strip()
-        except:
-            pass
+        except Exception: pass
         ip = requests.get('http://api.ipify.org').text
         try:
             with open('/tmp/ip.txt', 'w') as f:
                 f.write(ip)
-        except:
-            pass
+        except Exception: pass
         return ip
-    except:
-        return ''
+    except Exception: return ''

@@ -1,4 +1,3 @@
-#coding: utf8
 import re
 import os
 import urllib
@@ -15,12 +14,9 @@ from farbox_bucket.client.sync.compiler.basic_compiler import BasicSyncCompiler
 from farbox_bucket.client.sync.compiler.utils import slugify, get_file_timestamp, string_to_list, get_images_from_html
 from farbox_bucket.utils.md_related.markdown_doc_links import get_linked_docs_from_markdown_content
 
-
 PAGES_TXT_NAMES = ['about', 'links', 'link']
 
 SYSTEM_TEXT_NAMES = ['nav', 'footer', 'comment_js', 'comments_js', 'site']
-
-
 
 class PostSyncCompiler(BasicSyncCompiler):
     def __init__(self, *args, **kwargs):
@@ -55,8 +51,6 @@ class PostSyncCompiler(BasicSyncCompiler):
         data = getattr(self.compiled_content, 'metadata', {})
         return data
 
-
-
     @cached_property
     def post_status(self):
         # 日志的状态，一般默认为 public
@@ -74,7 +68,6 @@ class PostSyncCompiler(BasicSyncCompiler):
         else:
             status = self.get_meta_value(key='status', default='public') or 'public'
             return status.lower()
-
 
     @cached_property
     def post_title(self):
@@ -101,7 +94,6 @@ class PostSyncCompiler(BasicSyncCompiler):
         # at last, choose date timestamp as order
         order_value = self.post_timestamp
         return order_value
-
 
     @cached_property
     def post_url_path(self):
@@ -132,7 +124,6 @@ class PostSyncCompiler(BasicSyncCompiler):
 
         return url_path
 
-
     @cached_property
     def post_timestamp(self):
         if self.abs_filepath:
@@ -146,7 +137,6 @@ class PostSyncCompiler(BasicSyncCompiler):
         if not timestamp:
             timestamp = time.time()
         return timestamp
-
 
     @cached_property
     def post_date(self):
@@ -170,12 +160,9 @@ class PostSyncCompiler(BasicSyncCompiler):
 
         return tags
 
-
     @cached_property
     def post_images(self):
         return get_images_from_html(self.content) or []
-
-
 
     def get_compiled_data(self):
         post_type = 'post'
@@ -207,10 +194,7 @@ class PostSyncCompiler(BasicSyncCompiler):
 
         return data
 
-
     @cached_property
     def text_words(self):
         return count_words(self.raw_content) or 0
-
-
 

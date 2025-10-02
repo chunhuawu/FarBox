@@ -1,8 +1,6 @@
-#coding: utf8
 from gevent import spawn
 import elasticsearch
 es = None
-
 
 # 创建索引的返回结果
 # {u'acknowledged': True}
@@ -69,7 +67,6 @@ doc_mappings = {
 
 doc_fields_in_es = doc_mappings['properties'].keys()
 
-
 # es.index 表示是创建索引，一条记录本身就被视为 index（对象）， index_name 是一个最大的 container，可以理解为
 # doc_type 相当于一个子类, 或者说类似于一个 space
 # id 是一个必须的，这样就能指向一个 obj 了
@@ -84,17 +81,13 @@ doc_fields_in_es = doc_mappings['properties'].keys()
 # "store": True,  # 在 search 的结果中，会有这个值，get_index 则不会得到
 # 因为 es 本质上，仅仅是索引的集合，主要功能是搜索，而不是存储，我们为了避免硬盘的冗余，会禁用_source的存储
 
-
 def get_es_client():
     global  es
     if es is None:
         try:
             es = elasticsearch.Elasticsearch(["127.0.0.1:9200"])
-        except:
-            es = 0 # not allowed
+        except Exception: es = 0 # not allowed
     return es
-
-
 
 def create_es_indexes():
     es = get_es_client()
@@ -121,16 +114,12 @@ def create_es_indexes():
     print(info_result)
     print(doc_result)
 
-
-
 def delete_es_indexes():
     es = get_es_client()
     try:es.indices.delete('info')
-    except: pass
+    except Exception: pass
     try: es.indices.delete('doc')
-    except: pass
-
-
+    except Exception: pass
 
 def do_make_sure_es_indexes():
     es = get_es_client()
@@ -150,7 +139,6 @@ def make_sure_es_indexes(async=False):
     else:
         do_make_sure_es_indexes()
 
-
 """
 from configs.database import db
 doc = db.doc.find_one('Q0u-test.farbox.com:hello.md')
@@ -159,7 +147,6 @@ es = get_es_client()
 es.create(index='doc', doc_type='doc', id=doc_id, routing=doc['site_id'], body=doc)
 
 es.create(index='doc', doc_type='doc', id=doc_id+'2', routing=doc['site_id']+'2', body=doc)
-
 
 es.search(index='doc', doc_type='doc', fields=['sys_date'], routing='Q0u-test.farbox.com2')
 """

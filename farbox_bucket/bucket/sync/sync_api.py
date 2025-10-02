@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 import requests
 import time
 import gc
@@ -8,13 +6,8 @@ from farbox_bucket.utils.logger import get_file_logger
 
 from farbox_bucket.bucket.record.create import create_record_by_sync
 
-
 from farbox_bucket.bucket import get_bucket_max_id, get_bucket_delta_id, update_bucket_delta_id, is_valid_bucket_name, set_bucket_into_buckets
 from farbox_bucket.bucket.node import get_node_url, get_current_node_id
-
-
-
-
 
 # todo 要处理 remote_node 是否存活的判断
 def should_sync_remote_node(remote_node):
@@ -29,14 +22,8 @@ def should_sync_remote_node(remote_node):
             current_node_id = get_current_node_id()
             if current_node_id == remote_node_id:
                 return  False
-    except:
-        pass
+    except Exception: pass
     return True
-
-
-
-
-
 
 def sync_bucket_from_remote_node(bucket, remote_node, api_token='', cursor=None, per_page=1000,
                                  loop=True, check_should_or_not=True, print_log=False, server_sync_token=None):
@@ -72,16 +59,14 @@ def sync_bucket_from_remote_node(bucket, remote_node, api_token='', cursor=None,
         if print_log:
             print('will get data from %s?cursor=%s   per_page is %s' % (remote_url, cursor or '', per_page))
         response = requests.post(remote_url, data=data_to_post, timeout=180)
-    except:
-        info = '%s@%s is not valid or timeout' % (bucket, remote_node)
+    except Exception: info = '%s@%s is not valid or timeout' % (bucket, remote_node)
         logger.info(info)
         if print_log:
             print(info)
         return # ignore
     try:
         records = response.json()
-    except:
-        logger.info('%s@%s is not valid json data' % (bucket, remote_node))
+    except Exception: logger.info('%s@%s is not valid json data' % (bucket, remote_node))
         return # ignore
     if not isinstance(records, (list, tuple)):
         logger.info('records from remote bucket %s is not list' % bucket)
@@ -115,7 +100,6 @@ def sync_bucket_from_remote_node(bucket, remote_node, api_token='', cursor=None,
     if print_log:
         print(info)
 
-
      # 节省内存, 进行一次回收
     del records, response
     gc.collect()
@@ -132,6 +116,4 @@ def sync_bucket_from_remote_node(bucket, remote_node, api_token='', cursor=None,
         else:
             if print_log:
                 print('sync records from %s is done.\n' % bucket)
-
-
 

@@ -1,4 +1,3 @@
-#coding: utf8
 import random
 from farbox_bucket.utils import smart_str
 import socket, time, zlib
@@ -8,12 +7,9 @@ import os
 from pymemcache.client.base import Client as MemcacheClient
 from pymemcache.exceptions import MemcacheError
 
-
 try:
     import telnetlib
-except:
-    telnetlib = None
-
+except Exception: telnetlib = None
 
 def get_all_memcached_keys(host='127.0.0.1', port=11211):
     if not telnetlib:
@@ -37,7 +33,6 @@ def get_all_memcached_keys(host='127.0.0.1', port=11211):
     t.close()
     return list(keys)
 
-
 class Client(object):
     def __init__(self, host='127.0.0.1:11211', max_connections=100):
         self.host_ip, self.host_port = host.split(':', 1)
@@ -53,7 +48,6 @@ class Client(object):
 
     def get_all_keys(self):
         return get_all_memcached_keys(self.host_ip, self.host_port)
-
 
     def create_client(self, try_re_connect=True):
         try:
@@ -143,8 +137,7 @@ class Client(object):
         if zipped: # 需要压缩的 # compress的效率很高，1亿字节大概5秒, 压缩率接近50%
             try:
                 data = zlib.compress(data)
-            except:
-                pass
+            except Exception: pass
         if hash_key:
             key = hashlib.md5(key).hexdigest()
         expiration = int(expiration)
@@ -191,8 +184,7 @@ class Client(object):
         if zipped:
             try:
                 data = zlib.decompress(data)
-            except:
-                return None
+            except Exception: return None
         return data
 
     def auto_cache(self, key, data_func, zipped=False, expiration=0):
@@ -207,8 +199,6 @@ class Client(object):
     def __getattr__(self, item):
         return getattr(self.current_client, item)
 
-
-
 mem_cache_client = None
 
 def get_cache_client():
@@ -219,12 +209,10 @@ def get_cache_client():
     if max_connections:
         try:
             max_connections = int(max_connections)
-        except:
-            pass
+        except Exception: pass
     if not max_connections:
         max_connections = 100
     mem_cache_client = Client(max_connections=max_connections)
     return mem_cache_client
-
 
 cache_client = get_cache_client()

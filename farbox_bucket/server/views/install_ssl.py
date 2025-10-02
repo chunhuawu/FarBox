@@ -1,13 +1,9 @@
-# coding: utf8
-from __future__ import absolute_import
 from farbox_bucket.server.web_app import app
 from flask import abort, request
 from farbox_bucket.server.utils.response import send_plain_text
 from farbox_bucket.bucket.domain.utils import get_bucket_from_domain
 from farbox_bucket.bucket.domain.ssl_utils import get_ssl_cert_for_domain
 from farbox_bucket.server.utils.request_context_vars import set_not_cache_current_request
-
-
 
 @app.route('/_system/install_ssl', methods=['POST', 'GET'])
 @app.route('/_system/install_ssl/<domain>', methods=['POST', 'GET'])
@@ -33,5 +29,4 @@ def install_ssl(domain=''):
         return send_plain_text('%s,%s' % (ssl_key, ssl_cert))
     else:
         return ','
-
 

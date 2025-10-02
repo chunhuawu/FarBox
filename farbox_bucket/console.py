@@ -1,11 +1,8 @@
-#coding: utf8
-from __future__ import absolute_import
 import sys, os
 from farbox_bucket.utils.console_utils import get_args_from_console, get_first_arg_from_console
 from farbox_bucket.utils.cli_color import print_with_color
 from farbox_bucket.client.project import show_projects, show_project, get_project_config, set_project_node
 from farbox_bucket.client.message import send_message_for_project
-
 
 # farbox_bucket <project_name> <action>
 
@@ -50,7 +47,6 @@ def main():
 
     else:
         print_with_color('no command matched')
-
 
 if __name__ == '__main__':
     main()

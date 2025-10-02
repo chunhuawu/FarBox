@@ -1,8 +1,6 @@
-# coding: utf8
 from farbox_bucket.utils.env import get_env
 from farbox_bucket.clouds.qcloud import upload_file_obj_to_qcloud, delete_file_on_qcloud,\
     has_file_on_qcloud, get_file_content_from_qcloud
-
 
 raw_qcloud_config = get_env('qcloud')
 QCLOUD_REGION = get_env("qcloud_region") or 'ap-shanghai'
@@ -17,7 +15,6 @@ else:
 QCLOUD_URL = (get_env("qcloud_url") or "").rstrip("/")
 
 QCLOUD_CDN_TOKEN = (get_env("qcloud_cdn_token") or "").strip()
-
 
 def upload_file_to_qcloud_for_bucket(bucket, relative_path, file_obj, content_type="", **headers):
     if not qcloud_is_valid:
@@ -36,7 +33,6 @@ def upload_file_to_qcloud_for_bucket(bucket, relative_path, file_obj, content_ty
     )
     return uploaded
 
-
 def delete_file_on_qcloud_for_bucket(bucket, relative_path):
     if not qcloud_is_valid:
         return False # ignore
@@ -51,7 +47,6 @@ def delete_file_on_qcloud_for_bucket(bucket, relative_path):
     )
     return deleted
 
-
 def has_file_on_qcloud_for_bucket(bucket, relative_path):
     if not qcloud_is_valid:
         return False # ignore
@@ -64,7 +59,6 @@ def has_file_on_qcloud_for_bucket(bucket, relative_path):
         region=QCLOUD_REGION)
     return has_file
 
-
 def get_file_on_qcloud_for_bucket(bucket, relative_path):
     if not qcloud_is_valid:
         return None
@@ -76,5 +70,4 @@ def get_file_on_qcloud_for_bucket(bucket, relative_path):
         bucket=QCLOUD_BUCKET,
         region=QCLOUD_REGION)
         return raw_content
-    except:
-        return None
+    except Exception: return None

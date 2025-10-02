@@ -1,10 +1,7 @@
-# coding: utf8
-from __future__ import absolute_import
 from io import BytesIO
 import zlib
 #from gzip import GzipFile
 from base64 import b64decode, b64encode
-
 
 def gzip_content(content, base64=False):
     if isinstance(content, unicode):
@@ -13,7 +10,6 @@ def gzip_content(content, base64=False):
     if base64:
         zipped_content = b64encode(zipped_content)
     return zipped_content
-
 
 def ungzip_content(raw_content, base64=False):
     if base64:

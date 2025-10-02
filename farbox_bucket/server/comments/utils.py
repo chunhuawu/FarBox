@@ -1,4 +1,3 @@
-#coding: utf8
 import os
 from flask import request
 from farbox_bucket.utils import smart_unicode, get_md5, get_value_from_data, is_closed, string_types, to_float
@@ -10,7 +9,6 @@ from farbox_bucket.bucket.record.update import update_record
 from farbox_bucket.server.avatar import get_avatar_url
 from farbox_bucket.server.utils.site_resource import get_bucket_site_configs
 
-
 def to_doc_path(path_or_doc):
     if isinstance(path_or_doc, dict):
         path = path_or_doc.get('path')
@@ -18,8 +16,6 @@ def to_doc_path(path_or_doc):
         path = path_or_doc
     path = smart_unicode(path).strip('/').strip()[:500].lower()
     return path
-
-
 
 def doc_path_to_comments_path(doc_path):
     path_without_ext = os.path.splitext(doc_path)[0]
@@ -30,22 +26,16 @@ def doc_path_to_comments_path(doc_path):
     #comments_path = 'comments/%s' % comments_filename
     return comments_path
 
-
-
 def get_comment_avatar(author_email):
     author_email = author_email or ''
     author_email = author_email.lower()
     return get_avatar_url(author_email)
-
 
 def get_comment_author_name(original_author, author_email):
     if not original_author and author_email:
         # 从 email 中进行提取
         original_author = author_email.split('@')[0].split('+')[0].title()
     return original_author
-
-
-
 
 def patch_comments_for_old_farbox(bucket, comments_doc):
     # 临时的修正， 原来的 objects 都是被 client 端加密过的
@@ -66,8 +56,6 @@ def patch_comments_for_old_farbox(bucket, comments_doc):
     else:
         return []
 
-
-
 def get_comments_record(bucket, doc_path):
     comments_path = doc_path_to_comments_path(doc_path)  # 评论的文档存储路径
     comments_doc = get_record_by_path(bucket=bucket, path=comments_path)  or {} # 获得对应 comments 的 record
@@ -77,9 +65,6 @@ def get_comments_record(bucket, doc_path):
             objects = patch_comments_for_old_farbox(bucket=bucket, comments_doc=comments_doc)
             comments_doc['objects'] = objects
     return comments_doc
-
-
-
 
 def get_comments(parent_doc, bucket=None, as_tree=None):
     bucket = bucket or get_bucket_in_request_context() or request.values.get('bucket')
@@ -105,8 +90,6 @@ def get_comments(parent_doc, bucket=None, as_tree=None):
 
     return get_comments_by_comments_doc(comments_doc, as_tree=as_tree, utc_offset=utc_offset)
 
-
-
 def get_comments_by_comments_doc(comments_doc, as_tree=True, utc_offset=8):
     if not comments_doc:
         return []
@@ -128,8 +111,7 @@ def get_comments_by_comments_doc(comments_doc, as_tree=True, utc_offset=8):
             try:
                 date = utc_date_parse(date, utc_offset=utc_offset)
                 comment['date'] = date
-            except:
-                pass
+            except Exception: pass
 
         if comment.get('reply'): # 回复于某个 comment
             comment['reply_to_id'] = get_md5(comment.get('reply'))
@@ -152,7 +134,4 @@ def get_comments_by_comments_doc(comments_doc, as_tree=True, utc_offset=8):
             comments.append(comment)
 
     return comments
-
-
-
 

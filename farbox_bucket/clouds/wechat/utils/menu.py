@@ -1,4 +1,3 @@
-#coding: utf8
 import requests
 import ujson as json
 from farbox_bucket.utils import string_types
@@ -25,9 +24,7 @@ def create_menus(menus):
             return False
         else:
             return True
-    except:
-        return False
-
+    except Exception: return False
 
 def get_menus():
     url = API_PREFIX + 'menu/get'
@@ -36,13 +33,10 @@ def get_menus():
     response = requests.get(url, params=params, verify=False)
     return response.json()
 
-
 def delete_menus():
     url = API_PREFIX + 'menu/delete'
     access_token = get_access_token()
     params = dict(access_token=access_token)
     response = requests.get(url, params=params, verify=False)
     return response.json()
-
-
 

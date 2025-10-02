@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 from farbox_bucket.settings import ADMIN_DOMAIN_PASSWORD
 from farbox_bucket.utils.ssdb_utils import hset, hexists, hdel, hget
 from farbox_bucket.bucket import is_valid_bucket_name, has_bucket
@@ -7,8 +5,6 @@ from farbox_bucket.bucket.utils import get_admin_bucket
 from farbox_bucket.bucket.domain.info import SYSTEM_DOMAINS, get_domain_basic_info, is_valid_domain, get_domain_text_record
 from farbox_bucket.bucket.domain.utils import pull_domain_from_bucket, get_bucket_domains, push_domain_to_bucket
 import time
-
-
 
 def register_bucket_domain_from_system(bucket, domain, is_admin=False):
     # 注册系统提供的二级域名
@@ -52,7 +48,6 @@ def register_bucket_domain_from_system(bucket, domain, is_admin=False):
     else:
         return '%s is not allowed for bucket:%s' % (domain, bucket)
 
-
 def register_bucket_independent_domain(bucket, domain):
     # 注册独立域名， 这个前提是域名已经 park 到当前节点，并且已经做了必要的校验
     # 返回 None or 错误信息
@@ -91,8 +86,6 @@ def register_bucket_independent_domain(bucket, domain):
         else:
             return 'should set TXT record for domain first'
 
-
-
 def delete_bucket_domain(domain, bucket=None):
     # 删除 bucket 上的 domain， 支持独立域名以及系统二级域名
     # 这里未做是否有权限 unregister 的校验， 需要前置校验
@@ -116,8 +109,6 @@ def delete_bucket_domain(domain, bucket=None):
             return None
     return 'can not find the matched domain record to remove for %s' % domain
 
-
-
 ### shortcuts starts #######
 
 def register_system_domain(domain, bucket):
@@ -125,7 +116,6 @@ def register_system_domain(domain, bucket):
 
 def unregister_bucket_domain(domain, bucket=None):
     return delete_bucket_domain(domain=domain, bucket=bucket)
-
 
 def register_bucket_domain(domain, bucket, admin_password=None):
     # 这里的调用，是注册系统提供的二级域名, 这个 domain 不需要校验， 但是，一个 bucket 只允许一个 domain

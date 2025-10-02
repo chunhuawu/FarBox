@@ -1,4 +1,3 @@
-# coding: utf8
 import os, time
 from flask import request, abort, Response
 from farbox_bucket.utils import to_int, auto_type
@@ -19,8 +18,6 @@ from farbox_bucket.bucket.usage.bucket_usage_utils import get_bucket_usage, get_
 from farbox_bucket.server.es.es_status import get_es_status_for_bucket
 from farbox_bucket.server.es.es_sync_db_data import force_sync_posts
 
-
-
 @app.route('/admin/invite', methods=['POST', 'GET'])
 def invite():
     bucket = get_logined_admin_bucket()
@@ -34,7 +31,6 @@ def invite():
     per_page = to_int(request.values.get("per_page"), default_if_fail=100)
     invitations = get_invitations(limit=per_page, start_code=cursor)
     return render_api_template_as_response('page_admin_invite.jade', invitations=invitations)
-
 
 @app.route("/admin/bucket_date", methods=["POST", "GET"])
 def change_bucket_date():
@@ -55,7 +51,6 @@ def change_bucket_date():
     html = render_api_template("page_admin_bucket_expired_date.jade", info=info, service_info=service_info)
     return Response(html)
 
-
 @app.route("/admin/buckets_usage")
 def show_all_buckets_usage():
     if not get_logined_admin_bucket():
@@ -69,8 +64,6 @@ def show_all_buckets_usage():
                                            bandwidth_usage = bandwidth_usage,
                                            store_usage = store_usage,
                                            request_usage = request_usage)
-
-
 
 @app.route("/admin/system_bucket_assistant_for_replace", methods=["POST", "GET"])
 def system_bucket_assistant_for_replace():
@@ -93,8 +86,6 @@ def system_bucket_assistant_for_replace():
     info = "submit success" if request.method == "POST" else ""
 
     return render_api_template_as_response('page_admin_system_bucket_assistant.jade', data_obj=data_obj, info=info)
-
-
 
 @app.route("/admin/system_setup", methods=["POST", "GET"])
 def system_configs_setup():
@@ -127,7 +118,6 @@ def system_configs_setup():
     #print(time.time() - t1)
     return Response(html)
 
-
 @app.route("/admin/install_py_package", methods=["POST", "GET"])
 def install_py_package():
     if not get_logined_admin_bucket():
@@ -138,7 +128,6 @@ def install_py_package():
     else:
         result = ""
     return render_api_template_as_response("page_admin_install_py_package.jade", result=result)
-
 
 @app.route("/admin/bucket_status")
 def show_bucket_status_for_system_admin():
@@ -155,7 +144,6 @@ def show_bucket_status_for_system_admin():
 
     return render_api_template_as_response("page_admin_bucket_usage.jade", usage=bucket_usage, domains=domains, es_status=es_status)
 
-
 @app.route("/admin/force_sync_es_for_bucket")
 def force_sync_es_for_bucket():
     if not get_logined_admin_bucket():
@@ -165,5 +153,4 @@ def force_sync_es_for_bucket():
         abort(404, "bucket is empty")
     force_sync_posts(bucket)
     return "ok"
-
 

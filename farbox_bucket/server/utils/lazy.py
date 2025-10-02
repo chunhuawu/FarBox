@@ -1,4 +1,3 @@
-# coding: utf8
 
 
 class LazyDict(dict):
@@ -6,8 +5,7 @@ class LazyDict(dict):
     def __getitem__(self, item):
         try:
             value = dict.__getitem__(self, item)
-        except:
-            value = LazyDict()
+        except Exception: value = LazyDict()
         return value
 
     def __getattr__(self, item):

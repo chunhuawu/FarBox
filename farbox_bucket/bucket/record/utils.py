@@ -1,28 +1,22 @@
-# coding: utf8
 from farbox_bucket.settings import sentry_client
 from farbox_bucket.bucket.defaults import BUCKET_RECORD_SORT_TYPES
 from farbox_bucket.utils import to_unicode, string_types, are_letters
 from farbox_bucket.utils.data import json_dumps
 from farbox_bucket.utils.ssdb_utils import hset, hget, zsize
 
-
-
 def get_record_data_error_info(data):
     # record_data 必须是可以 dumps 的 dict 或者 字符串
     if isinstance(data, dict):
         try:
             data = json_dumps(data)
-        except:
-            if sentry_client:
+        except Exception: if sentry_client:
                 sentry_client.captureException()
             return 'py-data format error'
     if not isinstance(data, string_types):
         return 'data format error'
 
-
 def update_bucket_last_record_md5(bucket, record_md5):
     hset('_bucket_max_md5', bucket, record_md5)
-
 
 def allowed_to_create_record_in_bucket(bucket, record_md5):
     last_md5 = hget('_bucket_max_md5', bucket)
@@ -31,7 +25,6 @@ def allowed_to_create_record_in_bucket(bucket, record_md5):
     else:
         return True
 
-
 def get_file_id_from_record(record):
     if not isinstance(record, dict):
         return
@@ -39,9 +32,6 @@ def get_file_id_from_record(record):
     if not isinstance(file_id, string_types):
         return
     return file_id
-
-
-
 
 def get_bucket_name_for_order_by_record(bucket, record_data):
     data_type = get_data_type(record_data)
@@ -58,7 +48,6 @@ def count_records_by_type_for_bucket(bucket, doc_type):
         return 0
     bucket_name_for_order = '%s_%s_order' % (bucket, doc_type)
     return zsize(bucket_name_for_order)
-
 
 def get_data_type(record_data):
     data_type = record_data.get('_type') or record_data.get('type')
@@ -95,8 +84,6 @@ def get_path_from_record(record_data, is_lower=True):
         return
     #### 从某种角度来说， path 相当于是一个 db 中的唯一 id
     return path
-
-
 
 def get_type_from_record(record_data):
     if isinstance(record_data, dict):

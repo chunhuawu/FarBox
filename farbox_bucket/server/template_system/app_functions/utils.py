@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 
 def apply_middleware(app, middleware):
     # 处理中间件 & before_request & after_request
@@ -10,8 +8,6 @@ def apply_middleware(app, middleware):
         app.before_request_funcs.setdefault(None,[]).append(before_request)
     if after_request:
         app.after_request_funcs.setdefault(None, []).append(after_request)
-
-
 
 def apply_before_request(app, func):
     app.before_request_funcs.setdefault(None,[]).append(func)

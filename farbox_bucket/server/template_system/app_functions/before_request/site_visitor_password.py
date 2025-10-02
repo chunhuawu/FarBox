@@ -1,4 +1,3 @@
-# coding: utf8
 import re
 from flask import request, redirect, abort
 
@@ -9,8 +8,6 @@ from farbox_bucket.bucket.domain.web_utils import get_bucket_from_request
 from farbox_bucket.server.template_system.api_template_render import render_api_template_as_response
 from farbox_bucket.server.utils.cookie import save_cookie, get_cookie
 from farbox_bucket.server.utils.request_context_vars import set_not_cache_current_request
-
-
 
 def check_site_visitor_password_allowed():
     bucket = get_bucket_from_request()
@@ -43,10 +40,6 @@ def check_site_visitor_password_allowed():
                     return False
     return True
 
-
-
-
-
 def site_visitor_password_before_request():
     if request.path.startswith("/__"):
         return
@@ -73,10 +66,6 @@ def site_visitor_password_before_request():
             response = render_api_template_as_response("site_visitor_password.jade")
             if response:
                 return response
-        except:
-            pass
+        except Exception: pass
         abort(404)
-
-
-
 

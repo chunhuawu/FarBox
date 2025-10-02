@@ -1,4 +1,3 @@
-# coding: utf8
 from farbox_bucket.utils.image.utils import get_im, get_im_size
 from farbox_bucket.utils.image.exif import Exif
 from farbox_bucket.utils.date import get_image_date
@@ -6,7 +5,6 @@ from farbox_bucket.bucket.utils import get_bucket_utc_offset
 from farbox_bucket.utils.date import date_to_timestamp
 
 # 在图片存储之前，解析图片的信息，包括旋转相关的逻辑
-
 
 def do_get_image_info_from_raw_content(raw_content):
     info = {}
@@ -31,9 +29,7 @@ def do_get_image_info_from_raw_content(raw_content):
         info['image_height'] = image_height
     return info
 
-
 def get_image_info_from_raw_content(raw_content):
     try:
         return do_get_image_info_from_raw_content(raw_content)
-    except:
-        return {}
+    except Exception: return {}

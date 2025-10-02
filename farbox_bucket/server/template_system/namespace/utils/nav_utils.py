@@ -1,12 +1,9 @@
-# coding: utf8
-from __future__ import absolute_import
 from farbox_bucket.utils import smart_unicode, get_value_from_data, auto_type
 from flask import request
 from farbox_bucket.bucket.record.get.path_related import has_markdown_record_by_path_prefix
 from farbox_bucket.bucket.record.get.path_related import get_json_content_by_path
 from farbox_bucket.bucket.utils import get_bucket_pages_configs, get_bucket_site_configs
 from farbox_bucket.server.utils.request_path import auto_bucket_url_path
-
 
 # nav_data is a list, item in it is a dict, like [{name:xxx, url:xxxx}]
 
@@ -28,7 +25,6 @@ def get_nav_items_from_site_configs(bucket):
         if isinstance(nav_item, dict) and 'name' in nav_item and 'url' in nav_item:
             nav_items.append(nav_item)
     return nav_items
-
 
 """
 ---
@@ -55,8 +51,6 @@ def get_nav_items_from_doc(doc):
                 nav_item = dict(name=k, url=v)
                 nav_items.append(nav_item)
     return nav_items
-
-
 
 def get_auto_nav_items(bucket): # 自动生成的
     pages_configs = get_bucket_pages_configs(bucket)
@@ -90,7 +84,6 @@ def get_auto_nav_items(bucket): # 自动生成的
                 url="/wiki_nodes"
             ))
 
-
     if 'categories.jade' in pages_configs:
         # 有 categories.jade 的呈现
         nav_items.append(dict(
@@ -121,7 +114,6 @@ def get_auto_nav_items(bucket): # 自动生成的
             url='/__page/contact'
         ))
 
-
     #if 'feed.jade' in pages_configs:
     nav_items.append(dict(
     name='Feed',
@@ -129,9 +121,6 @@ def get_auto_nav_items(bucket): # 自动生成的
     ))
 
     return nav_items
-
-
-
 
 def deal_nav_items(nav_items):
     new_nav_items = []
@@ -150,9 +139,6 @@ def deal_nav_items(nav_items):
                 url = smart_unicode(url)
             ))
     return new_nav_items
-
-
-
 
 def pre_nav_data(nav_data):
     if not isinstance(nav_data, (list, tuple)):

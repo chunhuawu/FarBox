@@ -1,4 +1,3 @@
-#coding: utf8
 import time, os
 from farbox_bucket.utils.functional import cached_property
 from farbox_bucket.settings import MAX_RECORD_SIZE
@@ -24,7 +23,6 @@ class FileSyncCompiler(BasicSyncCompiler):
             else:
                 timestamp = get_file_timestamp(relative_path=self.relative_path, abs_filepath=self.abs_filepath, utc_offset=self.utc_offset)
             return timestamp
-
 
     def get_compiled_data(self):
         mime_type = guess_type(self.path)

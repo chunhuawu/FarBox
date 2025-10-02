@@ -1,4 +1,3 @@
-#coding: utf8
 # 登录和注册的逻辑
 from flask import request, abort, redirect
 from farbox_bucket.settings import SYSTEM_DOMAINS, BUCKET_PRICE, BUCKET_PRICE2
@@ -32,8 +31,6 @@ from farbox_bucket.bucket.domain.web_utils import get_bucket_from_request
 
 from farbox_bucket.clouds.wechat.wechat_handler import is_wechat_server_valid
 
-
-
 @app.route("/logout")
 def logout():
     delete_cookies("utoken", "visitor_password")
@@ -55,8 +52,6 @@ def login():
                                            is_wechat_server_valid=is_wechat_server_valid)
     return response
 
-
-
 @app.route("/__site_settings", methods=["POST", "GET"])
 def setting_settings_view():
     bucket = get_logined_bucket(check=True)
@@ -70,7 +65,6 @@ def setting_settings_view():
 
     return render_api_template_as_response("page_user_site_settings.jade", data_obj=data_obj)
 
-
 @app.route("/__site_json_settings", methods=["POST", "GET"])
 def site_json_settings_view():
     bucket = get_logined_bucket(check=True)
@@ -78,7 +72,6 @@ def site_json_settings_view():
         return abort(410)
     set_bucket_in_request_context(bucket)
     return render_api_template_as_response("page_user_json_settings_ui.jade")
-
 
 @app.route("/__bucket_usage")
 def show_bucket_usage():
@@ -88,12 +81,9 @@ def show_bucket_usage():
     usage = get_bucket_usage(bucket)
     return render_api_template_as_response("page_user_usage.jade", usage=usage)
 
-
-
 @app.route("/__apply_theme", methods=["POST", "GET"])
 def apply_theme():
     return render_api_template_as_response("page_user_template.jade")
-
 
 @app.route("/__register", methods=["POST", "GET"])
 def create_new_bucket_for_user_step_1():
@@ -126,14 +116,11 @@ def create_new_bucket_for_user_step_2():
     return render_api_template_as_response("page_user_create_bucket.jade", private_key=private_key, info=info,
                                            register_note=register_note)
 
-
-
 @app.route("/__bind_domain", methods=["POST","GET"])
 def bind_domain_for_bucket():
     ip = get_current_ip()
     main_domain = SYSTEM_DOMAINS[0] if SYSTEM_DOMAINS else None
     return render_api_template_as_response("page_user_bind_domain.jade", ip=ip, main_domain=main_domain)
-
 
 @app.route("/__set_bucket_email", methods=["POST", "GET"])
 def set_bucket_email():
@@ -151,7 +138,6 @@ def set_bucket_email():
     else:
         email = get_bucket_owner_email(bucket)
     return render_api_template_as_response("page_user_set_bucket_email.jade", info=info, email=email)
-
 
 @app.route("/__install_ssl_for_bucket_domain", methods=["POST", "GET"])
 def install_ssl_for_bucket_domain():
@@ -181,7 +167,6 @@ def install_ssl_for_bucket_domain():
             return p_redirect("/admin")
     return render_api_template_as_response("page_user_install_ssl.jade", info=info, data_obj=data_obj)
 
-
 @app.route("/__extend_bucket", methods=["POST", "GET"])
 def extend_bucket_yearly():
     # 考虑到 alipay 的回调，这里不限制 bucket 是否处于登录的状态
@@ -194,7 +179,6 @@ def extend_bucket_yearly():
     price = BUCKET_PRICE
     price2 = BUCKET_PRICE2
     price_note = get_env("bucket_price_note") or ""
-
 
     if request.method == "GET" and not request.values.get("trade_no") and request.values.get("action") != "do":
         # 不需要处理，直接呈现页面
@@ -212,7 +196,6 @@ def extend_bucket_yearly():
     return render_api_template_as_response("page_user_extend_bucket.jade", order_ids=order_ids,
                                            service_info=service_info, price=price, price2=price2, price_note=price_note)
 
-
 @app.route("/__donate")
 def donate_to_farbox():
     return render_api_template_as_response("page_donate.jade")
@@ -226,8 +209,7 @@ def render_markdown_page(path=""):
         cached_response = get_response_from_memcache()
         if cached_response:
             return cached_response
-    except:
-        pass
+    except Exception: pass
 
     if path in ["about", "links", "contact"]:
         md_doc = get_markdown_record_by_path_prefix(bucket, path)

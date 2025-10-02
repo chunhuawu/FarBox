@@ -1,13 +1,9 @@
-# coding: utf8
 import datetime
 from farbox_bucket.server.comments.utils import get_comments_record, get_comments_by_comments_doc, to_doc_path, doc_path_to_comments_path
 from farbox_bucket.utils import to_float
 from farbox_bucket.utils.data import dump_csv, csv_records_to_object
 from farbox_bucket.client.sync.compiler_worker import get_compiler_data_directly
 from farbox_bucket.bucket.record.helper.update_record import update_record_directly
-
-
-
 
 def dump_comments_to_csv_content(parent_obj_doc, comments):
     comment_keys = ['author', 'content', 'email', 'site', 'date', 'ip', 'reply']
@@ -26,8 +22,6 @@ def dump_comments_to_csv_content(parent_obj_doc, comments):
         csv_records.append(csv_record)
     csv_content = dump_csv(csv_records)
     return csv_content
-
-
 
 def add_new_comment_to_doc(bucket, parent_obj_doc, comment=None, comments=None):
     # comment is a dict, should add to comments_doc.comments
@@ -57,23 +51,4 @@ def add_new_comment_to_doc(bucket, parent_obj_doc, comment=None, comments=None):
     raw_record = get_compiler_data_directly(relative_path=comments_path, content=csv_content)
 
     update_record_directly(bucket, raw_record)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

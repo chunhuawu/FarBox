@@ -1,9 +1,6 @@
-# coding: utf8
 import time
 from farbox_bucket.settings import server_secret_key
 from farbox_bucket.utils import get_md5, string_types, to_int
-
-
 
 def get_signature_for_bucket(bucket, timestamp=None, salt=None):
     # <timestamp>-<signature>
@@ -14,8 +11,6 @@ def get_signature_for_bucket(bucket, timestamp=None, salt=None):
     signature_body = get_md5(value_to_hash)
     signature = "%s-%s" % (timestamp, signature_body)
     return signature
-
-
 
 def check_signature_for_bucket(bucket, signature, salt=None, hours=24):
     if not isinstance(signature, string_types):

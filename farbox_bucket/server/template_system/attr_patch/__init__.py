@@ -1,16 +1,11 @@
-# coding: utf8
 from farbox_bucket.utils import string_types
 from farbox_bucket.utils.functional import curry
 from farbox_bucket.server.utils.func import get_functions_in_a_file_obj, AttrFunc
-
 
 import all as _all_functions
 import array as _array_functions
 import dictionary as _dict_functions
 import strings as _str_functions
-
-
-
 
 all_functions = get_functions_in_a_file_obj(_all_functions)
 array_functions = get_functions_in_a_file_obj(_array_functions)
@@ -25,7 +20,6 @@ func_match_rules = [
     (string_types, str_functions),
 ]
 
-
 def render_attr_func_without_call(func): # h.xxx 这样的函数可以直接当做属性处理
     if not hasattr(func, '__call__') or not func:
         return func
@@ -33,8 +27,6 @@ def render_attr_func_without_call(func): # h.xxx 这样的函数可以直接当�
         return func
     new_func = AttrFunc(func)
     return new_func
-
-
 
 def get_attr_func(obj, attr, functions):
     # 在一个指定的functions 的 dict 中，试图取得obj.attr 时，返回对应的 function（如果有的话）
@@ -59,7 +51,6 @@ def get_attr_func(obj, attr, functions):
                 # 不接受任何参数的， curry 都是不行的, 其实就是相当于一个属性（的函数运行）
                 return original_func()
         return wrapped_func
-
 
 def patch_attr_func_for_obj(obj, attr):
     all_matched_func = get_attr_func(obj, attr, all_functions)

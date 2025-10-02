@@ -1,12 +1,9 @@
-# coding: utf8
 from farbox_bucket.utils import string_types, smart_unicode
 from farbox_bucket.bucket.record.utils import get_path_from_record
 from farbox_bucket.server.utils.site_resource import get_site_config
 from farbox_bucket.server.utils.request_path import auto_bucket_url_path
 from farbox_bucket.utils.path import get_relative_path
 from farbox_bucket.utils.url import get_url_without_prefix
-
-
 
 def get_doc_url(doc):
     if not isinstance(doc, dict):
@@ -29,7 +26,6 @@ def get_doc_url(doc):
         url = auto_bucket_url_path(url)
     return url
 
-
 def get_post_url_with_url_path(doc, url_prefix=None, url_root=None, hit_url_path=False):
     # 如果没有 url_prefix 的前提下，& hit_url_path = True 的时候，走系统逻辑的 post.url 的逻辑
     # 相当于  get_doc_url &  get_doc_url_for_template_api 的混合
@@ -45,8 +41,6 @@ def get_post_url_with_url_path(doc, url_prefix=None, url_root=None, hit_url_path
         else:
             post_url = get_doc_url(doc)
         return post_url
-
-
 
 def get_doc_url_for_template_api(doc, url_prefix, url_root=None, hit_url_path=False):
     # hit_url_path=True 的时候，post 上有 url_path， 但跟 post.url 直接调用的逻辑不亦一样

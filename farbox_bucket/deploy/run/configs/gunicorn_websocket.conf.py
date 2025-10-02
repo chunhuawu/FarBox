@@ -1,4 +1,3 @@
-#coding:utf8
 import os
 os.environ['GEVENT_RESOLVER'] = 'ares'
 workers = 1
@@ -15,8 +14,4 @@ limit_request_line = 500 #in bytes just 0.5k #目前并没有什么大的数据�
 proc_name = 'websocket'
 # timeout 固定多少时间重启worker
 # graceful_timeout 接到重启后，多少时间后重启
-
-
-
-
 

@@ -1,4 +1,3 @@
-#coding: utf8
 from flask import Response, abort
 import base64, time
 from farbox_bucket.server.web_app import app
@@ -7,7 +6,6 @@ from farbox_bucket.server.utils.response import get_304_response, is_doc_modifie
 from farbox_bucket.server.static.static_render import send_static_file
 
 from .avatar import get_avatar_id, get_gavatar_image_content
-
 
 @app.route('/service/avatar/<avatar_id>')
 def show_avatar(avatar_id):

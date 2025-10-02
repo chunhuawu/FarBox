@@ -1,11 +1,9 @@
-#coding: utf8
 import requests
 from farbox_bucket.utils.ssdb_utils import auto_cache_by_ssdb
 from farbox_bucket.utils.env import get_env
 
 WECHAT_APP_ID = get_env("wechat_app_id")
 WECHAT_APP_SECRET = get_env("wechat_app_secret")
-
 
 # 一个微信的open id 看起来可能是这样的: oZ454jpVhF15nHxs3ig-uCq_gqss
 
@@ -20,9 +18,8 @@ def _get_access_token():
     response = requests.get(url,  params=params, verify=False)
     try:
         token = response.json().get('access_token')
-    except:
-        try: print(response.json().get("errmsg"))
-        except: pass
+    except Exception: try: print(response.json().get("errmsg"))
+        except Exception: pass
         token = ""
     return token
 
@@ -30,7 +27,6 @@ def get_access_token(force_update=False):
     # 7200s的有效期
     # # 一个小时更新一次
     return auto_cache_by_ssdb("wechat_token", value_func=_get_access_token, ttl=3600, force_update=force_update)
-
 
 def check_wechat_errors_and_update_token(json_data):
     if not json_data:

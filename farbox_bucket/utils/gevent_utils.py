@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 from gevent.hub import Hub
 import gc, gevent
 from gevent import spawn
@@ -8,7 +6,6 @@ from gevent.pool import Pool
 from gevent.timeout import Timeout
 
 IGNORE_ERROR = Hub.SYSTEM_ERROR + Hub.NOT_ERROR
-
 
 def register_error_handler(error_handler):
 
@@ -23,18 +20,15 @@ def register_error_handler(error_handler):
 
     Hub.handle_error = custom_handle_error
 
-
 def gevent_error_sent_by_sentry(sentry_client):
     def gevent_error_handler(context, exc_info):
         """Here goes your custom error handling logics"""
         e = exc_info[1]
         try:
             sentry_client.captureException(exc_info=exc_info)
-        except:
-            # 避免捕获过程中的死循环问题
+        except Exception:# 避免捕获过程中的死循环问题
             pass
     register_error_handler(gevent_error_handler)
-
 
 def get_all_gevent_jobs():
     jobs = []
@@ -53,9 +47,7 @@ def wait_all_gevent_jobs_finished():
     gevent.joinall(jobs)
     for job in jobs:
         try: del job
-        except: pass
-
-
+        except Exception: pass
 
 def do_by_gevent_pool(pool_size=100, job_func=None, loop_items=None, timeout=None, wait_timeout=5*60, **kwargs):
     if not job_func or not loop_items:
@@ -80,14 +72,10 @@ def do_by_gevent_pool(pool_size=100, job_func=None, loop_items=None, timeout=Non
     try:
         worker_pool.join(timeout=timeout)
         return True # 表示处理完成
-    except:
-        return False
-
-
+    except Exception: return False
 
 def greenlet_quiet_error_handler(greenlet):
     pass
-
 
 def get_result_by_gevent_with_timeout_block(function, timeout, fallback_function=None, auto_kill=False, raise_error=True):
     g_job = spawn(function)

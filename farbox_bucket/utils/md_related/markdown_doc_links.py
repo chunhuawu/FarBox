@@ -1,7 +1,5 @@
-# coding: utf8
 import re
 from farbox_bucket.utils import smart_unicode, is_a_markdown_file, string_types
-
 
 def get_link_title_id_in_wiki_syntax(line):
     # 已经去除头尾的 [[ 与 ]] 了
@@ -35,7 +33,6 @@ def get_link_title_id_in_wiki_syntax(line):
         link = "#" + link
     return link, link_title, link_id
 
-
 def get_linked_docs_from_markdown_content(path, raw_content, md_link_abs_check_func=None):
     # return [unicode]
     if not raw_content:
@@ -59,7 +56,6 @@ def get_linked_docs_from_markdown_content(path, raw_content, md_link_abs_check_f
             if not link in maybe_md_links:
                 maybe_md_links.append(link)
 
-
     for m in re.finditer("(?<!\[)(\[\[)([^\[\]]+)(\]\])", raw_content):
         # [[ xxx ]]
         # [[ xxx | title ]]
@@ -75,7 +71,6 @@ def get_linked_docs_from_markdown_content(path, raw_content, md_link_abs_check_f
         link = link.strip()
         if link not in maybe_md_links:
             maybe_md_links.append(link)
-
 
     # 校验
     tags = []
@@ -107,6 +102,4 @@ def get_linked_docs_from_markdown_content(path, raw_content, md_link_abs_check_f
             link_paths.append(link)
 
     return link_paths, tags
-
-
 

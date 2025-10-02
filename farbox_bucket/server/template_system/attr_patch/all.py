@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 from farbox_bucket.utils.mime import guess_type
 import datetime
 from farbox_bucket.utils.date import utc_date_parse as date_parse
@@ -9,13 +7,9 @@ from farbox_bucket.server.template_system.model.date import Date
 #from json import loads as json_loads, dumps as json_dumps
 from farbox_bucket.utils.data import json_dumps, json_loads
 
-
-
 def debug_obj(obj):
     # 主要是开发时候debug用的，可以确定obj是什么类型的对象
     return obj
-
-
 
 def auto_value(obj):
     if isinstance(obj, datetime.datetime):
@@ -27,17 +21,13 @@ def md5(obj):
     # 返回 md5 值
     try:
         return get_md5(obj)
-    except:
-        return obj
-
+    except Exception: return obj
 
 def sha1(obj):
     # 返回 sha1 值
     try:
         return get_sha1(obj)
-    except:
-        return obj
-
+    except Exception: return obj
 
 def date(obj):
     if isinstance(obj, datetime.datetime):
@@ -46,15 +36,12 @@ def date(obj):
         try:
             date_obj = timestamp_to_date(obj, is_utc=True)
             return Date(date_obj)
-        except:
-            pass
+        except Exception: pass
     if isinstance(obj, string_types):
         try:
             return Date(date_parse(obj))
-        except:
-            pass
+        except Exception: pass
     return Date(datetime.datetime.utcnow()) # by default
-
 
 def json(obj):
     """
@@ -64,8 +51,7 @@ def json(obj):
     if isinstance(obj, (tuple, list, dict, str, unicode)):
         try:
             return json_dumps(obj, indent=4)
-        except:
-            return obj
+        except Exception: return obj
         # todo 缓存策略
         # return cache_result(cache_key)(json_dumps)(obj)
     else:
@@ -81,10 +67,8 @@ def from_json(obj):
     if isinstance(obj, string_types):
         try:
             return json_loads(obj)
-        except:
-            return obj
+        except Exception: return obj
     return obj
-
 
 def __int(obj):
     if isinstance(obj, (int, float, str, unicode)):
@@ -103,7 +87,6 @@ def __float(obj):
         return to_float(obj, default_if_fail=int)
     return obj
 
-
 def is_int(obj):
     return isinstance(obj, int)
 
@@ -119,7 +102,6 @@ def is_str(obj):
 def is_unicode(obj):
     return isinstance(obj, (str, unicode))
 
-
 def is_array(obj):
     return isinstance(obj, (list, tuple))
 
@@ -128,8 +110,6 @@ def is_list(obj):
 
 def is_tuple(obj):
     return isinstance(obj, tuple)
-
-
 
 def is_dict(obj):
     return isinstance(obj, dict)
@@ -147,7 +127,6 @@ def is_image(obj): # 一个字符串是否是图片的 url
             return False
     return False
 
-
 def type(obj):
     types = {int: 'int', float:'float', bool:'bool', unicode:'str', str:'str', list:'list', tuple:'tuple'}
     for t, ts in types.items():
@@ -158,8 +137,6 @@ def type(obj):
     # at last
     return ''
 
-
-
 def get(obj, *args, **kwargs):
     if isinstance(obj, dict):
         return obj.get(*args, **kwargs)
@@ -168,25 +145,18 @@ def get(obj, *args, **kwargs):
         i = args[0]
         try:
             return obj[i]
-        except:
-            return None
+        except Exception: return None
     elif args:
         field = args[0]
         default = args[1] if len(args)>=2 else None
         try:
             return getattr(obj, field, default)
-        except:
-            return default
+        except Exception: return default
     else:
         return # ignore
-
 
 def absolute(obj):
     if isinstance(obj, (float, int)):
         return abs(obj)
     return obj
-
-
-
-
 

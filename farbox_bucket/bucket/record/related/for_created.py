@@ -1,4 +1,3 @@
-# coding: utf8
 import os, time
 from farbox_bucket.utils.objectid import ObjectId
 from farbox_bucket.utils import to_float
@@ -8,8 +7,6 @@ from farbox_bucket.bucket.utils import get_bucket_name_for_url, get_bucket_name_
 from farbox_bucket.bucket.record.utils import get_path_from_record, get_data_type, get_url_path, get_bucket_name_for_order_by_record
 from farbox_bucket.bucket.record.get.path_related import has_record_by_path
 from .sub.utils import update_tags_info_for_posts
-
-
 
 def create_record_for_a_folder(bucket="", folder_path=""):
     if not is_valid_bucket_name(bucket):
@@ -41,8 +38,6 @@ def create_record_for_a_folder(bucket="", folder_path=""):
     #if parent_path and not has_record_by_path(bucket, parent_path):
         # 继续往上找 parent
     #    create_record_for_a_folder(bucket=bucket, folder_path=parent_path)
-
-
 
 def update_record_order_value_to_related_db(bucket, record_data, force_value=None):
     # 设定排序, 如果没有排序逻辑的，实际上根据 get_data(type) 的逻辑是无法取出内容的
@@ -93,7 +88,6 @@ def after_path_related_record_created(bucket, record_id, record_data):
         # post 类型的，标记 object_id，前面加 #
         to_mark_object_id = True
 
-
     # url 匹配用的索引
     url_path = get_url_path(record_data)
     # 两两对应的映射关系, 除了通过 url 找path，还可以 通过 path 找 url，因为删除一个 record 的时候，只有 path，没有 url_path
@@ -126,7 +120,6 @@ def after_path_related_record_created(bucket, record_id, record_data):
     # 指定的类型才能处理 slash
     if data_type in BUCKET_RECORD_SLASH_TYPES:
         zset(bucket_name_for_slash, path, score=slash_number)
-
 
     update_tags_info_for_posts(bucket=bucket, record_data=record_data) # files and posts info
 

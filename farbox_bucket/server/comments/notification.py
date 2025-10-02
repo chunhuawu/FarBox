@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 import re
 from flask import request
 from urlparse import urlparse
@@ -13,8 +11,6 @@ from farbox_bucket.utils.mail.system import send_mail_by_system
 from .contacts import get_contacts_from_new_comment
 from .template import get_comment_notification_content
 
-
-
 def get_valid_emails(emails):
     valid_emails = []
     for email in emails:
@@ -23,7 +19,6 @@ def get_valid_emails(emails):
         elif is_email_address(email):
             valid_emails.append(email.strip().lower())
     return list(set(valid_emails))  # 去重复
-
 
 def get_people_to_notify(content):  # unicode,lower
     # 得到被 @ 的用户, 本身就是 username 类似的
@@ -45,8 +40,6 @@ def get_people_to_notify(content):  # unicode,lower
             _people += p.split()
     return _people
 
-
-
 def get_contacts_from_comments(comments):
     # 从评论中获取name + email的字典  unicode,lower
     # comments 是一个 dict 类型组成的 list
@@ -59,9 +52,6 @@ def get_contacts_from_comments(comments):
         if author and email:
             contacts[smart_unicode(author).lower()] = email.lower()
     return contacts
-
-
-
 
 def send_notification_emails(new_comment):
     if not CAN_SEND_SYSTEM_EMAIL:
@@ -83,7 +73,6 @@ def send_notification_emails(new_comment):
      # 没有来路的，不处理了
     if not parent_url:
         return
-
 
     emails = []
     for person in people_to_notify:
@@ -109,11 +98,10 @@ def send_notification_emails(new_comment):
     if new_comment.email:
         new_comment_author_email = new_comment.email.strip().lower()
         try: emails.remove(new_comment_author_email)
-        except: pass
+        except Exception: pass
 
     if not emails:
         return # ignore
-
 
     notification_content = get_comment_notification_content(comment_obj=new_comment, parent_obj=new_comment.parent_obj, current_link=parent_url)
 
@@ -121,10 +109,4 @@ def send_notification_emails(new_comment):
 
     request.emails_sent_info = "comment-%s-people" % len(emails)
     #send_mail_by_system(to_address=emails, subject='New Comment', content= notification_content,)
-
-
-
-
-
-
 

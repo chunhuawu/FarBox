@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 import os
 from farbox_bucket.utils import smart_unicode, is_a_markdown_file
 from farbox_bucket.utils.convert.coffee2js import compile_coffee
@@ -7,7 +5,6 @@ from farbox_bucket.utils.convert.css import compile_css
 from farbox_bucket.utils.convert.jade2jinja import convert_jade_to_html
 from farbox_bucket.utils.path import get_relative_path, is_real, is_a_hidden_path, get_all_sub_files
 from farbox_markdown.compile_md import compile_markdown
-
 
 template_resource_compilers = {
     'scss': ('css', compile_css),
@@ -46,7 +43,6 @@ def get_templates_route_info(templates_info):
                 route_path = ''  # 首页
             route_info[route_path] = relative_path  # 不保留后缀名的
     return route_info
-
 
 def get_template_info(template_dir):
     info = {}
@@ -87,11 +83,9 @@ def get_template_info(template_dir):
                     error_message = getattr(e, 'message', None)
                     if error_message:
                         try: print('%s error: %s' % (relative_path, error_message))
-                        except: pass
+                        except Exception: pass
     info['_route'] = get_templates_route_info(info)
     return info
-
-
 
 def get_template_content_from_name(name_or_path, templates_info,):
     route_info = templates_info.get('_route') or {}
@@ -113,8 +107,4 @@ def get_template_content_from_name(name_or_path, templates_info,):
     if '.' not in name_or_path:
         filename = '%s.html' % name_or_path
         return templates_info.get(filename)
-
-
-
-
 

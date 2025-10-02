@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 import os
 from farbox_bucket.utils import string_types, smart_unicode, to_date, to_float, MARKDOWN_EXTS, is_a_markdown_file
 from farbox_bucket.utils.gzip_content import ungzip_content
@@ -12,8 +10,6 @@ from farbox_bucket.bucket import get_bucket_site_configs
 from farbox_bucket.server.utils.request_context_vars import get_context_value_from_request, set_context_value_from_request
 
 from .get import get_records_by_ids
-
-
 
 ########## utils starts ##########
 def filter_paths_under_path(paths, under):
@@ -40,7 +36,6 @@ def just_get_record_id(raw_record_id):
 
 ########## utils ends ##########
 
-
 ############## basic starts ##########
 
 def get_record_id_by_path(bucket, path):
@@ -51,7 +46,6 @@ def get_record_id_by_path(bucket, path):
         record_object_id = just_get_record_id(record_object_id)
         record_object_id = record_object_id.lstrip('#')
     return record_object_id
-
 
 def get_record_ids_by_paths(bucket, paths, ignore_marked_id=True):
     path_bucket = get_bucket_name_for_path(bucket)
@@ -65,7 +59,6 @@ def get_record_ids_by_paths(bucket, paths, ignore_marked_id=True):
             record_id = record_id.lstrip('#')
         record_ids.append(record_id)
     return record_ids
-
 
 def get_paths_and_ids_under(bucket, under="", max_limit=10000):
     path_bucket = get_bucket_name_for_path(bucket)
@@ -85,7 +78,6 @@ def get_paths_and_ids_under(bucket, under="", max_limit=10000):
         ids_and_paths.append([path, record_id])
     return ids_and_paths
 
-
 def get_bucket_markdown_record_ids(bucket, under='', max_limit=20000):
     record_ids = []
     paths_and_ids = get_paths_and_ids_under(bucket=bucket, under=under, max_limit=max_limit)
@@ -94,8 +86,6 @@ def get_bucket_markdown_record_ids(bucket, under='', max_limit=20000):
             record_ids.append(record_id)
     return record_ids
 
-
-
 def get_paths_under(bucket, under='', max_limit=10000):
     paths_and_ids = get_paths_and_ids_under(bucket=bucket, under=under, max_limit=max_limit)
     paths = []
@@ -103,9 +93,7 @@ def get_paths_under(bucket, under='', max_limit=10000):
         paths.append(path)
     return paths
 
-
 ############## basic ends ##########
-
 
 def get_record_by_path(bucket, path, force_dict=False):
     if not bucket:
@@ -122,7 +110,6 @@ def get_record_by_path(bucket, path, force_dict=False):
     else:
         record = None
     return record
-
 
 def get_markdown_record_by_path_prefix(bucket, prefix):
     if not bucket:
@@ -152,9 +139,6 @@ def has_markdown_record_by_path_prefix(bucket, prefix):
             return True
     return False
 
-
-
-
 def get_raw_content_by_record(record):
     if not record or not isinstance(record, dict):
         return ""
@@ -164,15 +148,13 @@ def get_raw_content_by_record(record):
     if record.get('_zipped'):
         try:
             raw_content = ungzip_content(raw_content, base64=True)
-        except:
-            pass
+        except Exception: pass
     return raw_content
 
 def get_raw_content_by_path(bucket, path):
     # 只处理有 raw_content 这个字段的
     record = get_record_by_path(bucket, path)
     return get_raw_content_by_record(record)
-
 
 def get_json_content_by_path(bucket, path, force_dict=False):
     raw_content = get_raw_content_by_path(bucket, path)
@@ -183,9 +165,7 @@ def get_json_content_by_path(bucket, path, force_dict=False):
         if force_dict and not isinstance(result, dict):
             return {}
         return result
-    except:
-        return {}
-
+    except Exception: return {}
 
 def do_get_record_by_url(bucket, url_path):
     url_path = url_path.strip().lower()
@@ -210,13 +190,11 @@ def get_record_by_url(bucket, url_path):
     set_context_value_from_request(cache_key, cached_in_g)
     return doc
 
-
 def get_record_by_url_or_path(bucket, key):
     if not isinstance(key, string_types):
         return None
     record = get_record_by_url(bucket, key) or get_record_by_path(bucket, key)
     return record
-
 
 def get_records_by_paths(bucket, paths, ignore_marked_id=True, limit=None):
     record_ids = get_record_ids_by_paths(bucket, paths, ignore_marked_id=ignore_marked_id)
@@ -224,7 +202,6 @@ def get_records_by_paths(bucket, paths, ignore_marked_id=True, limit=None):
         record_ids = record_ids[:limit]
     records = get_records_by_ids(bucket, record_ids)
     return records
-
 
 def get_next_record(bucket, current_record, reverse=True):
     if not current_record:
@@ -244,7 +221,6 @@ def get_next_record(bucket, current_record, reverse=True):
         return records_to_hit[0]
     else:
         return None
-
 
 # 有 order 的，也就是缩进建立在 xxx_<type>_order 上的，也都是有 path 的
 def get_paths_by_type(bucket, data_type, offset=0, limit=10000, reverse=False,
@@ -272,7 +248,6 @@ def get_paths_by_type(bucket, data_type, offset=0, limit=10000, reverse=False,
     order_bucket = get_bucket_name_for_order(bucket, data_type)
     result = zrange(order_bucket, offset=offset, limit=limit, reverse=reverse)
 
-
     for path, order_value in result:
         if should_hit_date:
             order_value = to_float(order_value)
@@ -288,12 +263,10 @@ def get_paths_by_type(bucket, data_type, offset=0, limit=10000, reverse=False,
         paths.append(path)
     return paths
 
-
 def get_records_by_type(bucket, data_type, offset=0, limit=100, reverse=False):
     paths = get_paths_by_type(bucket, data_type=data_type, offset=offset, limit=limit, reverse=reverse)
     records = get_records_by_paths(bucket, paths)
     return records
-
 
 def excludes_paths(paths, excludes=None):
     if not excludes:

@@ -1,4 +1,3 @@
-# coding: utf8
 import os
 
 def do_install_project_log_rotate(force=False):
@@ -24,9 +23,7 @@ def do_install_project_log_rotate(force=False):
     with open(project_log_rotate_config_filepath, "wb") as f:
         f.write(project_log_rotate_content)
 
-
 def install_project_log_rotate(force=False):
     try:
         do_install_project_log_rotate(force=force)
-    except:
-        pass
+    except Exception: pass

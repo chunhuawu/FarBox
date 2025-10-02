@@ -1,4 +1,3 @@
-# coding: utf8
 import re
 from farbox_bucket.utils import smart_unicode
 from farbox_bucket.utils.path import get_just_name
@@ -9,7 +8,6 @@ from farbox_bucket.bucket.record.get.path_related import get_record_by_path
 from farbox_bucket.server.template_system.api_template_render import render_api_template
 from farbox_bucket.server.template_system.namespace.data import Data
 from farbox_bucket.server.utils.request_path import get_request_path
-
 
 def show_albums_as_sub_site():
     bucket = get_bucket_in_request_context()

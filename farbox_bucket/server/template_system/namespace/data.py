@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 import json
 import copy
 from farbox_bucket.utils import string_types, to_int, smart_unicode
@@ -19,7 +17,6 @@ from farbox_bucket.server.utils.doc_url import get_doc_url_for_template_api
 from farbox_bucket.server.utils.request_context_vars import set_doc_in_request
 from farbox_bucket.server.helpers.file_manager import sync_file_by_server_side
 
-
 def level_to_level_start_and_end(level, path):
     if not level:
         return None, None
@@ -37,9 +34,6 @@ def level_to_level_start_and_end(level, path):
         elif level.startswith('<'): # <1 相当于0
             level_end = current
     return level_start, level_end
-
-
-
 
 class Data(object):
     @staticmethod
@@ -74,7 +68,6 @@ class Data(object):
             if return_count:
                 return len(tag_match_records)
             return tag_match_records
-
 
         if isinstance(type, (list, tuple)) and type:
             type = type[0]
@@ -157,12 +150,10 @@ class Data(object):
             obj_list = [{key:value for key,value in obj.items() if key in fields} for obj in obj_list if isinstance(obj, dict)]
         return obj_list
 
-
     def get_record_by_url(self, url=''):
         if not self.bucket or not url:
             return None
         return get_record_by_url(self.bucket, url)
-
 
     def get_record_by_path(self, path=''):
         if not self.bucket or not path:
@@ -179,8 +170,6 @@ class Data(object):
         if not path:
             return False
         return has_record_by_path(self.bucket, path)
-
-
 
     def get_doc(self, path, **kwargs):
         path = path.lower().strip('/').strip()
@@ -204,7 +193,6 @@ class Data(object):
         if as_context_doc and doc:
             set_doc_in_request(doc)
         return doc
-
 
     def sort_by_position(self, records, reverse=False):
         if not records:
@@ -233,7 +221,6 @@ class Data(object):
     def get_paginator(index_or_name=0):
         return _get_paginator(index_or_name)
 
-
     def update_json(self, path, **kwargs):
         # 更新一个 json 文件，用 simple_sync 的调用
         # 注意，调用这个函数的时候，并不需要管理员权限，所以，要慎重处理!!!!
@@ -254,12 +241,10 @@ class Data(object):
             sync_file_by_server_side(bucket=self.bucket, relative_path=path, content=new_content, is_dir=False, is_deleted=False)
         return ''
 
-
     def get_doc_url(self, doc, url_prefix, url_root=None, hit_url_path=False):
         # hit_url_path=True 的时候，post 上有 url_path， 但跟 post.url 直接调用的逻辑不亦一样
         # post.url 相当于有一个动态的 url_prefix
         return get_doc_url_for_template_api(doc, url_prefix=url_prefix, url_root=url_root, hit_url_path=hit_url_path)
-
 
 @cache_result
 def data():
@@ -272,8 +257,6 @@ def d():
 @cache_result
 def paginator():
     return _get_paginator()
-
-
 
 def get_data(type='post', limit=None, page=None, path='', level=None, level_start=None, level_end=None, excludes=None,
                  status=None, with_page=False, pager_name=None, sort='desc', return_count=False, **kwargs):

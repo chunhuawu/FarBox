@@ -1,4 +1,3 @@
-# coding: utf8
 import os
 import gevent
 import requests
@@ -7,7 +6,6 @@ from farbox_bucket.utils.url import get_url_path
 from farbox_bucket.bucket.utils import has_bucket
 from farbox_bucket.bucket.record.get.path_related import has_record_by_path
 from farbox_bucket.server.helpers.file_manager import sync_file_by_server_side
-
 
 def do_download_from_internet_and_sync(bucket, path, url, timeout=10):
     # 下载行为， 这里要获得site，因为如果是异步的话，g.site是无效的
@@ -22,10 +20,7 @@ def do_download_from_internet_and_sync(bucket, path, url, timeout=10):
             return
         sync_file_by_server_side(bucket=bucket, relative_path=path, content=response_content) # 进行同步
         return True
-    except:
-        pass
-
-
+    except Exception: pass
 
 def download_from_internet_and_sync(bucket, url, folder_to_save='/_data/downloads', path=None, timeout=10, force=False, async=True):
     # 从互联上下载内容

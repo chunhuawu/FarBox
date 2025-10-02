@@ -1,4 +1,3 @@
-# coding: utf8
 import re
 from flask import abort, request
 
@@ -29,8 +28,6 @@ from farbox_bucket.server.template_system.helper.post_compile_url_for_wiki_links
 from farbox_bucket.server.template_system.namespace.data import data as get_data_namespace_object
 
 from farbox_bucket.server.utils.request_context_vars import get_doc_in_request, set_doc_in_request
-
-
 
 class Posts(object):
     def __init__(self):
@@ -66,10 +63,8 @@ class Posts(object):
     def get_recent_posts(self, limit=8):
         return self.get_recent(limit)
 
-
     def get_posts_by_tag(self, tag, sort_by='-date'):
         return get_records_by_tag(self.bucket, tag, sort_by=sort_by)
-
 
     @cached_property
     def _post_paths(self):
@@ -126,7 +121,6 @@ class Posts(object):
     def request_path(self):
         return get_request_path_without_prefix()
 
-
     @cached_property
     def posts_root(self):
         if not self.bucket:
@@ -135,12 +129,10 @@ class Posts(object):
         root = smart_unicode(site_configs.get("posts_root", "")).strip()
         return root
 
-
     def get_post_by_url(self, url=''):
         if not self.bucket or not url:
             return None
         return get_record_by_url(self.bucket, url)
-
 
     def get_post_by_path(self, path=''):
         if not self.bucket or not path:
@@ -193,7 +185,6 @@ class Posts(object):
             else:
                 return   0
 
-
     @cached_property
     def post(self):
         return self.get_current_post(auto_raise_404=False)
@@ -216,7 +207,6 @@ class Posts(object):
     def pre_one(self):
         return self.previous_one
 
-
     @cached_property
     def category(self):
         # /xxx/<category_path>
@@ -226,7 +216,6 @@ class Posts(object):
         parent_path = get_request_offset_path_without_prefix(offset=1)
         return Category(parent_path)
         #return get_record_parent_category(self.post)
-
 
     @cached_property
     def categories(self):
@@ -242,7 +231,6 @@ class Posts(object):
     #         folder_list = self.data_namespace.get_data(type='folder', limit=100, level=1, sort='position', path=self.posts_root)
     #         return folder_list
 
-
     def get_tag_url(self, tag):
         if isinstance(tag, (list, tuple)):
             tag = '+'.join(tag)
@@ -252,12 +240,10 @@ class Posts(object):
     def tag_url(self, tag):
         return self.get_tag_url(tag)
 
-
     def set_min_per_page(self, min_per_page):
         if isinstance(min_per_page, int) and min_per_page >= 0:
             self.min_per_page = min_per_page
         return ''  # return nothing
-
 
     def search(self, keywords=None, limit=30, sort='-date'):
         # 全文检索，从而得到post_list
@@ -267,7 +253,7 @@ class Posts(object):
         limit = to_int(limit, 30)
         if isinstance(keywords, (tuple, list)):
             try: keywords = ' '.join(keywords)
-            except: return []
+            except Exception: return []
         if not keywords:
             return []
         pager_name = 'search_posts'
@@ -278,7 +264,6 @@ class Posts(object):
         # 产生搜索的HTML代码片段
         return render_api_template('search_posts.jade', search_base_url=base_url,
                                     search_under=under, just_js=just_js, **kwargs)
-
 
     def get_content_with_referred_docs(self, doc, for_wiki_link=True, tag_url_prefix=None, show_date=True, url_prefix=None, url_root=None, hit_url_path=True):
         # tag_url_prefix is for wiki_links only
@@ -301,14 +286,12 @@ class Posts(object):
                                            url_root=url_root, hit_url_path=hit_url_path)
         return content
 
-
     def get_referred_docs(self, doc=None): # 本文引用的 docs
         doc = doc or self.get_current_post(auto_raise_404=False)
         if not doc:
             return []
         else:
             return get_records_by_post_path_referred(self.bucket, get_path_from_record(doc))
-
 
     def get_referred_back_docs(self, doc=None): # 引用了本文的 docs
         doc = doc or self.get_current_post(auto_raise_404=False)
@@ -317,13 +300,9 @@ class Posts(object):
         else:
             return get_records_by_post_path_back_referred(self.bucket, get_path_from_record(doc))
 
-
-
-
 @cache_result
 def posts():
     return Posts()
-
 
 @cache_result
 def post():

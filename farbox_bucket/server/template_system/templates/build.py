@@ -1,10 +1,8 @@
-# coding: utf8
 import os
 import json
 from farbox_bucket.utils import smart_unicode
 from farbox_bucket.utils.path import write_file
 from farbox_bucket.utils.convert.jade2jinja import convert_jade_to_html
-
 
 def get_templates_info():
     templates_info = {}
@@ -38,13 +36,11 @@ def get_templates_info():
                 templates_info[just_name] = smart_unicode(convert_jade_to_html(raw_content))
     return templates_info
 
-
 def build_api_templates():
     info = get_templates_info()
     info_string = '# coding: utf8\napi_templates = %s' % json.dumps(info, indent=4, ensure_ascii=False)
     info_filepath = templates_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'info.py')
     write_file(info_filepath, info_string)
-
 
 if __name__ == '__main__':
     build_api_templates()

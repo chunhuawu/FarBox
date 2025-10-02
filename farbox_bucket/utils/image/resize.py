@@ -1,8 +1,6 @@
-#coding:utf8
 try:
     from pgmagick import Blob, Geometry, Image, CompositeOperator as co
-except:
-    Blob, Geometry, Image, co = None, None, None, None
+except Exception: Blob, Geometry, Image, co = None, None, None, None
 from .utils import get_im_size
 
 def safe_size(size):
@@ -24,13 +22,9 @@ def safe_size(size):
                 return standard_big
     return allowed[-1]
 
-
-
 def list_to_size(ls):
     ls = [int(i) for i in ls]
     return '%sx%s'%(ls[0], ls[1])
-
-
 
 def resize_image(im, width=None, height=None, fixed=False, quality=86, image_type='image/jpeg', degrees=0):
     """
@@ -94,19 +88,14 @@ def resize_image(im, width=None, height=None, fixed=False, quality=86, image_typ
     im.write(f, image_type)
     return getattr(f, 'data')
 
-
-
 def can_resize_by_system():
     if Blob:
         return True
     else:
         return False
 
-
-
 def __main__():
     pass
-
 
 if __name__ == "__main__":
     __main__()

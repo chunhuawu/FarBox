@@ -1,4 +1,3 @@
-# coding: utf8
 import re
 from farbox_bucket.utils import smart_unicode, string_types
 from farbox_bucket.utils.url import encode_url_arg
@@ -8,12 +7,10 @@ from farbox_bucket.server.utils.request_context_vars import set_not_cache_curren
 from flask import make_response, request
 from jinja2.environment import Template, TemplateSyntaxError
 
-
 def response_with_code(content, code):
     response = make_response(content)
     response.status_code = code
     return response
-
 
 error_500_template_resource = """<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
@@ -45,7 +42,6 @@ error_500_template_resource = """<!DOCTYPE html>
 </body>
 </html>
 """
-
 
 error_syntax_error_template_resource = """<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
@@ -114,13 +110,10 @@ def page_error(error):
     response.status_code = 500
     return response
 
-
 @app.errorhandler(410)
 def force_redirect(error):  # 做跳转使用
     # 410 状态, 永久性不可用
     return force_redirect_error_handler_callback(error)
-
-
 
 @app.errorhandler(422)
 def replace_response(error):
@@ -128,14 +121,10 @@ def replace_response(error):
     new_response = error.description
     return new_response
 
-
-
-
 @app.errorhandler(401)
 def auth_failed(error):
     #info = getattr(error, 'description', '')
     return p_redirect('/login?redirect=%s' % encode_url_arg(request.url) )
-
 
 @app.errorhandler(404)
 def page_not_found(error):

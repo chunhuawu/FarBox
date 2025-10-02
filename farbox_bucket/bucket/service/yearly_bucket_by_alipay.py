@@ -1,4 +1,3 @@
-# coding: utf8
 from flask import request
 from farbox_bucket.settings import BUCKET_PRICE, BUCKET_PRICE2
 from farbox_bucket.utils.data import json_dumps
@@ -8,7 +7,6 @@ from farbox_bucket.bucket.utils import is_valid_bucket_name
 from farbox_bucket.server.utils.response import force_redirect, force_response
 from farbox_bucket.server.utils.request_context_vars import set_response_in_request
 from farbox_bucket.bucket.service.bucket_service_info import change_bucket_expired_date, get_bucket_service_info
-
 
 def extend_bucket_expired_date_yearly_by_alipay(bucket, try_price2=False):
     title = "FarBox"

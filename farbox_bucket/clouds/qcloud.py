@@ -1,4 +1,3 @@
-#coding:utf8
 #import re
 import time
 import logging
@@ -8,7 +7,6 @@ from farbox_bucket.settings import server_secret_key
 from farbox_bucket.utils import smart_unicode, get_md5
 from farbox_bucket.utils.url import get_url_path, join_url
 
-
 logger = logging.getLogger("qcloud_cos.cos_client")
 logger.level = logging.ERROR
 
@@ -16,7 +14,6 @@ logger.level = logging.ERROR
 # https://github.com/tencentyun/cos-python-sdk-v5/blob/master/demo/tce_demo.py
 
 # Bucket由bucketname-appid组成  -> 原来还要分成 appid 的逻辑，要多蠢就有多蠢
-
 
 cos_cached_clients = {}
 def get_cos_client(secret_id, secret_key, region):
@@ -32,10 +29,7 @@ def get_cos_client(secret_id, secret_key, region):
     cos_cached_clients[cache_key] = cos_client
     return cos_client
 
-
 ########################################################################################################################################
-
-
 
 def delete_file_on_qcloud(url_path, secret_id, secret_key, bucket, region):
     cos_client = get_cos_client(secret_id=secret_id, secret_key=secret_key, region=region)
@@ -48,28 +42,22 @@ def delete_file_on_qcloud(url_path, secret_id, secret_key, bucket, region):
             return True
         else:
             return False
-    except:
-        return False
-
-
+    except Exception: return False
 
 def has_file_on_qcloud(url_path, secret_id, secret_key, bucket, region):
     cos_client = get_cos_client(secret_id=secret_id, secret_key=secret_key, region=region)
     return cos_client.object_exists(Bucket=bucket, Key=url_path)
 
-
 def get_file_meta_on_qcloud(url_path, secret_id, secret_key, bucket, region):
     cos_client = get_cos_client(secret_id=secret_id, secret_key=secret_key, region=region)
     return cos_client.head_object(Bucket=bucket, Key=url_path)
-
-
 
 def upload_file_obj_to_qcloud(file_obj, url_path, secret_id, secret_key, bucket, region, content_type="", **headers):
     cos_client = get_cos_client(secret_id=secret_id, secret_key=secret_key, region=region)
     if hasattr(file_obj, 'read'):
         data = file_obj.read()
         try: file_obj.close()
-        except: pass
+        except Exception: pass
     else:
         # 直接传入了原始的内容
         data = file_obj
@@ -87,9 +75,6 @@ def upload_file_obj_to_qcloud(file_obj, url_path, secret_id, secret_key, bucket,
     except Exception as e:
         return False
 
-
-
-
 def get_file_content_from_qcloud(url_path, secret_id, secret_key, bucket, region):
     cos_client = get_cos_client(secret_id=secret_id, secret_key=secret_key, region=region)
     response = cos_client.get_object(Bucket=bucket, Key=url_path)
@@ -101,8 +86,6 @@ def get_file_content_from_qcloud(url_path, secret_id, secret_key, bucket, region
             break
         file_content += chunk
     return file_content
-
-
 
 def sign_qcloud_url(qcloud_url, qcloud_token, url_path=None, more=None, zero_steps=4):
     # 默认10000秒的容差, about 3 hours, 相当于 3 个小时左右的跳转 URL 是固定的，方便缓存的逻辑

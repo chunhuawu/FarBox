@@ -1,4 +1,3 @@
-#coding: utf8
 
 
 SEND_MESSAGE_WECHAT_TEMPLATE = """<xml>

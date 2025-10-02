@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 import os, re
 from flask import request
 from farbox_bucket.utils import string_types
@@ -91,7 +89,6 @@ def get_response_for_resized_image(bucket, record, storage):
     cache_image_filepath = "_cache/images/%s/%s-%s-%s.%s" % (file_id, image_max_type, image_max_width, image_max_height, ext)
     cache_image_record = get_record_by_path(bucket=bucket, path=cache_image_filepath)
 
-
     if cache_image_record:
         # 已经存在了
         return storage.as_web_response(bucket=bucket, record=cache_image_record, mimetype=mimetype, try_resized_image=False)
@@ -101,7 +98,7 @@ def get_response_for_resized_image(bucket, record, storage):
         raw_content = storage.get_raw_content(bucket=bucket, record_data=record)
         if not raw_content: return
         try: im = get_im(raw_content)
-        except: im = None
+        except Exception: im = None
         if not im:
             # 标识，下次就不会尝试了
             update_record(bucket, record_id=record.get("_id"), _get_im_failed=True)
@@ -127,5 +124,4 @@ def get_response_for_resized_image(bucket, record, storage):
         )
         if cache_image_record:
             return storage.as_web_response(bucket=bucket, record=cache_image_record, mimetype=mimetype, try_resized_image=False)
-
 

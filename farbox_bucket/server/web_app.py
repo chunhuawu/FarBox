@@ -1,5 +1,3 @@
-#coding: utf8
-from __future__ import absolute_import
 from flask import Flask
 from farbox_bucket.settings import sentry_client
 from raven.contrib.flask import Sentry
@@ -19,10 +17,8 @@ from farbox_bucket.server.template_system.template_system_patch import patch_con
 
 try:
     from gunicorn.http.wsgi import InvalidHeader
-except:
-    class InvalidHeader(Exception):
+except Exception: class InvalidHeader(Exception):
         pass
-
 
 class FarBoxBucketFlask(Flask):
     def get_send_file_max_age(self, name):
@@ -42,15 +38,13 @@ class FarBoxBucketFlask(Flask):
             return not_found_response
         return Flask.send_static_file(self, filename)
 
-
     def wsgi_app(self, environ, start_response):
         try:
             return Flask.wsgi_app(self, environ, start_response)
         except InvalidHeader:
             response = get_status_response('InvalidHeader', status_code=500)
             return response(environ, start_response)
-        except:
-            sentry_client.captureException()
+        except Exception: sentry_client.captureException()
             response = get_status_response('unknown request error', status_code=500)
             return response(environ, start_response)
 
@@ -75,9 +69,7 @@ from farbox_bucket.server.template_system.errors import *
 # load my_farbox_bucket views first
 try:
     from my_farbox_bucket import *
-except:
-    pass
-
+except Exception: pass
 
 # load views
 ## system views

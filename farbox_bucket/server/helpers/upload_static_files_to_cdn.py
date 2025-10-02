@@ -1,12 +1,8 @@
-# coding: utf8
 import os
 from farbox_bucket.utils import get_md5_for_file
 from farbox_bucket.utils.path import get_relative_path, get_all_sub_files, is_a_hidden_path
 from farbox_bucket.utils.mime import guess_type
 from farbox_bucket.clouds.qcloud import upload_file_obj_to_qcloud, has_file_on_qcloud, get_file_meta_on_qcloud
-
-
-
 
 def upload_static_files_to_cdn(static_files_root, cdn_static_prefix, secret_id, secret_key,
                                bucket, region, force_update=False):
@@ -33,5 +29,4 @@ def upload_static_files_to_cdn(static_files_root, cdn_static_prefix, secret_id, 
                                       secret_id = secret_id, secret_key=secret_key,
                                       bucket=bucket, region=region, content_type=guess_type(filepath))
         print(filepath)
-
 

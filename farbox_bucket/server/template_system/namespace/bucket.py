@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 from flask import request
 from farbox_bucket.utils import smart_unicode, string_types
 from farbox_bucket.utils.data import json_b64_dumps, json_dumps
@@ -20,7 +18,6 @@ from farbox_bucket.bucket.utils import get_bucket_by_private_key
 from farbox_bucket.themes import themes as builtin_themes
 from farbox_bucket.settings import NODE
 
-
 class Bucket(object):
     @cached_property
     def logined_bucket(self):
@@ -39,7 +36,6 @@ class Bucket(object):
     @cached_property
     def service_info(self):
         return get_bucket_service_info(self.logined_bucket)
-
 
     @cache_result
     def toggle_enable_web_robots(self):
@@ -93,8 +89,7 @@ class Bucket(object):
     def get_bucket_by_private_key(self, private_key):
         try:
             bucket_name = get_bucket_by_private_key(private_key) or 'invalid_private_key'
-        except:
-            bucket_name = 'invalid_private_key'
+        except Exception: bucket_name = 'invalid_private_key'
         return bucket_name
 
     @cache_result
@@ -107,7 +102,6 @@ class Bucket(object):
     def current_bucket(self):
         return get_bucket_in_request_context() or ""
 
-
     @cache_result
     def register_domain(self, domain, admin_domain_password=None):
         if not self.logined_bucket:
@@ -116,7 +110,6 @@ class Bucket(object):
         if error_info:
             return error_info
         return ""
-
 
     @cache_result
     def unregister_domain(self, domain):
@@ -158,7 +151,6 @@ class Bucket(object):
     def current_theme_key(self):
         return self.page_configs.get("_theme_key") or ""
 
-
     @cached_property
     def theme_api_url(self):
         if not self.logined_bucket:
@@ -168,7 +160,6 @@ class Bucket(object):
             url_path = "__theme?bucket=%s&sign=%s" % (self.logined_bucket, sign)
             api_url = request.url_root.rstrip("/") + "/" + url_path
             return api_url
-
 
     @cache_result
     def apply_theme(self, source):
@@ -201,7 +192,6 @@ class Bucket(object):
             return {}
         else:
             return get_bucket_configs(self.logined_bucket, config_type)
-
 
 @cache_result
 def bucket():

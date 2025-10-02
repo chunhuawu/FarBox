@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 from OpenSSL._util import lib as cryptolib
 from OpenSSL import crypto
 import base64, re, time, os
@@ -8,7 +6,6 @@ def dump_key(key):
     if isinstance(key, (str, unicode)): # ignore
         return key
     return crypto.dump_privatekey(crypto.FILETYPE_PEM, key)
-
 
 def load_key_content(key_content):
     key_content = key_content.strip()
@@ -20,7 +17,6 @@ def load_key_content(key_content):
         key_content += '\n%s'%tail
     return crypto.load_privatekey(crypto.FILETYPE_PEM, key_content)
 
-
 def load_cert_content(cert_content):
     cert_content = cert_content.strip()
     head = '-----BEGIN CERTIFICATE-----'
@@ -30,7 +26,6 @@ def load_cert_content(cert_content):
     if not re.search("[^-]-{5,}}$", cert_content):
         cert_content += '\n%s'%tail
     return crypto.load_certificate(crypto.FILETYPE_PEM, cert_content)
-
 
 def load_cert_contents(cert_contents):
     # 多个证书合并的
@@ -44,8 +39,6 @@ def load_cert_contents(cert_contents):
         certs.append(cert)
     return certs
 
-
-
 def load_key(key):
     if not isinstance(key, (str, unicode)):
         return key
@@ -53,7 +46,6 @@ def load_key(key):
         with open(key, 'rb') as f:
             key = f.read()
     return load_key_content(key)
-
 
 def load_cert(cert):
     if not isinstance(cert, (str, unicode)):
@@ -63,13 +55,10 @@ def load_cert(cert):
             cert = f.read()
     return load_cert_content(cert)
 
-
-
 def dump_cert(cert):
     if isinstance(cert, (str, unicode)):
         return cert
     return crypto.dump_certificate(crypto.FILETYPE_PEM, cert)
-
 
 def get_pure_key(key_content):
     key_content = re.sub(r'---+.*?---+', '', key_content)
@@ -84,7 +73,6 @@ def get_public_key(private_key):
     public_key = crypto._bio_to_string(bio)
     return public_key
 
-
 def create_private_key(bits=1024):
     pkey = crypto.PKey() # private key
     pkey.generate_key(crypto.TYPE_RSA, bits=bits)
@@ -95,16 +83,12 @@ def create_private_key(bits=1024):
     #return pkey_str, public_key
     return pkey_str, public_key
 
-
-
 def sha1_with_rsa(pkey, to_sign):
     if isinstance(pkey, (str, unicode)):
         pkey = crypto.load_privatekey(crypto.FILETYPE_PEM, pkey)
     result = crypto.sign(pkey, to_sign, 'sha1')
     base64_result = base64.standard_b64encode(result).decode()
     return base64_result
-
-
 
 def create_cert_request(pkey, name, digest="sha256"):
     req = crypto.X509Req()
@@ -115,7 +99,6 @@ def create_cert_request(pkey, name, digest="sha256"):
     req.set_pubkey(pkey)
     req.sign(pkey, digest)
     return req
-
 
 def create_certificate(req, issuer_key, issuer_cert, days=3650, serial=None, digest="sha256", return_text=True):
     # 也可以自行签发 cert
@@ -152,6 +135,4 @@ def create_certificate(req, issuer_key, issuer_cert, days=3650, serial=None, dig
         return dump_cert(cert)
     else:
         return cert
-
-
 

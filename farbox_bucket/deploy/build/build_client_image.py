@@ -1,7 +1,5 @@
-# coding: utf8
 from farbox_bucket.utils import to_bytes, string_types, get_kwargs_from_console
 from xserver.docker_image.utils import build_docker_image
-
 
 docker_file_content = """FROM hepochen/pyweb:201908
 RUN apt-get -qq update
@@ -12,8 +10,6 @@ RUN pip install farbox_bucket
 CMD ["/usr/bin/python", "-m", "farbox_bucket.client.run"]
 """
 
-
-
 # docker build -f Dockerfile -t hepochen/farbox_client:latest .
 
 def build_farbox_client_image(image_version):
@@ -22,7 +18,6 @@ def build_farbox_client_image(image_version):
         image_version = image_version,
         docker_file_content = docker_file_content,
     )
-
 
 # build_farbox_client version=202105
 def build_farbox_client_image_from_console():

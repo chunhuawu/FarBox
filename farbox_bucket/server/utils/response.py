@@ -1,4 +1,3 @@
-# coding: utf8
 import os, re
 import ujson as json
 from flask import request, redirect, Response, abort, send_file, make_response
@@ -9,7 +8,6 @@ from farbox_bucket.utils.mime import guess_type
 from farbox_bucket.utils.url import join_url, get_get_var
 from farbox_bucket.server.utils.request_context_vars import pre_handle_force_response_in_context
 from farbox_bucket.utils.convert.jade2jinja import jade_to_template
-
 
 def _handle_redirect_url(url, keep_site_id=True):
     if url.startswith('?'):
@@ -36,27 +34,21 @@ def _handle_redirect_url(url, keep_site_id=True):
 
     return url
 
-
-
 def jsonify(data):
     try:
         data = json_dumps(data)
-    except:
-        data = json.dumps(dict(error='json_error'))
+    except Exception: data = json.dumps(dict(error='json_error'))
     response = Response(data, mimetype='application/json')
     return response
-
 
 def send_plain_text(text):
     response = Response(text, mimetype='text/plain')
     return response
 
-
 def p_redirect(url, *args, **kwargs):
     # 保证从https的url中跳转也是https的
     url = _handle_redirect_url(url)
     return redirect(url, *args, **kwargs)
-
 
 def force_redirect(url, *args, **kwargs):
     if not isinstance(url, string_types):
@@ -69,7 +61,6 @@ def force_redirect(url, *args, **kwargs):
     redirect_s = json.dumps(dict(url=url, args=args, kwargs=kwargs))
     abort(410, redirect_s)
 
-
 def force_response(content, mime_type='text/html'):
     # 相当于一个断点，直接拦截当前的 response 进行新的返回
     if isinstance(content, Response): # 已经是 response 了
@@ -79,8 +70,7 @@ def force_response(content, mime_type='text/html'):
             content = json.dumps(content)
             if not mime_type or mime_type == 'text/html':
                 mime_type = 'application/json'
-        except:
-            content = smart_unicode(content)
+        except Exception: content = smart_unicode(content)
     else:
         content = smart_unicode(content)
         content = pre_handle_force_response_in_context(content)
@@ -89,7 +79,6 @@ def force_response(content, mime_type='text/html'):
     if isinstance(content, Response) and isinstance(mime_type, string_types):
         content.content_type = mime_type
     abort(422, content)
-
 
 def force_redirect_error_handler_callback(error):  # 做跳转使用
     # 410 状态, 永久性不可用
@@ -102,13 +91,11 @@ def force_redirect_error_handler_callback(error):  # 做跳转使用
                 args = redirect_data.get('args') or ()
                 kwargs = redirect_data.get('kwargs') or {}
                 return p_redirect(url, *args, **kwargs)
-            except:
-                pass
+            except Exception: pass
         # at last if not redirect correctly
         return p_redirect(url)
     else:
         return error.description
-
 
 ERROR_MESSAGES = {
     503: 'Wait for a Moment, and Try Again.',
@@ -123,8 +110,6 @@ def json_if_error(code, message=''):
     response = make_response(jsonify(result))
     response.status_code = code
     return response
-
-
 
 def is_doc_modified(doc, date_field='date'):
     if not doc:
@@ -141,13 +126,11 @@ def is_doc_modified(doc, date_field='date'):
                 return False
     return True
 
-
 def get_304_response():
     # 仅仅给出一个空 response
     response = make_response('')
     response.status_code = 304
     return response
-
 
 def get_status_response(error_info='', status_code=404):
     error_info = error_info or 'not found'
@@ -163,7 +146,6 @@ def set_304_response_for_doc(doc, response, date_field='date', etag=None):
             response.set_etag(etag)
     return response
 
-
 def is_filepath_modified(filepath):
     try:
         mtime = int(os.path.getmtime(filepath))
@@ -174,14 +156,10 @@ def is_filepath_modified(filepath):
             date_in_request = int(date_in_request)
             if date_in_request == mtime:
                 return False
-        except:
-            pass
-    except:
-        pass
+        except Exception: pass
+    except Exception: pass
     # at last
     return True
-
-
 
 def send_file_with_304(filepath, mimetype=None):
     if not os.path.isfile(filepath):
@@ -194,17 +172,13 @@ def send_file_with_304(filepath, mimetype=None):
         try:
             mtime = int(os.path.getmtime(filepath))
             response.headers['Last-Modified'] = smart_str(mtime)
-        except:
-            pass
+        except Exception: pass
         return response
-
 
 def add_response_header(k, v):
     if not hasattr(request, 'more_headers'):
         request.more_headers = {}
     request.more_headers[k] = v
-
-
 
 def set_more_headers_for_response(response):
     more_headers = getattr(request, 'more_headers', None) or {}
@@ -215,8 +189,6 @@ def set_more_headers_for_response(response):
             k = smart_str(k)
             v = smart_str(v)
             response.headers[k] = v
-
-
 
 def get_user_response_headers():
     headers = getattr(request, 'user_response_headers', {})
@@ -229,8 +201,6 @@ def set_user_response_headers(user_headers=None):
     if user_headers and isinstance(user_headers, dict):
         request.user_response_headers = user_headers
 
-
-
 def set_user_headers_for_response(response):
     # 用户通过模板 API 设定的 headers, 给出到 response
     user_response_headers = getattr(request, 'user_response_headers', {})
@@ -242,7 +212,6 @@ def set_user_headers_for_response(response):
             v = smart_str(v)
             response.headers[k] = v
 
-
 def set_user_header_for_response(key, value):
     # 这是设定的逻辑，主要是 template api 中调用
     if isinstance(key, string_types) and len(key) < 50 and re.match('^[a-z0-9-_]+$', key, flags=re.I):
@@ -253,10 +222,6 @@ def set_user_header_for_response(key, value):
         return True
     else:
         return False
-
-
-
-
 
 local_jade_templates = {}
 def render_jade_template(template_filepath, after_render_func=None, *args, **kwargs):
@@ -301,9 +266,6 @@ def render_jade_template(template_filepath, after_render_func=None, *args, **kwa
     else:
         response = make_response(html_source)
         return response
-
-
-
 
 default_jade_source_cache_space = {}
 def render_jade_source(source, cache_key=None, cache_space=None, env=None, **kwargs):

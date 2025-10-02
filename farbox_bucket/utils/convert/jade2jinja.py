@@ -1,4 +1,3 @@
-#coding: utf8
 from pyjade.utils import process
 from pyjade import Compiler as _Compiler
 from pyjade.parser import Parser
@@ -6,7 +5,6 @@ from pyjade.lexer import Lexer
 import re, os
 from farbox_bucket.utils import to_unicode
 from jinja2 import Template
-
 
 def re_exclude_split(text, split_str, exclude_rules=None, maxsplit=0):
     # 某段 text 按照split_str分割成 list，但是某个正则规则内（比如括号内的）的split_str 则不能计算在内
@@ -45,7 +43,6 @@ def re_exclude_split(text, split_str, exclude_rules=None, maxsplit=0):
             parts.append(part)
 
     return parts
-
 
 class JadCompilerError(Exception):
     pass
@@ -86,15 +83,12 @@ def _parseExpr(self):
         else:
             raise e
 
-
 Parser.parseExpr = _parseExpr
 Parser.expect = _parser_except
-
 
 ONE_LINE_FUNCTIONS = ['load', 'set_content_type', 'redirect', 'a_with_selected', 'set_per_page', 'add_doc_actions', 'make_site_live']
 DEFAULT_NAMES = ['request','response', 'doc','post', 'posts', 'site', 'sites', 'files', 'tags', 'tag', 'folder', 'folders',
                     'category', 'images', 'albums', 'album', 'next_one', 'pre_one', 'paginator', 'pager']
-
 
 block_or_re_pattern = 'page|scroll|font|browser|pure|footer|create_dom|modal|tab' # block 语法
 
@@ -190,7 +184,6 @@ class Compiler(_Compiler):
                 self.visitBlock(mixin.block)
                 self.buffer('\n{% endcall %}\n')
 
-
     def visitAssignment(self,assignment):
         self.buffer('{%% set %s = %s %%}'%(assignment.name, assignment.val))
 
@@ -206,19 +199,14 @@ class Compiler(_Compiler):
         self.visit(each.block)
         self.buf.append('{% endfor %}')
 
-
     def visitDynamicAttributes(self,attrs):
         buf = ''
         for attr in attrs:
             buf += ' %s="{{%s}}" ' % (attr['name'], attr['val'])
         self.buf.append(buf)
 
-
 #FEED_HTML = '\n<link rel="alternate" type="application/rss+xml" title="atom 1.0" href="/feed">\n'
 CONTENT_TYPE_HTML = '\n<meta http-equiv="content-type" content="text/html; charset=utf-8">\n'
-
-
-
 
 def beautiful_jade(source):
     # 先处理跨行的，合并为单行
@@ -242,7 +230,6 @@ def beautiful_jade(source):
     in_special_block = False # like style or script
     special_block_space = 0 # 开始进入的节点
 
-
     for line_i, line in enumerate(raw_lines):
         # 去除了括号内的内容的 line，这样比较容易判断 dom 本身的结构
         line_without_attrs = re.sub(r'\(.*?\)', '', line).strip()
@@ -261,7 +248,6 @@ def beautiful_jade(source):
         else:
             raw_space_count = 0
 
-
         # 一些特殊代码块进入的状态判断
         if raw_space_count > raw_pre_space_count:
             # 自级
@@ -276,9 +262,7 @@ def beautiful_jade(source):
                 in_special_block = False
                 special_block_space = 0
 
-
         #print line, in_special_block
-
 
         points = space_count_added_points.items()
         offset = 0
@@ -347,7 +331,6 @@ def beautiful_jade(source):
             else: #rest 获得新的 space_count 组成新的 line
                 lines.append(' '*space_count+line_strip)
 
-
         # at last
         raw_pre_space_count = raw_space_count
 
@@ -396,21 +379,14 @@ def beautiful_jade(source):
                 # 也不能是 a(target="_blank", href="http://{{request.domain}}") 类似已经处理了的
                 new_line = re.sub(r'(\s*)(_)?(%s)(\..*?\)\s*)' % global_types, '\g<1>{{ \g<3>\g<4> }}', line)
 
-
-
         new_lines.append(new_line)
 
     new_source = '\n'.join(new_lines)
-
 
     # 语法 block 的特别处理
     new_source = re.sub(r'(^ *|\n *)\+(%s)( *\n)' % block_or_re_pattern, '\g<1>+\g<2>()\g<3>', new_source)
 
     return new_source
-
-
-
-
 
 def convert_jade_to_html(source, hash_key=None, cache_client=None):
     # 计算 cache_key
@@ -455,8 +431,6 @@ def convert_jade_to_html(source, hash_key=None, cache_client=None):
 
     return new_source
 
-
-
 def jade_to_template(source, env=None):
     compiled_source = convert_jade_to_html(source)
     if env: # 指定了某个 env 的
@@ -465,8 +439,6 @@ def jade_to_template(source, env=None):
         template = Template(compiled_source)
     template.source = compiled_source
     return template
-
-
 
 def compile_file(in_path):
     if not os.path.isfile(in_path):
@@ -481,7 +453,6 @@ def compile_file(in_path):
         compiled_code = compiled_code.encode('utf8')
     with open(out_path, 'w') as f:
         f.write(compiled_code)
-
 
 if __name__ == '__main__':
     print(beautiful_jade("""

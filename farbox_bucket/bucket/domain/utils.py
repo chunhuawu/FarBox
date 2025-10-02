@@ -1,13 +1,9 @@
-#coding: utf8
-from __future__ import absolute_import
 import datetime
 from flask import request, abort
 from farbox_bucket.utils import smart_unicode, string_types
 from farbox_bucket.utils.ssdb_utils import hget, hset, hdel
 from farbox_bucket.utils.cache import cached
 from farbox_bucket.settings import ADMIN_BUCKET, WEBSITE_DOMAINS
-
-
 
 def get_bucket_domains(bucket):
     if not bucket:
@@ -17,7 +13,6 @@ def get_bucket_domains(bucket):
         return []
     else:
         return domains
-
 
 def push_domain_to_bucket(bucket, domain, old_domain=None):
     if not isinstance(domain, string_types): return
@@ -30,7 +25,6 @@ def push_domain_to_bucket(bucket, domain, old_domain=None):
         domains.append(domain)
     hset("_domains", bucket, domains)
 
-
 def pull_domain_from_bucket(bucket, domain):
     if not isinstance(domain, string_types): return
     domain = domain.lower().strip()
@@ -38,7 +32,6 @@ def pull_domain_from_bucket(bucket, domain):
     if domain in domains:
         domains.remove(domain)
         hset("_domains", bucket, domains)
-
 
 def get_bucket_from_domain(domain):
     if not domain:
@@ -57,7 +50,6 @@ def get_bucket_from_domain(domain):
         if db_domain_info and isinstance(db_domain_info, dict):
             return db_domain_info.get('bucket')
 
-
 def get_system_domain_from_bucket(bucket):
     # 获得的是系统提供的二级域名，
     domain_doc = hget('_rdomain', bucket)
@@ -66,13 +58,9 @@ def get_system_domain_from_bucket(bucket):
     else:
         return None
 
-
 @cached(10)
 def get_bucket_from_domain_and_cached(domain):
     return get_bucket_from_domain(domain)
-
-
-
 
 def not_allowed_for_parked_domain(func):
     def _curried(*args, **kwargs):
@@ -91,7 +79,4 @@ def not_allowed_for_parked_domain(func):
     _curried.func_name = func.func_name
     _curried.original_func = func
     return _curried
-
-
-
 

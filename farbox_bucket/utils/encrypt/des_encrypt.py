@@ -1,4 +1,3 @@
-# coding: utf8
 import base64
 import zlib
 from Crypto.Cipher import DES, DES3
@@ -10,9 +9,7 @@ import string
 import json
 try:
     from cStringIO import StringIO
-except:
-    from io import BytesIO as StringIO
-
+except Exception: from io import BytesIO as StringIO
 
 def to_key_for_des(key, length=8):
     key = key.strip()
@@ -31,8 +28,6 @@ def get_key_for_des(key):
     md5_key = to_md5(key)
     des_key = to_key_for_des(md5_key[:8], length=8)
     return des_key
-
-
 
 # encrpyt_des & decrypt_des 默认是 base64 编码，主要考虑到在实际传输过程中的数据不失真
 
@@ -56,7 +51,6 @@ def encrypt_des(text, key, encode_type='base64'):
         encrypted_content = base64.b64encode(encrypted)
     return encrypted_content
 
-
 def decrypt_des(text, key, encode_type='base64'):
     key = to_key_for_des(key)
     if encode_type == 'zip':
@@ -69,9 +63,6 @@ def decrypt_des(text, key, encode_type='base64'):
     #if pad == '\x08':
     #    return text[:-8]
     return text[:-pad]
-
-
-
 
 def encrypt_file(in_filepath, key, chunk_size=81920, out_filepath=None, is_content=False, fast=True):
     if fast:
@@ -127,7 +118,6 @@ def encrypt_file(in_filepath, key, chunk_size=81920, out_filepath=None, is_conte
     else:
         return out_content
 
-
 def decrypt_file(in_filepath, key, chunk_size=81920, out_filepath=None, is_content=False, fast=True):
     if fast:
         des_key = get_key_for_des(key)
@@ -181,8 +171,6 @@ def decrypt_file(in_filepath, key, chunk_size=81920, out_filepath=None, is_conte
     else:
         return out_content
 
-
-
 def do_test_encrypt_file(filepath, fast=False):
     key = ''.join(random.sample(string.letters, 10))
     if not os.path.isfile(filepath):
@@ -206,12 +194,10 @@ def do_test_encrypt_file(filepath, fast=False):
         raw_content2 = f.read()
     try:
         os.remove(tmp_filepath)
-    except:
-        pass
+    except Exception: pass
     try:
         os.remove(tmp_filepath2)
-    except:
-        pass
+    except Exception: pass
     if raw_content != raw_content2:
         return False
     return True
@@ -221,9 +207,6 @@ def test_encrypt_file(filepath):
         return True
     else:
         return False
-
-
-
 
 #if __name__ == '__main__':
 #    print test_encrypt_file('/Users/hepochen/ImageBox/Inbox2/2018-12-05 17-16-30.jpg')

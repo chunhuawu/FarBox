@@ -1,4 +1,3 @@
-# coding: utf8
 import os
 import re
 from farbox_bucket.utils import get_md5
@@ -9,8 +8,6 @@ from farbox_bucket.bucket.record.get.path_related import get_raw_content_by_path
 from farbox_bucket.bucket.domain.web_utils import get_bucket_from_request
 from farbox_bucket.server.static.static_render import get_static_raw_content
 from farbox_bucket.server.helpers.file_manager import sync_file_by_server_side
-
-
 
 scss_key_value_compiler = re.compile(r'(\$[a-z0-9_-]+)(:\s*)([\S]+)(\n|\r|$)', flags=re.I)
 
@@ -32,8 +29,6 @@ def get_vars_in_scss(scss_filepath='', raw_content=''):
         vars_in_scss[key] = value
     return vars_in_scss
 
-
-
 def replace_var_in_scss_func(re_match, new_vars=None):
     new_vars = new_vars or {}
     if not isinstance(new_vars, dict):
@@ -48,7 +43,6 @@ def replace_var_in_scss_func(re_match, new_vars=None):
         new_line = re_match.group()
     return new_line
 
-
 def replace_vars_in_scss(raw_content, new_vars, compile_scss=False):
     if not raw_content: # return nothing
         return ''
@@ -59,7 +53,6 @@ def replace_vars_in_scss(raw_content, new_vars, compile_scss=False):
         new_content = '/*%s*/\n%s' % (raw_version, new_content) # compile 之后，保留原始内容的version，这样后续，可以进行对比，是否需要更新
     return new_content
 
-
 def get_prefix_name_from_source_filepath(filepath):
     prefix_name = os.path.splitext(filepath)[0]
     prefix_name = prefix_name.replace('.', '_').strip('/')
@@ -67,7 +60,6 @@ def get_prefix_name_from_source_filepath(filepath):
         prefix_name = prefix_name.replace('template/', '')
     prefix_name = prefix_name.replace('/', '_')
     return prefix_name
-
 
 def do_get_smart_scss_url(scss_filepath, **kwargs):
     # 根据其内容内的变量名，进行替换处理;
@@ -103,7 +95,6 @@ def do_get_smart_scss_url(scss_filepath, **kwargs):
     sync_file_by_server_side(bucket=bucket, relative_path=filepath, content=css_content)
 
     return filepath
-
 
 def get_smart_scss_url(scss_filepath, **kwargs):
     url = do_get_smart_scss_url(scss_filepath, **kwargs)

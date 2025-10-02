@@ -1,4 +1,3 @@
-# coding: utf8
 import time, os
 from gevent import spawn
 from farbox_bucket.utils import to_int, is_a_markdown_file
@@ -9,7 +8,6 @@ from farbox_bucket.utils.gevent_utils import get_result_by_gevent_with_timeout_b
 
 from farbox_bucket.bucket.utils import get_bucket_files_configs, set_bucket_configs, get_bucket_name_for_path, get_bucket_last_record_id,\
     get_bucket_last_record_id_computed, set_bucket_last_record_id_computed
-
 
 # max files is 20000, max depth is 10
 def get_files_info(bucket):
@@ -76,15 +74,12 @@ def get_files_info(bucket):
     data['date'] = time.time()
     return data
 
-
-
 def update_bucket_files_info(bucket, last_record_id=None):
     files_info = get_files_info(bucket)
     set_bucket_configs(bucket, configs=files_info, config_type='files')
     if last_record_id:
         set_bucket_last_record_id_computed(bucket, last_record_id)
     return files_info
-
 
 def auto_update_bucket_and_get_files_info(bucket, return_data=True):
     current_id = get_bucket_last_record_id(bucket)

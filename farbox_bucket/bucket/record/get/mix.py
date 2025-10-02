@@ -1,4 +1,3 @@
-# coding: utf8
 from .get import get_records_by_ids
 from .path_related import  get_paths_by_type, get_paths_under, get_records_by_paths, filter_paths_under_path
 from .slash_related import get_paths_by_slash_number
@@ -49,8 +48,6 @@ def mix_get_record_paths(bucket, path=None, level_start=None, level_end=None, da
         if should_append_path:
             paths.append(p)
     return paths
-
-
 
 def mix_get_records(bucket, path=None, level_start=None, level_end=None, data_type=None, data_type_reverse_sort=True, ignore_marked_id=True):
     paths = mix_get_record_paths(bucket=bucket, path=path, level_start=level_start,

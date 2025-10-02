@@ -1,10 +1,7 @@
-# coding: utf8
 from farbox_bucket.utils.ssdb_utils import hdel, hclear
 from farbox_bucket.bucket.utils import remove_bucket_from_buckets, clear_related_buckets
 from farbox_bucket.bucket.record.get.helper import loop_records_for_bucket
 from farbox_bucket.bucket.storage.default import storage
-
-
 
 def delete_bucket(bucket, delete_files=True):
     if not bucket:

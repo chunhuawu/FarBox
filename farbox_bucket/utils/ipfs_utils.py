@@ -1,4 +1,3 @@
-# coding: utf8
 import os
 import time
 from farbox_bucket.utils import smart_str
@@ -12,9 +11,7 @@ def run_command(command):
         result = f.read().strip()
         f.close()
         return result
-    except:
-        return None
-
+    except Exception: return None
 
 current_ipfs_bin_path = None
 def get_ipfs_bin_path():
@@ -49,7 +46,6 @@ def run_ipfs_cmd(cmd, tried=0):
         return run_ipfs_cmd(raw_cmd, tried=tried)
     return result
 
-
 def add_filepath_to_ipfs(filepath, only_hash=False):
     if not os.path.isfile(filepath):
         return
@@ -66,14 +62,11 @@ def add_filepath_to_ipfs(filepath, only_hash=False):
             return
     return result
 
-
 def just_get_ipfs_hash_from_filepath(filepath):
     if not os.path.isfile(filepath):
         return
     ipfs_hash = add_filepath_to_ipfs(filepath, only_hash=True)
     return ipfs_hash
-
-
 
 def get_ipfs_hash_from_filepath(filepath, encrypt_key=None):
     # 如果指定 encrypt_key，那么， 就是进行加密后的处理
@@ -89,9 +82,6 @@ def get_ipfs_hash_from_filepath(filepath, encrypt_key=None):
         delete_file(filepath_for_ipfs)
     return ipfs_hash
 
-
-
-
 def remove_hash_from_ipfs(ipfs_hash):
     # 实际上是移除 pin 的逻辑而已，并不能真正意义上进行删除
     if not ipfs_hash.startswith('Qm'):
@@ -99,13 +89,8 @@ def remove_hash_from_ipfs(ipfs_hash):
     cmd = 'ipfs pin rm %s' % ipfs_hash
     run_ipfs_cmd(cmd)
 
-
-
 def clear_ipfs():
     run_ipfs_cmd('ipfs repo gc')
-
-
-
 
 def encrypt_file(original_filepath, encrypt_key):
     # 会创建一个临时文件
@@ -120,11 +105,8 @@ def encrypt_file(original_filepath, encrypt_key):
         _encrypt_file(original_filepath, key=encrypt_key, out_filepath=tmp_filepath)
         #if not test_encrypt_file(original_filepath):
         #    print('\n\n\n\n\n\n\n\n%s test error\n\n\n\n\n\n\n\n' % original_filepath)
-    except:
-        return
+    except Exception: return
     return tmp_filepath
-
-
 
 # todo keep connected
 

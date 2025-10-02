@@ -1,4 +1,3 @@
-# coding: utf8
 import pickle
 import re
 from flask import request, Response
@@ -11,7 +10,6 @@ from farbox_bucket.server.utils.response import get_user_response_headers, set_u
 from farbox_bucket.server.utils.request_context_vars import set_doc_path_in_request, set_doc_type_in_request, \
     set_doc_type_and_path_in_request_by_context_doc, set_page_cache_key_in_request, get_page_is_cached, \
     set_page_is_cached, get_can_auto_cache_current_request
-
 
 def get_cache_key_for_page():
     bucket = get_bucket_in_request_context()
@@ -28,8 +26,6 @@ def get_cache_key_for_page():
     cache_key = "page-%s" % get_md5(raw_cache_key)
     return cache_key
 
-
-
 def should_hit_cache_in_site():
     if request.method != 'GET':
         return False
@@ -38,7 +34,6 @@ def should_hit_cache_in_site():
     if not get_can_auto_cache_current_request():
         return False
     return True # at last
-
 
 def response_to_render_data(response):
     # 获得的 render_data 主要是为了缓存的作用
@@ -72,9 +67,7 @@ def response_to_render_data(response):
 
     render_data['user_response_headers'] = get_user_response_headers()
 
-
     return render_data
-
 
 def cache_response_into_memcache(response):
     from farbox_bucket.server.web_app import sentry_client
@@ -99,10 +92,8 @@ def cache_response_into_memcache(response):
             try:
                 if cached_data and isinstance(cached_data, (str, unicode)) and re.match(r'^\d$', cached_data):
                     raise TypeError("meme cache error?")
-            except:
-                sentry_client.captureException()
+            except Exception: sentry_client.captureException()
     return response
-
 
 def get_response_from_memcache():
     # 从 memcache 中直接获得 response

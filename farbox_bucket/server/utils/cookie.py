@@ -1,15 +1,10 @@
-#coding: utf8
-from __future__ import absolute_import
 from flask import request
 from farbox_bucket.settings import signer
 from itsdangerous import BadTimeSignature, BadSignature
 import time, re
 from farbox_bucket.settings import sentry_client
 
-
 # 这里处理的 cookie 都是用 signer 加密、解谜的，如果只是普通的 cookie，直接response.set_cookie 就可以了
-
-
 
 def save_cookie(k, v, max_age=10*60): # 一般10分钟过期(客户端的)
     raw_max_age = max_age
@@ -29,16 +24,13 @@ def save_cookie(k, v, max_age=10*60): # 一般10分钟过期(客户端的)
     if max_age:
         try:
             max_age = int(max_age)
-        except:
-            max_age = 10*60
+        except Exception: max_age = 10*60
     else:
         max_age = None
     request.safe_cookies_to_set[k] = dict(value=signer.dumps(v), max_age=max_age)
 
-
 def set_cookie(k, v, max_age=10*60):
     return save_cookie(k, v, max_age)
-
 
 def get_cookie(k, max_age=None, is_pure=False): # 这里的max_age是服务端的判定
     try:
@@ -63,7 +55,6 @@ def delete_cookies(*keys):
     for key in keys:
         request.cookies_to_delete.append(key)
 
-
 def set_cookies(response):
     # the value must dumps by singer
     # 在website.core中调用，after_request，可以处理安全性cookie的读写删除
@@ -80,8 +71,4 @@ def set_cookies(response):
     for key in cookies_to_delete:
         if key not in cookies_to_set and key in request.cookies:
             response.delete_cookie(key)
-
-
-
-
 

@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 import re
 from farbox_markdown.meta import extract_metadata
 from farbox_bucket.utils import smart_unicode, get_value_from_data, to_int, to_float, is_on
@@ -12,7 +10,6 @@ import HTMLParser
 unescape = HTMLParser.HTMLParser().unescape
 
 HTML_C = re.compile(r'</?[^<]+?>')
-
 
 class Text(object):
     def __init__(self, core, attr=None, parent=None):
@@ -38,12 +35,10 @@ class Text(object):
     def __eq__(self, other):
         return other == self.core
 
-
     def __contains__(self, item):
         if not isinstance(item, (str, unicode)):
             item = smart_unicode(item)
         return item in self.core
-
 
     def _get_slice_content(self):
         if self.parent and self.attr=='content' and 'raw_content' in self.parent:
@@ -51,7 +46,6 @@ class Text(object):
         else:
             content_to_slice = self.core
         return content_to_slice
-
 
     def __getitem__(self, length):
         # 截取部分内容的
@@ -63,12 +57,10 @@ class Text(object):
     def __call__(self, length): # 同上， 截取部分内容的
         return self.__getitem__(length)
 
-
     def __getslice__(self, i, j):
         # 也是截取内容，但是可以指定开始、结束的位置
         content_to_slice = self._get_slice_content()
         return content_to_slice[i: j]
-
 
     def __repr__(self):
         return self._auto_content
@@ -82,22 +74,18 @@ class Text(object):
             other = ''
         return '%s%s' % (self.core, other)
 
-
     def count(self, key):
         return self.core.count(key)
-
 
     @cached_property
     def int(self):
         # '123'.int  or '123'.int('98')
         return to_int(self.core)
 
-
     @cached_property
     def float(self):
         # 类似 int 的用法
         return to_float(self.core)
-
 
     @cached_property
     def escaped(self):
@@ -122,17 +110,14 @@ class Text(object):
         # 平文本, 即使原来是 html 类型的，也会转为普通文本
         return html_to_text(self.core)
 
-
     @cached_property
     def plain_html(self):
         # 仅仅处理图片 & 换行的 html
         return  linebreaks(self.plain_text, post_path=self.post_path, render_markdown_image=True)
 
-
     @cached_property
     def site_configs(self):
         return get_bucket_site_configs()
-
 
     @cached_property
     def _toc_content(self):
@@ -162,7 +147,6 @@ class Text(object):
         # 默认返回None，表示否
         return False
 
-
     @cached_property
     def _content(self):
         if self.attr in ['content',] and self.is_post_content and self.parent and self.parent.get('raw_content') and self.site_is_plain_text_type:
@@ -174,7 +158,6 @@ class Text(object):
             core_content = self.core
         return core_content
 
-
     @cached_property
     def _auto_content(self):
         # 主要是直接调用时候的处理，比如 site.title  post.content(这个可能有TOC 或者什么的)
@@ -182,7 +165,6 @@ class Text(object):
             return self._toc_content + self._content
         else:
             return self._content
-
 
     @cached_property
     def opening(self):

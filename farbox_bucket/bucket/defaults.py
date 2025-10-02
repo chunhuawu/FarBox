@@ -1,4 +1,3 @@
-#coding: utf8
 
 # 基础结构
 zero_id = '0'*24 # 创世ID, 一旦创建，不可修改
@@ -20,7 +19,6 @@ zero_id_for_inbox = '0'*22 + '14'
 # todo 变动区域分为两种类型，一个是整个 bucket 内保持同步的（如何处理冲突呢？），一个是只在当前 node 生效的
 # todo 倾向于只有一种，就是只在当前 node 生效的
 
-
 # 主要是外部调用 get_records 查询的时候，给一个基准 id，可以避免 zero_ids 被查询到
 # 主要是模板引擎中调用
 zero_id_for_finder = '0'*22 + '99'
@@ -29,7 +27,6 @@ zero_ids = [zero_id, zero_id_for_user, zero_id_for_site, zero_id_for_secret,
             zero_id_for_pages, zero_id_for_files, zero_id_for_posts,
             zero_id_for_histories, zero_id_for_statistics,
             zero_id_for_orders, zero_id_for_inbox]
-
 
 bucket_config_doc_id_names = {
     'init': zero_id,
@@ -46,8 +43,6 @@ bucket_config_doc_id_names = {
 }
 
 config_names_not_allowed_set_by_user = ['init', 'histories', 'statistics', 'inbox']
-
-
 
 BUCKET_RECORD_SORT_TYPES = ('post', 'image', 'file', 'folder', 'comments')
 

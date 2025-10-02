@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 from OpenSSL import crypto
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
@@ -17,12 +15,9 @@ from farbox_bucket.utils import to_float, smart_str, smart_unicode, get_md5
 from farbox_bucket.utils.cache import LimitedSizeDict
 from farbox_bucket.bucket.utils import get_bucket_in_request_context
 
-
 # alipay_partner_public_key = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB'
 # alipay_partner_public_key = RSA.importKey("-----BEGIN PUBLIC KEY-----\n%s\n-----END PUBLIC KEY-----"%alipay_partner_public_key)
 # partner_verifier = PKCS1_v1_5.new(alipay_partner_public_key)
-
-
 
 certs_cache = LimitedSizeDict(max=1000)
 def get_cert(private_key):
@@ -54,13 +49,9 @@ def get_verifier(public_key):
     verifier_cache[cache_key] = verifier
     return verifier
 
-
 # partner 主要是直接支付，需要用到的, 公开的, 支付宝提供的
 alipay_platform_public_key = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDI6d306Q8fIfCOaTXyiUeJHkrIvYISRcc73s3vF1ZT7XN8RNPwJxo8pWaJMmvyTn9N4HQ632qJBVHf8sxHi/fEsraprwCtzvzQETrNRwVxLO5jVmRGi60j8Ue1efIlzPXV9je9mkjzOmdssymZkh2QhUrCmZYI/FCEa3/cNMW0QIDAQAB'
 platform_verifier = get_verifier(alipay_platform_public_key)
-
-
-
 
 def get_cn_timestamp(t_format='%Y-%m-%d %H:%M:%S'):
     # 考虑服务器本身的时间戳问题，使用 utcnow + 8来处理
@@ -69,16 +60,12 @@ def get_cn_timestamp(t_format='%Y-%m-%d %H:%M:%S'):
     timestamp = cn_now.strftime(t_format)
     return timestamp
 
-
-
-
 class BaseAlipay(object):
     def __init__(self, private_key, public_key=None):
         try: self.cert = get_cert(private_key)
-        except: self.cert = None
+        except Exception: self.cert = None
         try: self.verifier = get_verifier(public_key)
-        except: self.verifier = None
-
+        except Exception: self.verifier = None
 
     def get_out_trade_no(self, prefix=''): # 64位最长
         # 商户网站唯一订单号
@@ -91,8 +78,7 @@ class BaseAlipay(object):
             if bucket: # site_id hashed 长度为 32， 总长度为 14+8+1+32=55 < 64
                 hashed_bucket_id = get_md5(bucket) # 主要用作校验，避免跨站的交易被验证成功
                 no = '%s-%s' % (no, hashed_bucket_id)
-        except:
-            pass
+        except Exception: pass
 
         return no
 
@@ -109,8 +95,6 @@ class BaseAlipay(object):
                 return True
         return False
 
-
-
     def compile_response(self, r):
         if r.status_code in [301, 302]: # url 跳转
             return r.headers.get('location')
@@ -123,7 +107,6 @@ class BaseAlipay(object):
                     error_info = re.search('<div class="Todo">(.*?)</div>', r.text).groups()[0]
                     return error_info
             return
-
 
     def get_pay_request_data(self, price, title, content, notify_url='', return_url='', out_trade_no='', note=''):
         price = to_float(price)
@@ -153,7 +136,6 @@ class BaseAlipay(object):
 
         return data
 
-
     def verify_request(self):
         # 校验支付宝通知请求的合法性
         if request.method == 'POST':
@@ -170,8 +152,7 @@ class BaseAlipay(object):
             return False
         try:
             sign = base64.b64decode(sign)
-        except:
-            return False
+        except Exception: return False
 
         # 检验签名的时候，需要去除 sign、sign_type
         # 先尝试用 partner， 再用 platform 公钥
@@ -183,7 +164,6 @@ class BaseAlipay(object):
         if not verified:
             verified = platform_verifier.verify(sha_sign_content, sign)
         return verified
-
 
     def _get_sign_s(self, post_data, excludes=None):
         #post_data = post_data.copy()
@@ -203,10 +183,6 @@ class BaseAlipay(object):
         post_data_s = self._get_sign_s(post_data, excludes=excludes)
         signature = crypto.sign(self.cert, post_data_s, 'sha1')
         return base64.standard_b64encode(signature).decode()
-
-
-
-
 
 class AlipayAPI(BaseAlipay):
     def __init__(self, private_key, public_key=None, pid=None, app_id=None, api_url='',):
@@ -233,7 +209,6 @@ class AlipayAPI(BaseAlipay):
             data = dict(out_trade_no=trade_no)
         return self._send_request('alipay.trade.query', data)['alipay_trade_query_response']
 
-
     def pay(self, price, title, content, notify_url='', return_url='', out_trade_no='', note='', qrcode=False):
         if self.pid and not qrcode:
             # 使用直接付款的 api
@@ -242,7 +217,6 @@ class AlipayAPI(BaseAlipay):
             pay_request_data = self.get_pay_request_data(price, title, content, notify_url, return_url, out_trade_no, note)
             redirect_url = self._send_request('alipay.trade.wap.pay', pay_request_data)
             return redirect_url
-
 
     def refund(self, trade_no, amount, reason=''):
         # 退款
@@ -254,8 +228,6 @@ class AlipayAPI(BaseAlipay):
             data['refund_reason'] = smart_unicode(reason)[80]
 
         return self._send_request('alipay.trade.refund', data)
-
-
 
     # utils
 
@@ -277,7 +249,6 @@ class AlipayAPI(BaseAlipay):
             if trade_status in ['TRADE_SUCCESS']: # 'TRADE_FINISHED',
                 return True
         return False
-
 
     # 基本的请求信息 starts
 
@@ -302,7 +273,6 @@ class AlipayAPI(BaseAlipay):
 
     # 基本的请求信息 ends
 
-
 class DirectAlipay(BaseAlipay):
     def __init__(self, pid, private_key):
         # pid == partner id
@@ -316,7 +286,6 @@ class DirectAlipay(BaseAlipay):
             'partner': self.pid,
             'seller_id': self.pid,
         }
-
 
     def _send_request(self, data):
         if not self.cert:
@@ -333,7 +302,6 @@ class DirectAlipay(BaseAlipay):
         r = requests.post(self.api_url+"?"+params_s, allow_redirects=False)
 
         return self.compile_response(r)
-
 
     def pay(self, price, title, content, notify_url='', return_url='', out_trade_no='', note=''):
         pay_request_data = self.get_pay_request_data(price, title, content, notify_url, return_url, out_trade_no, note=note)

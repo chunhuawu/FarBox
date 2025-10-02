@@ -1,4 +1,3 @@
-# coding: utf8
 from farbox_bucket.utils.client_sync.sync_utils import clear_sync_meta_data
 from farbox_bucket.utils.path import load_json_file, dump_json_file
 from farbox_bucket.utils.encrypt.key_encrypt import create_private_key
@@ -6,7 +5,6 @@ from farbox_bucket.bucket.utils import get_bucket_by_private_key
 from farbox_bucket.client.action import create_bucket
 from farbox_bucket.client.sync.site import sync_site_folder_simply
 import os
-
 
 def get_private_key_for_site_folder(site_folder):
     home_dir = os.environ.get('HOME')
@@ -24,8 +22,6 @@ def get_private_key_for_site_folder(site_folder):
         private_keys[site_folder_key] = private_key
         dump_json_file(config_filepath, private_keys)
     return private_key
-
-
 
 def sync_site_for_debug(site_folder, web_port=7788, clear_first=False):
     node = 'localhost:%s' % web_port
@@ -49,5 +45,4 @@ def sync_site_for_debug(site_folder, web_port=7788, clear_first=False):
 
     # exit now
     print(web_url)
-
 

@@ -1,7 +1,5 @@
-#coding: utf8
 from farbox_bucket.client.sync.compiler.post_compiler import PostSyncCompiler
 import os
-
 
 # folder 从某种角度来说，只是记录这个数据，而不是更多的关系上的，因为无法从 path 上进行查询匹配
 # folder_doc

@@ -1,7 +1,4 @@
-# coding: utf8
 from .get import get_records_for_bucket
-
-
 
 def loop_records_for_bucket(bucket, func_for_record, limit=100, raw=False):
     start_record_id = None

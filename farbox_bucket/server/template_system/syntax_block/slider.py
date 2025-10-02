@@ -1,4 +1,3 @@
-# coding: utf8
 import re
 from farbox_bucket.utils.functional import curry
 from jinja2.runtime import Undefined
@@ -6,8 +5,6 @@ from farbox_bucket.server.utils.cache_for_function import cache_result
 from farbox_bucket.server.template_system.namespace.data import Data
 from farbox_bucket.server.template_system.api_template_render import render_api_template
 from farbox_bucket.utils import get_random_html_dom_id
-
-
 
 def slider(folder=None, doc_type='image', **kwargs):
     if doc_type not in ['post', 'image']:

@@ -1,4 +1,3 @@
-# coding: utf8
 import re, os
 from farbox_bucket.utils.functional import curry
 from farbox_bucket.bucket.record.utils import get_path_from_record
@@ -39,10 +38,6 @@ def re_sub_for_referred_docs(re_obj, show_date=True,  post_doc=None, url_root=No
                                    show_date = show_date,
                                    post_url = post_url,
                                    hash_id = hash_id, inline=inline)
-
-
-
-
 
 def compute_content_with_referred_docs(post_doc, html_content=None, show_date=True, url_prefix=None, url_root=None, hit_url_path=False):
     path = get_path_from_record(post_doc)

@@ -1,4 +1,3 @@
-# coding: utf8
 import os
 from farbox_bucket.utils import string_types, get_value_from_data
 from farbox_bucket.utils.path import is_sub_path, get_just_name, get_relative_path
@@ -13,7 +12,6 @@ from farbox_bucket.utils.path import is_sub_path, get_just_name, get_relative_pa
 #  "tags": {}
 # }
 
-
 # output ->
 # {
 #  "nodes": [
@@ -23,8 +21,6 @@ from farbox_bucket.utils.path import is_sub_path, get_just_name, get_relative_pa
 #       { "source": "id1", "target": "id2" }
 # ]
 # }
-
-
 
 def filter_and_get_posts_link_points_info(posts_info, under=""):
     under = under.strip("/").strip().lower()
@@ -66,7 +62,6 @@ def filter_and_get_posts_link_points_info(posts_info, under=""):
         output_nodes.append(tag_node)
         output_nodes_map[tag_node_id] = tag_node
 
-
     for source_path, linked_paths in links_info.items():
         if under and not is_sub_path(source_path, under):
             continue
@@ -91,7 +86,6 @@ def filter_and_get_posts_link_points_info(posts_info, under=""):
             output_nodes.append(path_node)
             output_nodes_map[source_path] = path_node
 
-
     # update path nodes count
     for path, count in filepath_counter.items():
         path_node = output_nodes_map.get(path)
@@ -112,13 +106,10 @@ def filter_and_get_posts_link_points_info(posts_info, under=""):
                 group_id = filepath_group_info[level1_parent]
             node["group"] = group_id
 
-
     output = {
         "nodes": output_nodes,
         "links": output_links,
     }
 
     return output
-
-
 

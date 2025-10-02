@@ -1,5 +1,3 @@
-# coding: utf8
-from __future__ import absolute_import
 
 data = {
     # 常用基础词
@@ -56,7 +54,6 @@ data = {
     'Next': u'下一页',
     'Yes': u'是',
     'No': u'否',
-
 
     'Resume': u'简历',
     'Tool':  u'工具',

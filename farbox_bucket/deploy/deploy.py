@@ -1,4 +1,3 @@
-# coding: utf8
 import os
 import json
 import re
@@ -8,14 +7,11 @@ from farbox_bucket import version
 from farbox_bucket.utils import string_types, get_kwargs_from_console
 from farbox_bucket.deploy.run.files import files_data as raw_files_data
 
-
 def run_cmd(cmd):
     c_f = os.popen(cmd)
     try:
         return c_f.read().strip()
-    except:
-        return None
-
+    except Exception: return None
 
 def update_deploy_farbox_bucket():
     from xserver.helper.package_utils import deploy_project_dir
@@ -32,8 +28,6 @@ def update_deploy_farbox_bucket():
         project_name = project_name,
     )
 
-
-
 def deploy_farbox_bucket(memcache='2G', project_name='farbox_bucket',
                          sync_from_remote_node=None, start_project=True):
     print('deploy_farbox_bucket')
@@ -49,7 +43,6 @@ def deploy_farbox_bucket(memcache='2G', project_name='farbox_bucket',
         memcache = str(int(memcache)*1024)
     memcache = '%smb' % re.search('\d+', memcache).group() # to MB
 
-
     deploy_project_dir(
         files_data = files_data_for_deploy,
         project_name = project_name,
@@ -60,15 +53,11 @@ def deploy_farbox_bucket(memcache='2G', project_name='farbox_bucket',
         # 表示从 remote_node 进行持续的同步，相当于当前是远程节点的备份
         run_cmd('echo "%s" > /home/run/%s/configs/backup_from_ips.txt' % (sync_from_remote_node, project_name))
 
-
     if start_project:
         try:
             from xserver.server.project import run_project
             run_project(project_name)
-        except:
-            print('failed to start the project, should install xserver first')
-
-
+        except Exception: print('failed to start the project, should install xserver first')
 
 # deploy_farbox_bucket memcache=5g project=farbox_bucket remote_node=xxx.com start_project=true
 # deploy_farbox_bucket memcache=2g project=farbox_bucket start_project=true
@@ -102,8 +91,6 @@ def deploy_from_console():
         project_name = project_name,
     )
 
-
-
 def upgrade_farbox_bucket():
     last_arv = sys.argv[-1]
     if '.' in last_arv:
@@ -113,12 +100,9 @@ def upgrade_farbox_bucket():
     print(run_cmd('kill -HUP `cat /tmp/web_server.pid`'))
     print(run_cmd('supervisorctl status'))
 
-
 def restart_farbox_bucket_cache():
     print(run_cmd('service memcached restart'))
     print(run_cmd('service memcached status'))
-
-
 
 def update_farbox_bucket_web():
     print(run_cmd('kill -HUP `cat /tmp/web_server.pid`'))

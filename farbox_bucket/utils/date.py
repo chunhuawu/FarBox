@@ -1,10 +1,8 @@
-#coding: utf8
 import datetime, re
 from dateutil.parser import parse
 import calendar
 import time
 from farbox_bucket.utils import to_float, get_value_from_data, string_types
-
 
 def get_local_utc_offset():
     # 获取本地的时区...
@@ -15,8 +13,6 @@ def get_local_utc_offset():
     utc_offset_seconds = 3600*24*utc_offset_delta.days + utc_offset_delta.seconds
     utc_offset = utc_offset_seconds/3600.
     return utc_offset
-
-
 
 def utc_date_parse(timestr, parserinfo=None, utc_offset=None, **kwargs):
     # 转为 datetime，但已经偏移为 utc 的时间了
@@ -42,7 +38,6 @@ def utc_date_parse(timestr, parserinfo=None, utc_offset=None, **kwargs):
             timezone_str = p2.split(' ')[0]
             timestr = '%s +%s' % (p1, timezone_str)
 
-
     if isinstance(timestr, unicode):
         timestr = timestr.replace(u'\uff1a', ':')
 
@@ -63,14 +58,10 @@ def utc_date_parse(timestr, parserinfo=None, utc_offset=None, **kwargs):
     if date.tzinfo is None and not date_offset_done: # 如果不包含时区信息，则偏移，比如dropbox api提供的都是有时区信息的
         try:
             date -= datetime.timedelta(0, utc_offset*3600)
-        except:
-            # 囧, 可能会导致 date 的时间工差 <0 ....
+        except Exception:# 囧, 可能会导致 date 的时间工差 <0 ....
             pass
 
     return date
-
-
-
 
 def date_to_timestamp(date, is_int=False, is_utc=False, utc_offset=None):
     # is_utc, 是指 date 是UTC时间
@@ -102,8 +93,6 @@ def timestamp_to_date(timestamp, is_utc=False):
     else: # 当前计算机设定时区内的时间
         return datetime.datetime.fromtimestamp(timestamp)
 
-
-
 # 获得图片的日期，exif信息中的优先
 def get_image_date(exif, file_date=None, utc_offset=None):
     date = file_date
@@ -116,10 +105,8 @@ def get_image_date(exif, file_date=None, utc_offset=None):
         if date_pat:
             exif_date = date_pat.groups()[0]
         date = utc_date_parse(exif_date, utc_offset=utc_offset)
-    except:
-        pass
+    except Exception: pass
     return date
-
 
 def get_utc_today():
     return datetime.datetime.utcnow().strftime('%Y-%m-%d')

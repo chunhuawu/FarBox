@@ -1,12 +1,10 @@
-#coding:utf8
 import os
 os.environ['GEVENT_RESOLVER'] = 'ares'
 import multiprocessing
 
 try:
     import psutil as pu
-except:
-    pu = None
+except Exception: pu = None
 
 cpu_cores = multiprocessing.cpu_count()
 if cpu_cores >=8 :
